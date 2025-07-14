@@ -10,7 +10,7 @@
     @vite('resources/js/app.js')
 </head>
 
-<body>
+<body class="scrollbar-custom  overflow-y-scroll hide-scrollbar">
     @include('member.layouts.header')
     @yield('content')
     <x-footer-guest />

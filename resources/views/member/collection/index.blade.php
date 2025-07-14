@@ -4,21 +4,25 @@
     <div>
         <div>
             <div class="max-w-7xl flex bg-gray-50 gap-4 p-4 mx-auto items-center justify-between">
-                <p class="font-bold text-lg text-slate-800">Daftar Koleksi Buku</p>
+                <p class="font-bold text-lg text-slate-800">Buku Terbaru</p>
                 <!-- Filter Kategori -->
-                <div class="flex items-center gap-3">
-                    <h3 class="text-sm">Filter Kategori:</h3>
+                <div class="items-center">
+                    <h3 class="text-sm mb-2 font-semibold">Filter Kategori:</h3>
                     <div class="flex gap-3">
-                        <a href="{{ route('member.collection') }}"
-                            class="hover:bg-slate-500 hover:text-teal-500 {{ !$selectedCategory ? 'bg-teal-600 text-white' : 'bg-teal-200 text-gray-700 hover:bg-gray-300' }}">
-                            Semua
-                        </a>
-                        @foreach ($categories as $category)
-                            <a href="{{ route('member.collection', ['category' => $category->id]) }}"
-                                class="px-4 py-2 rounded-full border text-sm font-medium
-                          {{ $selectedCategory == $category->id ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
-                                {{ $category->name }}
+                        <div
+                            class="h-fit px-2 py-1 rounded-full text-xs w-16 text-center {{ !$selectedCategory ? 'bg-neutral-500 text-amber-50 hover:bg-neutral-500' : 'bg-amber-500 text-amber-50' }} hover:bg-amber-700 hover:border-neutral-500 hover:text-amber-50">
+                            <a href="{{ route('member.collection') }}">
+                                Semua
                             </a>
+                        </div>
+                        @foreach ($categories as $category)
+                            <div
+                                class="h-fit px-2 py-1 rounded-full text-xs w-16 text-center
+                          {{ $selectedCategory == $category->id ? 'bg-neutral-500 text-amber-50 hover:bg-neutral-500' : 'bg-amber-500 text-amber-50' }} hover:bg-amber-700 hover:border-neutral-500 hover:text-amber-50">
+                                <a href="{{ route('member.collection', ['category' => $category->id]) }}">
+                                    {{ $category->name }}
+                                </a>
+                            </div>
                         @endforeach
                     </div>
                 </div>

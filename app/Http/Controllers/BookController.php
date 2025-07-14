@@ -6,6 +6,7 @@ use App\Models\Book;
 use App\Models\Category;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
@@ -15,6 +16,7 @@ class BookController extends Controller
     public function index(Request $request)
     {
         try {
+            $user = Auth::user();
             $sortBy = $request->get("sort_by", 'title');
             $sortDir = $request->get('sort_dir', 'asc');
             $validSorts = ["id", "title", "author", "publisher", "year", "isbn", "stock"];
@@ -38,7 +40,7 @@ class BookController extends Controller
 
             $categories = Category::withCount('books')->get();
 
-            return view("admin.books.index", compact("books", "categories", "sortBy", "sortDir"));
+            return view("admin.books.index", compact("books", "categories", "sortBy", "sortDir", "user"));
         } catch (Exception $e) {
             // Logging error (opsional)
             Log::error("Error fetching books: " . $e->getMessage());

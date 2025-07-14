@@ -11,8 +11,8 @@
 
     <div class="flex items-center space-x-3 p-4">
         <div class="logo leading-tight">
-            <p class="text-slate-50 text-xs font-bold">Admin: {{ $user->id }}</p>
-            <p class="text-xs text-slate-300">{{ $user->name }}</p>
+            <p class="text-slate-50 text-xs font-bold">Admin: {{ Auth::user()->id }}</p>
+            <p class="text-xs text-slate-300">{{ Auth::user()->name }}</p>
         </div>
     </div>
 

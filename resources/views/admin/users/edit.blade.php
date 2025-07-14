@@ -37,6 +37,13 @@
             </div>
 
             <div>
+                <label for="profile_picture" class="block font-semibold">E-mail</label>
+                <input type="file" name="profile_picture" id="profile_picture"
+                    class="form-input w-full border-b border-slate-400 p-2"
+                    value="profile_pictures/{{ $user->profile_picture }}">
+            </div>
+
+            <div>
                 <label for="role_id" class="block font-semibold">Role</label>
                 <select name="role_id" id="role_id" class="form-select w-full border-b border-slate-400 p-2" required>
                     <option disabled selected>

@@ -7,6 +7,7 @@ function formUser() {
         password: "",
         password_confirmation: "",
         phone_number: "",
+        profile_picture: "",
         async submitForm() {
             try {
                 const response = await axios.post(
@@ -32,6 +33,7 @@ function formUser() {
             this.password = "";
             this.confirmPassword = "";
             this.phone_number = "";
+            this.profile_picture = "";
         },
     };
 }

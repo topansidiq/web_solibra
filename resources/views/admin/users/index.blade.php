@@ -72,6 +72,13 @@
                         </div>
 
                         <div>
+                            <label for="profile_picture" class="block font-semibold">Foto Profil</label>
+                            <input type="file" name="profile_picture" id="profile_picture"
+                                class="form-input w-full border-b border-slate-400 p-2" required
+                                placeholder="Gambar JPG/PNG" value="{{ old('profile_picture') }}">
+                        </div>
+
+                        <div>
                             <label for="password" class="block font-semibold">Password</label>
                             <input type="password" name="password" id="password"
                                 class="form-input w-full border-b border-slate-400 p-2" required
@@ -131,7 +138,8 @@
                                     </div>
 
                                     {{-- Delete Book Button --}}
-                                    <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="ml-2">
+                                    <form action="{{ route('users.destroy', $user->id) }}" method="POST"
+                                        class="ml-2">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="delete-book-btn">

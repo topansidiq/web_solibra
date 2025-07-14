@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -12,9 +13,10 @@ class UserController extends Controller
 {
     public function index()
     {
+        $user = Auth::user();
         $roles = Role::all(); // Fetch all roles for the view
         $users = User::paginate(20); // Paginate users, 20 per page
-        return view("admin.users.index", compact("users", "roles"));
+        return view("admin.users.index", compact("users", "roles", "user"));
     }
 
     public function edit(User $user)
@@ -62,10 +64,11 @@ class UserController extends Controller
             'role_id' => 'required|exists:roles,id',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
+            'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         // Save user first
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'id_number' => $request->id_number,
             'phone_number' => $request->phone_number,
@@ -74,8 +77,16 @@ class UserController extends Controller
             'password' => bcrypt($request->password),
         ]);
 
+        // Save profile picture to storage
+        if ($request->hasFile('profile_picture')) {
+            $path = $request->file('profile_picture')->store('profile_pictures', 'public');
+            $user->profile_picture = $path;
+            $user->save();
+        }
+
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
+
 
     public function verifiedPhoneNumber(User $user)
     {
