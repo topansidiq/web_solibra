@@ -15,7 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('id_number')->unique();
+            $table->string('gender')->nullable();
+            $table->string('place_birth')->nullable();
+            $table->date('birth_date')->nullable();
+            $table->string('last_education')->nullable();
+            $table->string('job')->nullable();
             $table->foreignId('role_id')->constrained()->onDelete('cascade');
+            $table->string('profile_picture')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('phone_number')->unique();

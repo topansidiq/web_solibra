@@ -34,7 +34,12 @@ class UserFactory extends Factory
 
         return [
             'name' => fake()->name(),
-            'id_number' => $this->faker->unique()->numerify('2025########'), // 8 digit setelah 2025
+            'id_number' => $this->faker->unique()->numerify('2025########'),
+            'gender' => $this->faker->randomElement(['female', 'male']),
+            'place_birth' => $this->faker->streetName(),
+            'birth_date' => $this->faker->date(),
+            'last_education' => $this->faker->randomElement(['SD', 'SMA/SMK', 'SMP', 'S1', 'Diploma III', 'Diploma IV', 'S2', 'S3', 'Magister Terapan', 'Akademisi', 'Sertifikasi']),
+            'job' => $this->faker->jobTitle(),
             'phone_number' => fake()->unique()->numerify('08#########'),
             'phone_number_verified' => $this->faker->randomElement(['verified', 'unverified']),
             'role_id' => $roleId,
