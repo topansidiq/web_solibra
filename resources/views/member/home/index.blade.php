@@ -13,7 +13,7 @@
                 </h1>
                 <div class="hidden lg:flex gap-4">
                     <a href="#"
-                        class=" bg-amber-500 hover:bg-amber-700 text-white px-5 py-2 rounded-full shadow-md transition duration-300">
+                        class=" bg-yellow-500 hover:bg-yellow-700 text-white px-5 py-2 rounded-full shadow-md transition duration-300">
                         Hubungi Kami
                     </a>
                 </div>
@@ -30,8 +30,8 @@
 
 
         <!-- Sambutan -->
-        <section class="py-10 px-6 w-full mx-auto bg-neutral-50">
-            <div class="bg-neutral-100 max-w-7xl mx-auto rounded-md shadow-md border border-gray-200 p-6">
+        <section class="py-10 px-6 w-full mx-auto bg-white">
+            <div class="bg-neutral-50 max-w-7xl mx-auto rounded-md shadow-md border border-gray-200 p-6">
                 <h2
                     class="text-left text-2xl font-bold pb-7 mb-3 border-b border-neutral-200 max-w-fit mx-auto text-neutral-700">
                     Selamat
@@ -39,7 +39,7 @@
                     Perpustakaan Umum Kota Solok
                 </h2>
 
-                <div class="border-l-4 border-l-amber-500 p-5">
+                <div class="border-l-4 border-l-yellow-500 p-5">
                     <p class="text-gray-700 leading-relaxed text-justify pl-1">
                         <strong class="text-neutral-700">Perpustakaan Umum Kota Solok</strong> adalah salah satu lembaga
                         penting

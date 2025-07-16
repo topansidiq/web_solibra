@@ -1,9 +1,9 @@
-<div class="w-full grid items-center xl:flex sticky top-0 z-50 bg-neutral-800 text-slate-50" x-data="{ active: '{{ Route::currentRouteName() }}' }"
+<div class="w-full grid items-center xl:flex sticky top-0 z-50 bg-sky-800 text-slate-50" x-data="{ active: '{{ Route::currentRouteName() }}' }"
     x-transition>
     <div class="xl:p-4 flex justify-between gap-5 w-full">
         <div class="p-3 flex gap-2 items-center pb-2">
-            <div class="w-8 h-8 bg-red-400">
-                <i data-lucide="library" class="w-auto"></i>
+            <div class="w-8 h-8 bg-yellow-500">
+                <i data-lucide="library" class="w-auto text-neutral-800"></i>
             </div>
             <div class="">
                 <p class="font-serif">SOLIBRA</p>
@@ -28,7 +28,7 @@
             @foreach ($menu as $item)
                 <div>
                     <a href="{{ route($item['name']) }}" @click="active = '{{ $item['name'] }}'"
-                        class="flex items-center gap-2 py-2 hover:text-amber-500 hover:border-b-amber-500 hover:border-b transition-all text-xs"
+                        class="flex items-center gap-2 py-2 hover:text-yellow-500 hover:border-b-yellow-500 hover:border-b transition-all text-xs"
                         :class="active === '{{ $item['name'] }}' ? 'border-b border-b-gray-50' : ''">
 
                         <i data-lucide="{{ $item['icon'] }}" class="w-4 h-4"></i>
@@ -45,7 +45,7 @@
                 </div>
             </div>
             <div class="profile-picture">
-                <div class="w-10 h-10 bg-amber-500 rounded-full block" src="#" alt=""></div>
+                <div class="w-10 h-10 bg-yellow-500 rounded-full block" src="#" alt=""></div>
             </div>
         </div>
     </div>
