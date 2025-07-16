@@ -16,6 +16,12 @@ class MemberController extends Controller
         return view("member.home.index", compact('user'));
     }
 
+    public function profile()
+    {
+        $user = Auth::user();
+        return view('member.profile.index', compact('user'));
+    }
+
     public function collection(Request $request)
     {
 
@@ -36,16 +42,5 @@ class MemberController extends Controller
         })->get();
 
         return view("member.collection.index", compact('collections', 'user', 'books', 'bookSelect', 'categories', 'selectedCategory'));
-    }
-
-    public function history()
-    {
-        $user = Auth::user();
-        return view('member.history.index', compact('user'));
-    }
-    public function home()
-    {
-        $user = Auth::user();
-        return view('member.home.index', compact('user'));
     }
 }

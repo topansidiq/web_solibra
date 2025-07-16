@@ -18,7 +18,7 @@
                 $menu = [
                     ['label' => 'Beranda', 'name' => 'member.index', 'icon' => 'home'],
                     ['label' => 'Daftar Koleksi', 'name' => 'member.collection', 'icon' => 'book-open'],
-                    ['label' => 'Sejarah', 'name' => 'member.history', 'icon' => 'layers'],
+                    ['label' => 'Profile', 'name' => 'member.profile', 'icon' => 'building'],
 
                     // ['label' => 'Peminjaman', 'name' => 'borrows.index', 'icon' => 'list'],
                     // ['label' => 'Pengguna', 'name' => 'users.index', 'icon' => 'user'],
@@ -26,6 +26,18 @@
             @endphp
 
             @foreach ($menu as $item)
+                @if ($item['name'] == 'member.profile')
+                    <div>
+                        <a href="{{ route($item['name']) }}" @click="active = '{{ $item['name'] }}'"
+                            class="flex items-center gap-2 py-2 hover:text-yellow-500 hover:border-b-yellow-500 hover:border-b transition-all text-xs"
+                            :class="active === '{{ $item['name'] }}' ? 'border-b border-b-gray-50' : ''">
+
+                            <i data-lucide="{{ $item['icon'] }}" class="w-4 h-4"></i>
+                            <span>{{ $item['label'] }}</span>
+                        </a>
+                    </div>
+                    @continue
+                @endif
                 <div>
                     <a href="{{ route($item['name']) }}" @click="active = '{{ $item['name'] }}'"
                         class="flex items-center gap-2 py-2 hover:text-yellow-500 hover:border-b-yellow-500 hover:border-b transition-all text-xs"

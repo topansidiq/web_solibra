@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GuestController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
@@ -10,10 +11,10 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\UserController;
 
-// Homepage
-Route::get('/', function () {
-    return view('welcome');
-});
+// Guest
+Route::get('/', [GuestController::class, 'home'])->name('home');
+Route::get('/collection', [GuestController::class, 'collection'])->name('collection');
+Route::get('/profile', [GuestController::class, 'profile'])->name('profile');
 
 // Authentication Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -26,8 +27,8 @@ Route::post('/register', [RegisterController::class, 'register']);
 Route::middleware(['auth', 'role:member'])->group(function () {
     Route::get('/member/dashboard', [MemberController::class, 'dashboard'])->name('member.index');
 
-    Route::get('/collection', [MemberController::class, 'collection'])->name('member.collection');
-    Route::get('/history', [MemberController::class, 'history'])->name('member.history');
+    Route::get('/member/collection', [MemberController::class, 'collection'])->name('member.collection');
+    Route::get('/member/profile', [MemberController::class, 'profile'])->name('member.profile');
 
     Route::patch('/users/{user}/verified-phone-number', [UserController::class, 'verifiedPhoneNumber'])->name('users.verified-phone-number');
 });
