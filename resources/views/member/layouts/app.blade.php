@@ -11,9 +11,11 @@
 </head>
 
 <body class="scrollbar-custom  overflow-y-scroll hide-scrollbar">
-    @include('member.layouts.header')
-    @yield('content')
-    <x-footer-guest />
+    <div class="flex flex-col items-center justify-between h-screen w-screen">
+        @include('member.layouts.header')
+        @yield('content')
+        <x-footer-guest />
+    </div>
 </body>
 
 </html>

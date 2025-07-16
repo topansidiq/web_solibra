@@ -2,9 +2,9 @@
 
 @section('content')
     <div>
-        <div>
-            <div class="max-w-7xl flex bg-gray-50 gap-4 p-4 mx-auto items-center justify-between">
-                <p class="font-bold text-lg text-slate-800">Buku Terbaru</p>
+        <div class="w-[1680px] mx-auto">
+            <div class="flex bg-gray-50 gap-4 p-4 mx-auto items-center justify-between">
+                <p class="font-bold text-lg text-slate-800">Koleksi Terbaru</p>
                 <!-- Filter Kategori -->
                 <div class="items-center">
                     <h3 class="text-sm mb-2 font-semibold">Filter Kategori:</h3>
@@ -30,24 +30,53 @@
                 </div>
 
             </div>
-            <div class="max-w-7xl bg-gray-50 gap-4 p-4 grid grid-cols-6 mx-auto content-around">
+            <div class=" bg-gray-50 gap-4 p-4 grid grid-cols-6 mx-auto content-around">
                 @foreach ($books as $book)
-                    <div
-                        class="book bg-slate-50 rounded shadow border border-slate-300 cursor-pointer hover:scale-105 transition">
-                        <div class="h-50 bg-slate-400">
-                            <img src="/storage/covers/{{ $book->cover }}" alt="" class="">
-                        </div>
-
-                        <div class="p-2">
-                            <h2 class="font-bold text-sm">{{ $book->title }} ({{ $book->year }})</h2>
-                            <div class="text-xs">
-                                @foreach ($book->categories as $category)
-                                    <span class="">{{ $category->name }}, </span>
-                                @endforeach
+                    <a href="{{ route('show.book', $book) }}">
+                        <div
+                            class="book h-full bg-slate-50 rounded shadow border border-slate-300 cursor-pointer hover:scale-105 transition">
+                            <div class="h-fit bg-slate-400">
+                                <img src="{{ asset('storage/' . $book->cover) }}" alt="" class="shadow-sm">
                             </div>
-                            <p class="text-xs font-semibold text-slate-500">Penulis: {{ $book->author }}</p>
+
+                            <div class="p-3">
+                                <h2 class="font-bold text-sm">{{ $book->title }} ({{ $book->year }})</h2>
+                                <div class="text-xs">
+                                    @foreach ($book->categories as $category)
+                                        <span class="">{{ $category->name }}, </span>
+                                    @endforeach
+                                </div>
+                                <p class="text-xs font-semibold text-slate-500">Penulis: {{ $book->author }}</p>
+                            </div>
                         </div>
-                    </div>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+        <div class="w-[1680px] mx-auto">
+            <div class="flex bg-gray-50 gap-4 p-4 mx-auto items-center justify-between">
+                <p class="font-bold text-lg text-slate-800">Populer</p>
+            </div>
+            <div class=" bg-gray-50 gap-4 p-4 grid grid-cols-6 mx-auto content-around">
+                @foreach ($books as $book)
+                    <a href="{{ route('show.book', $book) }}">
+                        <div
+                            class="book h-full bg-slate-50 rounded shadow border border-slate-300 cursor-pointer hover:scale-105 transition">
+                            <div class="h-fit bg-slate-400">
+                                <img src="{{ asset('storage/' . $book->cover) }}" alt="" class="shadow-sm">
+                            </div>
+
+                            <div class="p-3">
+                                <h2 class="font-bold text-sm">{{ $book->title }} ({{ $book->year }})</h2>
+                                <div class="text-xs">
+                                    @foreach ($book->categories as $category)
+                                        <span class="">{{ $category->name }}, </span>
+                                    @endforeach
+                                </div>
+                                <p class="text-xs font-semibold text-slate-500">Penulis: {{ $book->author }}</p>
+                            </div>
+                        </div>
+                    </a>
                 @endforeach
             </div>
         </div>

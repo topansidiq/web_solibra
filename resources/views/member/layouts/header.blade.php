@@ -18,7 +18,8 @@
                 $menu = [
                     ['label' => 'Beranda', 'name' => 'member.index', 'icon' => 'home'],
                     ['label' => 'Daftar Koleksi', 'name' => 'member.collection', 'icon' => 'book-open'],
-                    ['label' => 'Profile', 'name' => 'member.profile', 'icon' => 'building'],
+                    ['label' => 'Peminjaman', 'name' => 'member.borrow', 'icon' => 'book'],
+                    ['label' => 'Profil', 'name' => 'member.profile', 'icon' => 'building'],
 
                     // ['label' => 'Peminjaman', 'name' => 'borrows.index', 'icon' => 'list'],
                     // ['label' => 'Pengguna', 'name' => 'users.index', 'icon' => 'user'],
@@ -73,7 +74,8 @@
             $menu = [
                 ['label' => 'Beranda', 'name' => 'member.index', 'icon' => 'home'],
                 ['label' => 'Daftar Koleksi', 'name' => 'member.collection', 'icon' => 'book-open'],
-                ['label' => 'Sejarah', 'name' => 'member.history', 'icon' => 'layers'],
+                ['label' => 'Peminjaman', 'name' => 'member.borrow', 'icon' => 'book'],
+                ['label' => 'Profil', 'name' => 'profile', 'icon' => 'building'],
 
                 // ['label' => 'Peminjaman', 'name' => 'borrows.index', 'icon' => 'list'],
                 // ['label' => 'Pengguna', 'name' => 'users.index', 'icon' => 'user'],

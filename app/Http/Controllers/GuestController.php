@@ -30,4 +30,28 @@ class GuestController extends Controller
 
         return view('collection', compact('latestBook', 'books', 'categories', 'selectedCategory'));
     }
+
+    public function profile()
+    {
+        return view('profile');
+    }
+
+    public function showBook(Book $book)
+    {
+        $book->load('categories');
+
+        $categoryIds = $book->categories->pluck('id');
+
+        // Ambil buku lain yang punya salah satu kategori yang sama
+        $relatedBooks = Book::whereHas('categories', function ($query) use ($categoryIds) {
+            $query->whereIn('categories.id', $categoryIds);
+        })
+            ->where('id', '!=', $book->id) // Jangan tampilkan dirinya sendiri
+            ->with('categories')
+            ->latest()
+            ->take(6)
+            ->get();
+
+        return view('show.book', compact('book', 'relatedBooks'));
+    }
 }

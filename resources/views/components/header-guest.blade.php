@@ -18,7 +18,7 @@
                 $menu = [
                     ['label' => 'Beranda', 'name' => 'home', 'icon' => 'home'],
                     ['label' => 'Daftar Koleksi', 'name' => 'collection', 'icon' => 'book-open'],
-                    // ['label' => 'Sejarah', 'name' => 'member.history', 'icon' => 'layers'],
+                    ['label' => 'Profil', 'name' => 'profile', 'icon' => 'building'],
 
                     // ['label' => 'Peminjaman', 'name' => 'borrows.index', 'icon' => 'list'],
                     // ['label' => 'Pengguna', 'name' => 'users.index', 'icon' => 'user'],
