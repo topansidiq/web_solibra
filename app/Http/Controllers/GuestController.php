@@ -46,7 +46,7 @@ class GuestController extends Controller
         $relatedBooks = Book::whereHas('categories', function ($query) use ($categoryIds) {
             $query->whereIn('categories.id', $categoryIds);
         })
-            ->where('id', '!=', $book->id) // Jangan tampilkan dirinya sendiri
+            ->where('id', '!=', $book)
             ->with('categories')
             ->latest()
             ->take(6)

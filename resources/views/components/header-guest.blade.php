@@ -14,6 +14,7 @@
         {{-- Desktop --}}
         <nav class="hidden xl:flex gap-6 text-sm items-center content-between">
 
+
             @php
                 $menu = [
                     ['label' => 'Beranda', 'name' => 'home', 'icon' => 'home'],
@@ -39,6 +40,18 @@
         </nav>
 
         <div class="profile hidden lg:flex gap-3 items-center p-3">
+            <div class="text-sm">
+                @foreach (LaravelLocalization::getSupportedLocales() as $code => $locale)
+                    <a href="{{ LaravelLocalization::getLocalizedURL($code) }}"
+                        class="px-1 {{ LaravelLocalization::getCurrentLocale() === $code ? 'font-bold text-sky-300' : 'text-neutral-400' }}">
+                        {{ strtoupper($code) }}
+                    </a>
+                    @if (!$loop->last)
+                        |
+                    @endif
+                @endforeach
+            </div>
+
             <div class="login flex gap-3">
                 <div class="bg-yellow-500 px-4 py-1 rounded">
                     <a href="/login" class="text-shadow-md">Masuk</a>
