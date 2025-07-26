@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Illuminate\Pagination\AbstractPaginator;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -18,9 +20,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $locale = App::getLocale();
+        Paginator::useTailwind();
 
-        // Kalau ada folder resources/views/id, en, dll.
+        // Force Laravel to recognize pagination:: views
+        $paginationPath = resource_path('views/vendor/pagination');
+        View::addNamespace('pagination', $paginationPath);
+
+        // Set viewFactory resolver explicitly
+        AbstractPaginator::viewFactoryResolver(function () {
+            return View::getFacadeRoot();
+        });
+
+        // (Jika pakai localization views)
+        $locale = app()->getLocale();
         View::addLocation(resource_path("views/{$locale}"));
     }
 }

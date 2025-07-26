@@ -20,6 +20,7 @@
                     ['label' => 'Beranda', 'name' => 'home', 'icon' => 'home'],
                     ['label' => 'Daftar Koleksi', 'name' => 'collection', 'icon' => 'book-open'],
                     ['label' => 'Profil', 'name' => 'profile', 'icon' => 'building'],
+                    ['label' => 'Kegiatan', 'name' => 'event', 'icon' => 'calendar'],
 
                     // ['label' => 'Peminjaman', 'name' => 'borrows.index', 'icon' => 'list'],
                     // ['label' => 'Pengguna', 'name' => 'users.index', 'icon' => 'user'],
@@ -43,7 +44,7 @@
             <div class="text-sm">
                 @foreach (LaravelLocalization::getSupportedLocales() as $code => $locale)
                     <a href="{{ LaravelLocalization::getLocalizedURL($code) }}"
-                        class="px-1 {{ LaravelLocalization::getCurrentLocale() === $code ? 'font-bold text-sky-300' : 'text-neutral-400' }}">
+                        class="px-1 {{ LaravelLocalization::getCurrentLocale() === $code ? 'font-bold text-sky-300' : 'text-neutral-200' }}">
                         {{ strtoupper($code) }}
                     </a>
                     @if (!$loop->last)
@@ -53,12 +54,12 @@
             </div>
 
             <div class="login flex gap-3">
-                <div class="bg-yellow-500 px-4 py-1 rounded">
+                <div class="bg-yellow-500 px-4 py-1 rounded text-sm">
                     <a href="/login" class="text-shadow-md">Masuk</a>
                 </div>
             </div>
             <div class="register flex gap-3">
-                <div class="bg-sky-500 px-4 py-1 rounded">
+                <div class="bg-sky-500 px-4 py-1 rounded text-sm">
                     <a href="/register" class="text-shadow-md">Bergabung</a>
                 </div>
             </div>

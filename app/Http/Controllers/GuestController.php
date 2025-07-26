@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\Category;
+use App\Models\Event;
 use Illuminate\Http\Request;
 
 class GuestController extends Controller
@@ -34,6 +35,11 @@ class GuestController extends Controller
     public function profile()
     {
         return view('profile');
+    }
+    public function event()
+    {
+        $events = Event::all()->groupBy('status');
+        return view('event', compact('events'));
     }
 
     public function showBook(Book $book)

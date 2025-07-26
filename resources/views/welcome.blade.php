@@ -21,7 +21,7 @@
                     style="background-image: url({{ asset('img/Perpustakaan_Umum_Kota_Solok.jpg') }})">
                     <div class="md:p-10 lg:p-16 p-5">
                         <h1 class="text-3xl md:text-5xl font-extrabold leading-tight mb-4">
-                            <span class="block text-xl">
+                            <span class="block text-4xl">
                                 {{ __('message.welcome') }}
                             </span>
                         </h1>

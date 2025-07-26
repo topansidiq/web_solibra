@@ -10,6 +10,7 @@ use App\Http\Controllers\{
     BorrowController,
     CategoryController,
     DashboardController,
+    EventController,
     MemberController,
     UserController
 };
@@ -24,6 +25,7 @@ Route::group(
         Route::get('/', [GuestController::class, 'home'])->name('home');
         Route::get('/collection', [GuestController::class, 'collection'])->name('collection');
         Route::get('/profile', [GuestController::class, 'profile'])->name('profile');
+        Route::get('/event', [GuestController::class, 'event'])->name('event');
 
         // ✅ Show Book
         Route::get('/show/book/{book}', [GuestController::class, 'showBook'])->name('show.book');
@@ -43,26 +45,27 @@ Route::group(
             Route::patch('/users/{user}/verified-phone-number', [UserController::class, 'verifiedPhoneNumber'])->name('users.verified-phone-number');
             Route::get('/member/borrow', [MemberController::class, 'borrow'])->name('member.borrow');
         });
-
-        // 🔒 Admin or Librarian Routes
-        Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
-            Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
-
-            // Resource routes
-            Route::resource('books', BookController::class);
-            Route::resource('categories', CategoryController::class);
-            Route::resource('borrows', BorrowController::class);
-            Route::resource('users', UserController::class);
-
-            // Custom book routes
-            Route::put('/books/{book}', [BookController::class, 'update'])->name('books.update');
-            Route::get('/books/search', [BookController::class, 'search'])->name('books.search');
-
-            // Custom borrow actions
-            Route::patch('/borrows/{borrow}/confirm', [BorrowController::class, 'confirm'])->name('borrows.confirm');
-            Route::patch('/borrows/{borrow}/return', [BorrowController::class, 'return'])->name('borrows.return');
-            Route::patch('/borrows/{borrow}/overdue', [BorrowController::class, 'overdue'])->name('borrows.overdue');
-            Route::patch('/borrows/{borrow}/archive', [BorrowController::class, 'archive'])->name('borrows.archive');
-        });
     }
 );
+
+// 🔒 Admin or Librarian Routes
+Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
+    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+
+    // Resource routes
+    Route::resource('books', BookController::class);
+    Route::resource('categories', CategoryController::class);
+    Route::resource('borrows', BorrowController::class);
+    Route::resource('users', UserController::class);
+    Route::resource('events', EventController::class);
+
+    // Custom book routes
+    Route::put('/books/{book}', [BookController::class, 'update'])->name('books.update');
+    Route::get('/books/search', [BookController::class, 'search'])->name('books.search');
+
+    // Custom borrow actions
+    Route::patch('/borrows/{borrow}/confirm', [BorrowController::class, 'confirm'])->name('borrows.confirm');
+    Route::patch('/borrows/{borrow}/return', [BorrowController::class, 'return'])->name('borrows.return');
+    Route::patch('/borrows/{borrow}/overdue', [BorrowController::class, 'overdue'])->name('borrows.overdue');
+    Route::patch('/borrows/{borrow}/archive', [BorrowController::class, 'archive'])->name('borrows.archive');
+});
