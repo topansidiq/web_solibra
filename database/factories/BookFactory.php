@@ -24,6 +24,8 @@ class BookFactory extends Factory
             'title' => $this->faker->sentence(5),
             'author' => $this->faker->name(),
             'publisher' => $this->faker->company(),
+            'language' => $this->faker->randomElement(['Indonesia', 'Inggris']),
+            'pages' => $this->faker->numberBetween(99, 500),
             'year' => $this->faker->year(),
             'isbn' => $this->faker->unique()->isbn13(),
             'stock' => $this->faker->numberBetween(0, 100),

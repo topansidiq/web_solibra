@@ -87,6 +87,18 @@
                                 class="form-input w-full border-b border-slate-400 focus: outline-0 p-2 placeholder: text-sm"
                                 placeholder="Contoh: Solok Publisher">
                         </div>
+                        <div>
+                            <label for="language-edit" class="block font-semibold">Bahasa</label>
+                            <input type="text" name="language" id="language-edit"
+                                class="form-input w-full border-b border-slate-400 focus: outline-0 p-2 placeholder: text-sm"
+                                placeholder="Contoh: Indonesia">
+                        </div>
+                        <div>
+                            <label for="pages-edit" class="block font-semibold">Halaman</label>
+                            <input type="number" name="pages" id="pages-edit"
+                                class="form-input w-full border-b border-slate-400 focus: outline-0 p-2 placeholder: text-sm"
+                                placeholder="Contoh: 991">
+                        </div>
 
                         <div>
                             <label for="year-edit" class="block font-semibold">Tahun</label>
@@ -184,78 +196,43 @@
         <div class="mx-4">
             <table class="table font-sans w-full">
                 <thead class="bg-teal-800 text-white text-sm sticky top-0 z-10">
+                    @php
+                        $columns = [
+                            ['key' => null, 'label' => 'No.'],
+                            ['key' => 'title', 'label' => 'Judul'],
+                            ['key' => 'author', 'label' => 'Penulis'],
+                            ['key' => 'publisher', 'label' => 'Penerbit'],
+                            ['key' => null, 'label' => 'Bahasa'],
+                            ['key' => null, 'label' => 'Halaman'],
+                            ['key' => 'year', 'label' => 'Tahun'],
+                            ['key' => 'isbn', 'label' => 'ISBN'],
+                            ['key' => null, 'label' => 'Kategori'],
+                            ['key' => 'stock', 'label' => 'Stok'],
+                        ];
+                    @endphp
+
                     <tr>
-
-                        @php
-                            $isAsc = request('sort_dir', 'asc') === 'asc';
-                            $nextDir = $isAsc ? 'desc' : 'asc';
-                        @endphp
-
-                        <th class="p-4 text-center">
-                            No.
-                        </th>
-                        <th class="p-4">
-                            <a href="{{ route('books.index', ['sort_by' => 'title', 'sort_dir' => $sortBy === 'title' && $sortDir === 'asc' ? 'desc' : 'asc']) }}"
-                                class="hover:underline m-auto">
-                                Judul
-                                @if ($sortBy === 'title')
-                                    <i data-lucide="{{ $sortDir === 'asc' ? 'arrow-up' : 'arrow-down' }}"
-                                        class="w-4 h-4 inline"></i>
+                        @foreach ($columns as $col)
+                            <th class="p-4 {{ $col['key'] ? '' : 'text-center' }}">
+                                @if ($col['key'])
+                                    <a href="{{ route('books.index', [
+                                        'sort_by' => $col['key'],
+                                        'sort_dir' => $sortBy === $col['key'] && $sortDir === 'asc' ? 'desc' : 'asc',
+                                    ]) }}"
+                                        class="hover:underline">
+                                        {{ $col['label'] }}
+                                        @if ($sortBy === $col['key'])
+                                            <i data-lucide="{{ $sortDir === 'asc' ? 'arrow-up' : 'arrow-down' }}"
+                                                class="w-4 h-4 inline"></i>
+                                        @endif
+                                    </a>
+                                @else
+                                    {{ $col['label'] }}
                                 @endif
-                            </a>
-                        </th>
-                        <th class="p-4">
-                            <a href="{{ route('books.index', ['sort_by' => 'author', 'sort_dir' => $sortBy === 'author' && $sortDir === 'asc' ? 'desc' : 'asc']) }}"
-                                class="m-auto hover:underline">
-                                Penulis
-                                @if ($sortBy === 'author')
-                                    <i data-lucide="{{ $sortDir === 'asc' ? 'arrow-up' : 'arrow-down' }}"
-                                        class="w-4 h-4 inline"></i>
-                                @endif
-                            </a>
-                        </th>
-                        <th class="p-4">
-                            <a href="{{ route('books.index', ['sort_by' => 'publisher', 'sort_dir' => $sortBy === 'publisher' && $sortDir === 'asc' ? 'desc' : 'asc']) }}"
-                                class="m-auto hover:underline">
-                                Penerbit
-                                @if ($sortBy === 'publisher')
-                                    <i data-lucide="{{ $sortDir === 'asc' ? 'arrow-up' : 'arrow-down' }}"
-                                        class="w-4 h-4 inline"></i>
-                                @endif
-                            </a>
-                        </th>
-                        <th class="p-4">
-                            <a href="{{ route('books.index', ['sort_by' => 'year', 'sort_dir' => $sortBy === 'year' && $sortDir === 'asc' ? 'desc' : 'asc']) }}"
-                                class="m-auto hover:underline">
-                                Tahun
-                                @if ($sortBy === 'year')
-                                    <i data-lucide="{{ $sortDir === 'asc' ? 'arrow-up' : 'arrow-down' }}"
-                                        class="w-4 h-4 inline"></i>
-                                @endif
-                            </a>
-                        </th>
-                        <th class="p-4">
-                            <a href="{{ route('books.index', ['sort_by' => 'isbn', 'sort_dir' => $sortBy === 'isbn' && $sortDir === 'asc' ? 'desc' : 'asc']) }}"
-                                class="m-auto hover:underline">
-                                ISBN
-                                @if ($sortBy === 'isbn')
-                                    <i data-lucide="{{ $sortDir === 'asc' ? 'arrow-up' : 'arrow-down' }}"
-                                        class="w-4 h-4 inline"></i>
-                                @endif
-                            </a>
-                        </th>
-                        <th class="p-4">Kategori</th>
-                        <th class="p-4">
-                            <a href="{{ route('books.index', ['sort_by' => 'stock', 'sort_dir' => $sortBy === 'stock' && $sortDir === 'asc' ? 'desc' : 'asc']) }}"
-                                class="m-auto hover:underline">
-                                Stok
-                                @if ($sortBy === 'stock')
-                                    <i data-lucide="{{ $sortDir === 'asc' ? 'arrow-up' : 'arrow-down' }}"
-                                        class="w-4 h-4 inline"></i>
-                                @endif
-                            </a>
-                        </th>
+                            </th>
+                        @endforeach
                     </tr>
+
                 </thead>
                 <tbody class="text-xs">
                     @foreach ($books as $book)
@@ -290,6 +267,8 @@
 
                             <td class="px-4 py-1 border border-slate-300">{{ $book->author }}</td>
                             <td class="px-4 py-1 border border-slate-300">{{ $book->publisher }}</td>
+                            <td class="px-4 py-1 border border-slate-300">{{ $book->language }}</td>
+                            <td class="px-4 py-1 border border-slate-300 text-center">{{ $book->pages }}</td>
                             <td class="px-4 py-1 border border-slate-300 text-center">{{ $book->year }}</td>
                             <td class="px-4 py-1 border border-slate-300 text-center">{{ $book->isbn }}</td>
                             <td class="px-4 py-1 border border-slate-300">
