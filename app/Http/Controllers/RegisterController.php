@@ -6,13 +6,13 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rules\Enum;
 
 class RegisterController extends Controller
 {
     public function showRegisterForm()
     {
-        $roles = Role::all();
-        return view('register', compact('roles'));
+        return view('register');
     }
 
     public function register(Request $request)
@@ -21,7 +21,7 @@ class RegisterController extends Controller
             'name' => 'required|string|max:255',
             'id_number' => 'required|string|max:20|unique:users,id_number',
             'phone_number' => 'required|string|max:15|unique:users,phone_number',
-            'role_id' => 'required|exists:roles,id',
+            'role' => ['required', new Enum(Role::class)],
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
             'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
@@ -42,7 +42,7 @@ class RegisterController extends Controller
             'last_education' => $request->last_education,
             'job' => $request->job,
             'phone_number' => $request->phone_number,
-            'role_id' => $request->role_id,
+            'role' => Role::from($request->role),
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);

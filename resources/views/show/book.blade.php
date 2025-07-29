@@ -1,4 +1,6 @@
-@extends('welcome')
+@extends('layouts.app')
+
+@section('title', 'Tampilan Buku')
 
 @section('content')
     <div class="flex flex-col gap-4">
@@ -11,13 +13,13 @@
                 </div>
                 <div>
                     <h1 class="font-bold text-neutral-700 text-2xl">Tentang Buku Ini</h1>
-                    <p class="pt-2 font-semibold text-neutral-500">{{ $book->title }}</p>
+                    <p class="pt-2 font-semibold text-neutral-500">{{ $book->clean_title }}</p>
                 </div>
             </div>
             <div class="flex flex-col md:flex-row gap-6 bg-neutral-50 pr-6">
                 {{-- Cover --}}
                 <div class="md:w-1/3">
-                    <img src="{{ asset('storage/' . $book->cover) }}" alt="{{ $book->title }}"
+                    <img src="{{ asset('storage/' . $book->cover) }}" alt="{{ $book->clean_title }}"
                         class="rounded shadow-sm w-full object-cover">
                 </div>
 
@@ -29,7 +31,7 @@
                             Judul
                         </div>
                         <div class="col-span-3 px-2">
-                            <h1 class="font-bold text-slate-800">{{ $book->title }}</h1>
+                            <h1 class="font-bold text-slate-800">{{ $book->clean_title }} ({{ $book->edition }})</h1>
                         </div>
                     </div>
                     <div class="grid grid-cols-4 border-b border-neutral-200 items-center py-2">
@@ -37,7 +39,7 @@
                             Penulis
                         </div>
                         <div class="col-span-3 px-2">
-                            <h1 class="text-slate-800">{{ $book->author }}</h1>
+                            <h1 class="text-slate-800">{{ $book->formatted_author }}</h1>
                         </div>
                     </div>
                     <div class="grid grid-cols-4 border-b border-neutral-200 items-center py-2">
@@ -45,7 +47,18 @@
                             Penerbit
                         </div>
                         <div class="col-span-3 px-2">
-                            <h1 class="text-slate-800">{{ $book->publisher }}</h1>
+                            <h1 class="text-slate-800">{{ preg_replace('/[:,]/', '', $book->publisher) }} |
+                                {{ preg_replace('/[:,]/', '', $book->publication_place) }}</h1>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-4 border-b border-neutral-200 items-center py-2">
+                        <div class="col-span-1 ">
+                            Deskripsi Fisik
+                        </div>
+                        <div class="col-span-3 px-2">
+                            <h1 class="text-slate-800"><span
+                                    class="font-bold text-neutral-500">({{ $book->physical_shape }})</span>
+                                {{ $book->physical_description }}</h1>
                         </div>
                     </div>
                     <div class="grid grid-cols-4 border-b border-neutral-200 items-center py-2">
@@ -53,7 +66,7 @@
                             ISBN
                         </div>
                         <div class="col-span-3 px-2">
-                            <h1 class="text-slate-800">{{ $book->isbn }}</h1>
+                            <h1 class="text-slate-800">{{ preg_replace('/[-]/', '', $book->isbn) }}</h1>
                         </div>
                     </div>
                     <div class="grid grid-cols-4 border-b border-neutral-200 items-center py-2">
@@ -110,4 +123,5 @@
             </div>
         @endif
     </div>
+
 @endsection

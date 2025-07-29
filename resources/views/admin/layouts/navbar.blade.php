@@ -1,4 +1,4 @@
-<div class="flex flex-col bg-sky-950 w-80 h-screen" x-data="{ active: '{{ Route::currentRouteName() }}' }">
+<div class="sticky top-0 left-0 flex flex-col bg-sky-950 w-80 h-screen" x-data="{ active: '{{ Route::currentRouteName() }}' }">
 
     <div class="flex items-center space-x-3 p-4">
         <i data-lucide="library" class="w-8 h-8 text-neutral-200"></i>

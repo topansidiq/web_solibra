@@ -65,7 +65,7 @@
                 @else
                     @foreach ($collections as $books)
                         @foreach ($books as $book)
-                            <a href="block" href="{{ route('books.show', $book->id) }}">
+                            <a href="block" href="{{ route('books.show', $book->title) }}">
                                 <div
                                     class="book bg-slate-50 rounded shadow border border-slate-300 cursor-pointer hover:scale-105 transition">
                                     <div class="h-50 bg-slate-400">

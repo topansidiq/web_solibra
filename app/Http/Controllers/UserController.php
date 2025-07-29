@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rules\Enum;
 use Throwable;
 
 class UserController extends Controller
@@ -14,16 +15,14 @@ class UserController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $roles = Role::all(); // Fetch all roles for the view
         $users = User::paginate(20); // Paginate users, 20 per page
-        return view("admin.users.index", compact("users", "roles", "user"));
+        return view("admin.users.index", compact("users", "user"));
     }
 
     public function edit(User $user)
     {
         $user = User::findOrFail($user->id);
-        $roles = Role::all();
-        return view('admin.users.edit', compact('user', 'roles'));
+        return view('admin.users.edit', compact('user'));
     }
 
     public function update(Request $request, User $user)
@@ -32,7 +31,7 @@ class UserController extends Controller
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
                 'id_number' => 'required|string|max:20|unique:users,id_number,' . $user->id,
-                'role_id' => 'required|exists:roles,id',
+                'role' => ['required', new Enum(Role::class)],
                 'email' => 'required|email|unique:users,email,' . $user->id,
                 'phone_number' => 'required|string|max:15|unique:users,phone_number,' . $user->id,
             ]);
@@ -61,7 +60,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'id_number' => 'required|string|max:20|unique:users,id_number',
             'phone_number' => 'required|string|max:15|unique:users,phone_number',
-            'role_id' => 'required|exists:roles,id',
+            'role' => ['required', new Enum(Role::class)],
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
             'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
@@ -72,7 +71,7 @@ class UserController extends Controller
             'name' => $request->name,
             'id_number' => $request->id_number,
             'phone_number' => $request->phone_number,
-            'role_id' => $request->role_id,
+            'role' => Role::from($request->role),
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);

@@ -16,139 +16,12 @@
             <div class="flex flex-row gap-3">
 
                 {{-- Add new book button --}}
-                <div x-data="{ open: false }">
-                    <div @click="open = true"
-                        class="flex flex-row items-center justify-around rounded-sm cursor-pointer px-2 py-1 bg-sky-700 text-xs text-neutral-50">
+                <div
+                    class="flex items-center justify-around rounded-sm cursor-pointer px-2 py-1 bg-sky-700 text-xs text-neutral-50">
+                    <a href="{{ route('books.create') }}" class="flex items-center">
                         <i data-lucide="plus" class="block w-4 h-4"></i>
                         <p>Tambah Buku</p>
-                    </div>
-
-                    <div x-cloak x-transition class="modal-add bg-amber-50 shadow-2xl rounded-lg fixed top-32 left-52 w-1/2"
-                        x-show="open">
-                        <div class="bg-neutral-800 w-full p-4 rounded-t-lg cursor-move modal-add-header">
-                            <h2 class="flex align-middle justify-between">
-                                <div>
-                                    <p class="text-xl font-semibold text-neutral-100">Tambah Buku Baru</p>
-                                    <p class="text-xs text-neutral-300">Menu untuk menambah buku baru untuk koleksi buku</p>
-                                </div>
-                                <button @click="open=false"><i class="block w-6 h-6 text-white text-sm cursor-pointer"
-                                        data-lucide="x"></i></button>
-                            </h2>
-                        </div>
-
-                        <form action="{{ route('books.store') }}" method="POST" enctype="multipart/form-data"
-                            class="grid grid-cols-2 gap-4 p-5 w-full">
-                            @csrf
-
-                            <div>
-                                <label for="title" class="block font-semibold">Judul Buku</label>
-                                <input type="text" name="title" id="title"
-                                    class="form-input w-full border-b border-neutral-300 focus: outline-0 p-2 placeholder: text-xs"
-                                    placeholder="Contoh: Pemrograman Web" required>
-                            </div>
-
-                            <div>
-                                <label for="author" class="block font-semibold">Penulis</label>
-                                <input type="text" name="author" id="author"
-                                    class="form-input w-full border-b border-neutral-300 focus: outline-0 p-2 placeholder: text-xs"
-                                    required placeholder="Contoh: Rio, Andi, Rahmat">
-                            </div>
-
-                            <div>
-                                <label for="publisher" class="block font-semibold">Penerbit</label>
-                                <input type="text" name="publisher" id="publisher"
-                                    class="form-input w-full border-b border-neutral-300 focus: outline-0 p-2 placeholder: text-xs"
-                                    placeholder="Contoh: Solok Publisher">
-                            </div>
-
-                            <div>
-                                <label for="year" class="block font-semibold">Tahun</label>
-                                <input type="number" name="year" id="year"
-                                    class="form-input w-full border-b border-neutral-300 focus: outline-0 p-2 placeholder: text-xs"
-                                    min="1900" max="{{ date('Y') }}" placeholder="Contoh: 1998">
-                            </div>
-
-                            <div>
-                                <label for="isbn" class="block font-semibold">ISBN</label>
-                                <input type="text" name="isbn" id="isbn"
-                                    class="form-input w-full border-b border-neutral-300 focus: outline-0 p-2 placeholder: text-xs"
-                                    placeholder="Contoh: 987654321">
-                            </div>
-
-                            <div>
-                                <div x-data="categorySearch({{ $categories->sortByDesc('books_count')->values()->toJson() }})" class="relative">
-                                    <label for="keyword" class="block font-semibold">Kategori</label>
-                                    <input type="text" x-model="search" @focus="show = true"
-                                        @keydown.tab.prevent="selectFirst()" @keydown.enter.prevent="selectFirst()"
-                                        @click.outside="show = false" id="keyword" name="keyword"
-                                        class="form-input w-full border-b border-neutral-300 focus: outline-0 p-2 placeholder: text-xs"
-                                        placeholder="Ketikkan kategori...">
-
-                                    <!-- Dropdown kategori -->
-                                    <div x-show="show"
-                                        class="absolute w-full bg-white shadow border mt-1 rounded z-50 max-h-60 overflow-y-auto">
-                                        <template x-for="(cat, index) in filtered" :key="cat.id">
-                                            <div @click="select(cat)"
-                                                class="px-4 py-2 text-sm hover:bg-neutral-500 hover:text-amber-50 cursor-pointer"
-                                                :class="index === 0 ? 'bg-neutral-200' : ''">
-                                                <span x-text="cat.name"></span>
-                                                <span class="text-xs" x-text="'(' + cat.books_count + ' buku)'"></span>
-                                            </div>
-                                        </template>
-
-                                        <template x-if="filtered.length === 0">
-                                            <div class="px-4 py-2 text-sm text-neutral-400">Tidak ditemukan</div>
-                                        </template>
-                                    </div>
-
-                                    <!-- Tampilkan kategori yang dipilih -->
-                                    <div class="mt-2 flex flex-wrap gap-1">
-                                        <template x-for="(cat, i) in selected" :key="cat.id">
-                                            <div
-                                                class="bg-neutral-700 text-amber-50 px-2 py-1 rounded text-xs flex items-center">
-                                                <span x-text="cat.name"></span>
-                                                <button type="button" class="ml-2 w-5 h-5" @click="remove(cat.id)">
-                                                    x
-                                                </button>
-                                                <input type="hidden" name="categories[]" :value="cat.id">
-                                            </div>
-                                        </template>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div>
-                                <label for="stock" class="block font-semibold">Stok</label>
-                                <input type="number" name="stock" id="stock"
-                                    class="form-input w-full border-b border-neutral-300 focus: outline-0 p-2 placeholder: text-xs"
-                                    min="0" placeholder="Contoh: 23">
-                            </div>
-
-                            <div>
-                                <label for="cover" class="block font-semibold">Cover Buku</label>
-                                <input type="file" name="cover" id="cover"
-                                    class="form-input w-full border-b border-neutral-300 focus: outline-0 p-2 placeholder: text-xs">
-                            </div>
-
-                            <div class="col-span-2">
-                                <label for="description" class="block font-semibold">Deskripsi</label>
-                                <textarea name="description" id="description" rows="5"
-                                    placeholder="Bagian ini bisa di isi dengan sinopsis atau abstrak"
-                                    class="form-textarea w-full border-b border-neutral-300 focus: outline-0 placeholder:text-sm placeholder:text-center resize-y"></textarea>
-                            </div>
-
-                            <div class="col-span-2 pt-4 flex flex-row content-end gap-4 justify-end-safe">
-                                <button @click="open = false"
-                                    class="block rounded-sm font-bold bg-red-500 px-3 py-1 w-28 text-white hover:scale-105 transition-all">Batal</button>
-                                <button type="submit"
-                                    class="bg-emerald-700 px-3 py-1 rounded-sm font-bold text-white block w-28 hover:scale-105 transition-all">
-                                    Simpan
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-
+                    </a>
                 </div>
 
                 {{-- Add new category button --}}
@@ -227,8 +100,7 @@
                                 <label for keyword class="block font-semibold">Pilih Buku</label>
                                 <input type="text" x-model="search" @focus="show = true"
                                     @keydown.tab.prevent="selectFirst()" @keydown.enter.prevent="selectFirst()"
-                                    @click.outside="show = false" id="keyword" name="keyword"
-                                    placeholder="Cari buku..."
+                                    @click.outside="show = false" id="keyword" name="keyword" placeholder="Cari buku..."
                                     class="form-input w-full border-b border-neutral-300 focus:outline-0 p-2 placeholder:text-sm">
 
                                 {{-- Dropdown --}}
@@ -252,8 +124,7 @@
                                 <label for keyword class="block font-semibold">Pilih Pengguna</label>
                                 <input type="text" x-model="search" @focus="show = true"
                                     @keydown.tab.prevent="selectFirst()" @keydown.enter.prevent="selectFirst()"
-                                    @click.outside="show = false" id="keyword" name="keyword"
-                                    placeholder="Cari buku..."
+                                    @click.outside="show = false" id="keyword" name="keyword" placeholder="Cari buku..."
                                     class="form-input w-full border-b border-neutral-300 focus:outline-0 p-2 placeholder:text-sm">
 
                                 {{-- Dropdown --}}
@@ -329,7 +200,7 @@
                             'title' => $book->title,
                             'author' => $book->author,
                             'publisher' => $book->publisher,
-                            'language' => $book->language,
+                            'publication_place' => $book->publication_place,
                             'pages' => $book->pages,
                             'year' => $book->year,
                             'isbn' => $book->isbn,
@@ -341,7 +212,7 @@
                             'created_at' => $book->created_at->format('d M Y'),
                         ]) }}">
                         <div
-                            class="xl:h-70 sm:h-40 bg-teal-600 text-white flex items-center justify-center rounded shadow text-3xl font-bold">
+                            class="xl:h-70 sm:h-40 bg-gradient-to-bl from-sky-700 to-sky-400 text-white flex items-center justify-center rounded shadow text-3xl font-bold">
                             @if ($book->cover)
                                 <img src="{{ asset('storage/' . $book->cover) }}" alt="{{ $book->title }}"
                                     class="w-full h-full object-cover rounded-xl">
@@ -380,7 +251,7 @@
                             <img :src="book.cover" alt="Book Cover" class="w-full h-64 object-cover rounded mb-4" />
                         </template>
                         <template x-if="!book.cover">
-                            <div class="w-full h-64 bg-teal-600 text-white flex items-center justify-center rounded text-5xl font-bold mb-4"
+                            <div class="w-full h-64 bg-gradient-to-bl from-sky-700 to-sky-400 text-white flex items-center justify-center rounded text-5xl font-bold mb-4"
                                 x-text="book.initial"></div>
                         </template>
 

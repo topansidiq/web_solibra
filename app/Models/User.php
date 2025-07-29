@@ -20,7 +20,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'id_number',
-        'role_id',
+        'role',
         'email',
         'password',
         'phone_number',
@@ -31,6 +31,25 @@ class User extends Authenticatable
         'last_education',
         'job'
     ];
+
+    protected $casts = [
+        'role' => Role::class
+    ];
+
+    public function isAdmin(): bool
+    {
+        return $this->role === Role::Admin;
+    }
+
+    public function isLibrarian(): bool
+    {
+        return $this->role === Role::Librarian;
+    }
+
+    public function isMember(): bool
+    {
+        return $this->role === Role::Member;
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -55,11 +74,6 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
-    }
-
-    public function role()
-    {
-        return $this->belongsTo(Role::class);
     }
 
     public function borrows()

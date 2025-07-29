@@ -45,23 +45,22 @@
 
             <div>
                 <label for="role_id" class="block font-semibold">Role</label>
-                <select name="role_id" id="role_id" class="form-select w-full border-b border-slate-400 p-2" required>
+                @php
+                    use App\Models\Role;
+                @endphp
+
+                <select name="role" id="role" class="form-select w-full border-b border-slate-400 p-2" required>
                     <option disabled selected>
-                        Role saat ini:
-                        @if ($user->role_id == 1)
-                            <span>Admin</span>
-                        @elseif ($user->role_id == 2)
-                            <span>Petugas Perpustakaan</span>
-                        @elseif($user->role_id == 4)
-                            <span>Anggota</span>
-                        @endif
+                        Role saat ini: {{ $user->role->label() }}
                     </option>
-                    @foreach ($roles as $role)
-                        <option value="{{ $role->id }}">
-                            {{ ucfirst($role->name) }}
+
+                    @foreach (Role::cases() as $role)
+                        <option value="{{ $role->value }}">
+                            {{ $role->label() }}
                         </option>
                     @endforeach
                 </select>
+
             </div>
 
             <div class="col-span-2 flex justify-end">

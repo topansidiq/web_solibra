@@ -20,7 +20,7 @@ return new class extends Migration
             $table->date('birth_date')->nullable();
             $table->string('last_education')->nullable();
             $table->string('job')->nullable();
-            $table->foreignId('role_id')->constrained()->onDelete('cascade');
+            $table->string('role');
             $table->string('profile_picture')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

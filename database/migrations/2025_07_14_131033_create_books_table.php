@@ -6,27 +6,34 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+
     public function up(): void
     {
+
         Schema::create('books', function (Blueprint $table) {
             $table->id();
+            $table->string('supply_date')->nullable();
+            $table->string('identification_number')->nullable();
+            $table->string('material')->nullable();
+            $table->string('physical_shape')->nullable();
             $table->string('title');
             $table->string('author');
+            $table->string('edition')->nullable();
+            $table->string('publication_place')->nullable();
             $table->string('publisher')->nullable();
-            $table->string('language')->nullable();
-            $table->string('pages')->nullable();
             $table->year('year')->nullable();
+            $table->string('physical_description')->nullable();
+            $table->string('acquisition_source')->nullable();
+            $table->string('acquisition_name')->nullable();
             $table->string('isbn')->unique()->nullable();
+            $table->string('price')->nullable();
+            $table->string('language')->nullable();
             $table->unsignedInteger('stock')->default(0);
             $table->text('description')->nullable();
-            $table->string('cover')->nullable(); // path ke file cover image
+            $table->string('cover')->nullable();
             $table->timestamps();
         });
 
-        // Pivot table untuk relasi banyak ke banyak dengan kategori
         Schema::create('book_category', function (Blueprint $table) {
             $table->foreignId('book_id')->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
@@ -34,11 +41,9 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('books');
+        Schema::dropIfExists('book_category');
     }
 };

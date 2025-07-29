@@ -50,6 +50,12 @@ class BookController extends Controller
         }
     }
 
+    public function create()
+    {
+        $categories = Category::all();
+        return view('admin.books.create', compact('categories'));
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -59,12 +65,22 @@ class BookController extends Controller
             'language' => 'nullable|string',
             'pages' => 'nullable|integer|min:0',
             'year' => 'nullable|integer',
-            'isbn' => 'nullable|string',
+            'isbn' => 'nullable|string|unique:books,isbn',
             'categories' => 'nullable|array',
             'categories.*' => 'exists:categories,id',
             'stock' => 'nullable|integer|min:0',
             'description' => 'nullable|string',
             'cover' => 'nullable|image|max:2048',
+            'supply_date' => 'nullable|date',
+            'identification_number' => 'nullable|string',
+            'material' => 'nullable|string',
+            'physical_shape' => 'nullable|string',
+            'edition' => 'nullable|string',
+            'publication_place' => 'nullable|string',
+            'physical_description' => 'nullable|string',
+            'acquisition_source' => 'nullable|string',
+            'acquisition_name' => 'nullable|string',
+            'price' => 'nullable|string',
         ]);
 
         if ($request->hasFile('cover')) {
@@ -84,18 +100,28 @@ class BookController extends Controller
     {
         try {
             $validated = $request->validate([
-                'title' => 'required|string|max:255',
-                'author' => 'required|string|max:255',
-                'publisher' => 'nullable|string|max:255',
-                'language' => 'nullable|string|max:255',
+                'title' => 'required|string',
+                'author' => 'required|string',
+                'publisher' => 'nullable|string',
+                'language' => 'nullable|string',
                 'pages' => 'nullable|integer|min:0',
-                'year' => 'nullable|integer|min:1900|max:' . date('Y'),
-                'isbn' => 'nullable|string|max:255',
-                'description' => 'nullable|string',
-                'stock' => 'nullable|integer|min:0',
+                'year' => 'nullable|integer',
+                'isbn' => 'nullable|string|unique:books,isbn',
                 'categories' => 'nullable|array',
                 'categories.*' => 'exists:categories,id',
+                'stock' => 'nullable|integer|min:0',
+                'description' => 'nullable|string',
                 'cover' => 'nullable|image|max:2048',
+                'supply_date' => 'nullable|date',
+                'identification_number' => 'nullable|string',
+                'material' => 'nullable|string',
+                'physical_shape' => 'nullable|string',
+                'edition' => 'nullable|string',
+                'publication_place' => 'nullable|string',
+                'physical_description' => 'nullable|string',
+                'acquisition_source' => 'nullable|string',
+                'acquisition_name' => 'nullable|string',
+                'price' => 'nullable|string',
             ]);
 
             // Update buku

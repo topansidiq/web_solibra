@@ -143,7 +143,7 @@
                             <td class="px-4 py-1 border border-slate-300">
                                 <div class="flex items-center justify-between">
                                     <p class="outline-0">
-                                        {{ $borrow->book->title ?? '-' }}
+                                        {{ Str::limit($borrow->book->clean_title, 35) ?? '-' }}
                                     </p>
                                     <form action="{{ route('borrows.destroy', $borrow->id) }}" method="POST"
                                         onsubmit="return confirm('Yakin ingin menghapus peminjaman ini?')">

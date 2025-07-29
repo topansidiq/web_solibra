@@ -25,13 +25,6 @@ class UserFactory extends Factory
     public function definition(): array
     {
 
-        $roleId = Role::whereIn('name', ['admin', 'librarian', 'member'])
-            ->inRandomOrder()
-            ->first()
-            ->id;
-
-
-
         return [
             'name' => fake()->name(),
             'id_number' => $this->faker->unique()->numerify('2025########'),
@@ -42,7 +35,7 @@ class UserFactory extends Factory
             'job' => $this->faker->jobTitle(),
             'phone_number' => fake()->unique()->numerify('08#########'),
             'phone_number_verified' => $this->faker->randomElement(['verified', 'unverified']),
-            'role_id' => $roleId,
+            'role' => fake()->randomElement(Role::cases()),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,7 +23,6 @@ class LoginController extends Controller
 
         $credentials = $request->only('password');
 
-        // Determine whether to use email or phone for login
         if ($request->filled('email')) {
             $credentials['email'] = $request->email;
         } else {
@@ -42,11 +42,11 @@ class LoginController extends Controller
 
     protected function redirectTo(): string
     {
-        $role = Auth::user()->role->name;
+        $role = Auth::user()->role;
 
         return match ($role) {
-            "admin", "librarian" => '/admin/dashboard',
-            "member" => '/member/dashboard',
+            Role::Admin, Role::Librarian => '/admin/dashboard',
+            Role::Member => '/member/dashboard',
             default => '/',
         };
     }
