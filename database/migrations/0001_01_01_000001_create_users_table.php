@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Validation\Rules\Email;
 
 return new class extends Migration
 {
@@ -26,7 +25,7 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('regency')->nullable();
             $table->string('province')->nullable();
-            $table->string('member_status')->nullable();
+            $table->string('member_status')->nullable()->default('new');
             $table->string('jobs')->nullable();
             $table->string('education')->nullable();
             $table->string('class_department')->nullable();
