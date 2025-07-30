@@ -41,6 +41,11 @@ class GuestController extends Controller
         $events = Event::all()->groupBy('status');
         return view('event', compact('events'));
     }
+    public function information()
+    {
+
+        return view('information');
+    }
 
     public function showBook(Book $book)
     {
@@ -59,5 +64,10 @@ class GuestController extends Controller
             ->get();
 
         return view('show.book', compact('book', 'relatedBooks'));
+    }
+
+    public function showByCategory()
+    {
+        return redirect()->route('collection')->with('success', 'Yahh');
     }
 }

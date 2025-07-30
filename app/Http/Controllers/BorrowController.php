@@ -8,14 +8,18 @@ use App\Models\Category;
 use App\Models\Notification;
 use App\Models\User;
 use Carbon\Carbon;
+use Date;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class BorrowController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $borrows = [
+        'max' => 3,
+        'expired' => null,
+        'length' => 0
+    ];
+
     public function index(Request $request)
     {
         $sortBy = $request->get("sort_by", 'borrowed_at');
@@ -81,15 +85,42 @@ class BorrowController extends Controller
         return back()->with('success', 'Peminjaman berhasil diarsipkan.');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $book = Book::find($request->book_id);
-        if ($book->stock <= 0) {
-            return redirect()->back()->with('error', 'Buku tidak tersedia untuk dipinjam.');
-        }
+        // $book = Book::find($request->book_id);
+        // if ($book->stock <= 0) {
+        //     return redirect()->back()->with('error', 'Buku tidak tersedia untuk dipinjam.');
+        // }
+
+        // $user_borrowed = Borrow::where('user_id');
+        // $borrows['length'] = $user_borrowed->count();
+
+        // $validated = $request->validate([
+        //     'book_id' => 'required|exists:books,id',
+        //     'user_id' => 'required|exists:users,id',
+        //     'borrowed_at' => 'required|date',
+        // ]);
+
+        // $borrowedAt = Carbon::parse($validated['borrowed_at']);
+
+
+        // $borrow = Borrow::create([
+        //     'book_id' => $validated['book_id'],
+        //     'user_id' => $validated['user_id'],
+        //     'borrowed_at' => $borrowedAt,
+        //     'due_date' => $borrowedAt->copy()->addDays(14),
+        //     'status' => 'unconfirmed',
+        // ]);
+
+        // Notification::create([
+        //     'user_id' => $borrow->user()->name,
+        //     'type' => 'loan_request',
+        //     'message' => "Peminjaman buku '{$book->title}' telah diajukan pada '{$borrow->borrowed_at}'.",
+        // ]);
+
+        // return redirect()->route('borrows.index')->with('success', 'Peminjaman berhasil dibuat!');
+
+
 
         $validated = $request->validate([
             'book_id' => 'required|exists:books,id',
@@ -97,19 +128,46 @@ class BorrowController extends Controller
             'borrowed_at' => 'required|date',
         ]);
 
-        $borrowedAt = Carbon::parse($validated['borrowed_at']);
+        $userId = $validated['user_id'];
+        $book = Book::findOrFail($validated['book_id']);
 
+        if ($book->stock <= 0) {
+            return redirect()->back()->with('error', 'Buku tidak tersedia untuk dipinjam.');
+        }
+
+        // Ambil semua peminjaman aktif (belum dikembalikan)
+        $activeBorrows = Borrow::where('user_id', $userId)
+            ->whereNull('return_date')
+            ->get();
+
+        // Update array borrows
+        $this->borrows['length'] = $activeBorrows->count();
+
+        $this->borrows['expired'] = $activeBorrows->contains(function ($borrow) {
+            return now()->gt(Carbon::parse($borrow->due_date));
+        });
+
+        if ($this->borrows['expired']) {
+            return redirect()->back()->with('error', 'Ada buku yang belum dikembalikan dan sudah jatuh tempo.');
+        }
+
+        if ($this->borrows['length'] >= $this->borrows['max']) {
+            return redirect()->back()->with('error', 'Kamu telah mencapai batas maksimum peminjaman.');
+        }
+
+        // Lanjutkan membuat peminjaman
+        $borrowedAt = Carbon::parse($validated['borrowed_at']);
 
         $borrow = Borrow::create([
             'book_id' => $validated['book_id'],
-            'user_id' => $validated['user_id'],
+            'user_id' => $userId,
             'borrowed_at' => $borrowedAt,
-            'due_date' => $borrowedAt->copy()->addDays(7),
+            'due_date' => $borrowedAt->copy()->addDays(14),
             'status' => 'unconfirmed',
         ]);
 
         Notification::create([
-            'user_id' => $borrow->user()->name,
+            'user_id' => $userId,
             'type' => 'loan_request',
             'message' => "Peminjaman buku '{$book->title}' telah diajukan pada '{$borrow->borrowed_at}'.",
         ]);

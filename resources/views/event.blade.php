@@ -1,4 +1,4 @@
-@extends('welcome')
+@extends('layouts.app')
 
 @php
     $options = [
@@ -45,7 +45,8 @@
                     {{-- Header berdasarkan mapping --}}
                     <div class="flex items-center justify-center mb-4">
                         <div class="border-t border-gray-300 flex-grow"></div>
-                        <span class="mx-4 text-gray-500 text-sm">{{ $statusLabels[$status] ?? ucfirst($status) }}</span>
+                        <span id="{{ Str::slug($statusLabels[$status]) }}"
+                            class="mx-4 text-gray-500 text-sm">{{ $statusLabels[$status] ?? ucfirst($status) }}</span>
                         <div class="border-t border-gray-300 flex-grow"></div>
                     </div>
 

@@ -16,4 +16,8 @@ class Category extends Model
     {
         return $this->belongsToMany(Book::class);
     }
+    public function getRouteKeyName()
+    {
+        return 'id';
+    }
 }

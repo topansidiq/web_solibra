@@ -10,6 +10,7 @@ use App\Http\Controllers\{
     BookController,
     BorrowController,
     CategoryController,
+    CollectionController,
     DashboardController,
     EventController,
     MemberController,
@@ -22,6 +23,7 @@ Route::get('/', [GuestController::class, 'home'])->name('home');
 Route::get('/collection', [GuestController::class, 'collection'])->name('collection');
 Route::get('/profile', [GuestController::class, 'profile'])->name('profile');
 Route::get('/event', [GuestController::class, 'event'])->name('event');
+Route::get('/information', [GuestController::class, 'information'])->name('information');
 
 // Show Book
 Route::get('/show/book/{book}', [GuestController::class, 'showBook'])->name('show.book');

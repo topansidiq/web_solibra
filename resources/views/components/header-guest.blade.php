@@ -12,33 +12,87 @@
         </div>
 
         {{-- Desktop --}}
-        <nav class="hidden xl:flex gap-6 text-sm items-center content-between">
-
-
+        <nav class="hidden xl:flex gap-6 text-sm items-center content-between" x-data="{ openDropDown: false, active: '{{ request()->route()->getName() }}' }">
             @php
                 $menu = [
                     ['label' => 'Beranda', 'name' => 'home', 'icon' => 'home'],
                     ['label' => 'Daftar Koleksi', 'name' => 'collection', 'icon' => 'book-open'],
                     ['label' => 'Profil', 'name' => 'profile', 'icon' => 'building'],
                     ['label' => 'Kegiatan', 'name' => 'event', 'icon' => 'calendar'],
-
-                    // ['label' => 'Peminjaman', 'name' => 'borrows.index', 'icon' => 'list'],
-                    // ['label' => 'Pengguna', 'name' => 'users.index', 'icon' => 'user'],
+                    ['label' => 'Informasi', 'name' => 'information', 'icon' => 'info'],
                 ];
             @endphp
 
+            @php
+                $options = [
+                    ['status' => 'Akan Datang', 'value' => 'upcoming'],
+                    ['status' => 'Sedang Berlangsung', 'value' => 'ongoing'],
+                    ['status' => 'Sudah Selesai', 'value' => 'completed'],
+                    ['status' => 'Dibatalkan', 'value' => 'cancelled'],
+                ];
+
+                $statusLabels = collect($options)->pluck('status', 'value');
+            @endphp
+
             @foreach ($menu as $item)
-                <div>
+                <div @mouseenter="openDropDown = '{{ $item['name'] }}'" @mouseleave="openDropDown = false" x-transition
+                    x-cloack class="relative">
                     <a href="{{ route($item['name']) }}" @click="active = '{{ $item['name'] }}'"
                         class="flex items-center gap-2 py-2 hover:text-yellow-500 hover:border-b-yellow-500 hover:border-b transition-all text-xs"
                         :class="active === '{{ $item['name'] }}' ? 'border-b border-b-gray-50' : ''">
-
                         <i data-lucide="{{ $item['icon'] }}" class="w-4 h-4"></i>
                         <span>{{ $item['label'] }}</span>
                     </a>
+
+                    @if ($item['name'] === 'information')
+                        <div class="absolute top-full left-0 mt-2 bg-neutral-50 text-neutral-700 shadow-lg w-48 z-50 border border-neutral-500 rounded-md text-sm"
+                            x-show="openDropDown === 'information'" x-transition x-cloack>
+                            <a href="#"
+                                class="block px-4 py-2 hover:bg-yellow-500 hover:text-neutral-50">Informasi
+                                Perpustakaan</a>
+                            <a href="#"
+                                class="block px-4 py-2 hover:bg-yellow-500 hover:text-neutral-50">Informasi Layanan</a>
+                            <a href="#"
+                                class="block px-4 py-2 hover:bg-yellow-500 hover:text-neutral-50">Informasi
+                                Kegiatan</a>
+                            <a href="#"
+                                class="block px-4 py-2 hover:bg-yellow-500 hover:text-neutral-50">Informasi
+                                Lowongan</a>
+                            <a href="#"
+                                class="block px-4 py-2 hover:bg-yellow-500 hover:text-neutral-50">Informasi Sumber
+                                Daya</a>
+                        </div>
+                    @endif
+
+                    @if ($item['name'] === 'event')
+                        <div class="absolute top-full left-0 mt-2 bg-neutral-50 text-neutral-700 shadow-lg w-48 z-50 border border-neutral-500 rounded-md text-sm"
+                            x-show="openDropDown === 'event'" x-transition x-cloak>
+
+                            @foreach ($statusLabels as $status => $events)
+                                <a href="{{ route('event') }}"
+                                    class="block px-4 py-2 hover:bg-yellow-500 hover:text-white">
+                                    {{ $statusLabels[$status] }}
+                                </a>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    @if ($item['name'] === 'collection')
+                        <div class="absolute top-full left-0 mt-2 bg-neutral-50 text-neutral-700 shadow-lg w-48 z-50 border border-neutral-500 rounded-md text-sm"
+                            x-show="openDropDown === 'collection'" x-transition x-cloak>
+
+                            @foreach ($categories as $category)
+                                <a href="{{ route('collection') }}"
+                                    class="block px-4 py-2 hover:bg-yellow-500 hover:text-white">
+                                    {{ $category->name }}
+                                </a>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
             @endforeach
         </nav>
+
 
         <div class="profile hidden lg:flex gap-3 items-center p-3">
             <div class="text-sm">
