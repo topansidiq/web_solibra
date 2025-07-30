@@ -16,26 +16,13 @@ class UserSeeder extends Seeder
     public function run(): void
     {
 
-        // User::factory(200)->create();
-
-        // User::create([
-        //     'name' => "Topan Sidiq",
-        //     'email' => 'salsabilaagustinpy@gmail.com',
-        //     'id_number' => "1305072807020002",
-        //     'email_verified_at' => now(),
-        //     'phone_number' => '082288404233',
-        //     'phone_number_verified' => 'verified',
-        //     'role_id' => 1,
-        //     'password' => Hash::make('Salsabila2311'),
-        //     'remember_token' => "topan12345",
-        // ]);
 
         User::create([
             'name' => 'Salsabila Agustin Putri Yendi',
             'role' => 'member',
             'phone_number' => '082388407308',
             'gender' => 'P',
-            'birth_date' => '2002-07-28',
+            'birth_date' => '2004-08-03',
             'age' => 23,
             'id_type' => 'KTP',
             'id_number' => 1305072807020001,
@@ -46,7 +33,31 @@ class UserSeeder extends Seeder
             'jobs' => 'Mahasiswa',
             'education' => 'S1',
             'class_department' => 'Ilmu Perpustakaan',
-            'email' => 'salsabilaagustingpy@gmail.com',
+            'email' => 'salsabilaagustinnpy@gmail.com',
+            'password' => Hash::make('Salsabila2311'),
+            'remember_token' => 'topan12345',
+            'status_account' => 'active',
+            'expired_date' => now()->addYear(),
+            'profile_picture' => null,
+        ]);
+
+        User::create([
+            'name' => 'Topan Sidiq',
+            'role' => 'admin',
+            'phone_number' => '082288407308',
+            'gender' => 'P',
+            'birth_date' => '2002-07-28',
+            'age' => 23,
+            'id_type' => 'KTP',
+            'id_number' => 1305072807020002,
+            'address' => 'Jl. Contoh No. 123, Padang',
+            'regency' => 'Padang',
+            'province' => 'Sumatera Barat',
+            'member_status' => 'new',
+            'jobs' => 'Mahasiswa',
+            'education' => 'S1',
+            'class_department' => 'Ilmu Perpustakaan',
+            'email' => 'topansidiq28@gmail.com',
             'password' => Hash::make('Salsabila2311'),
             'remember_token' => 'topan12345',
             'status_account' => 'active',
