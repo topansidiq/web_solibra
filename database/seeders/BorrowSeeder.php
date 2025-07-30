@@ -15,7 +15,7 @@ class BorrowSeeder extends Seeder
      */
     public function run(): void
     {
-        Borrow::factory(20)->create()->each(function ($borrow) {
+        Borrow::factory(50)->create()->each(function ($borrow) {
             // Ambil buku yang dipinjam
             $book = $borrow->book;
 

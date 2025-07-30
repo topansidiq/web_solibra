@@ -1,166 +1,46 @@
 @extends('admin.layouts.app')
 
 @section('content')
-    <div class="content flex flex-col flex-auto bg-neutral-50 w-full">
+    <div class="content flex flex-col flex-auto bg-sky-50 w-full">
 
         {{-- Page Header --}}
         <div class="title p-4 flex items-center justify-between">
 
             {{-- Title --}}
             <div class="">
-                <h3 class="text-xl font-bold">Beranda</h3>
-                <p class="text-sm">Menu ini menampilkan aktifitas di dalam aplikasi.</p>
+                <h3 class="text-xl text-neutral-700 font-bold">Beranda</h3>
+                <p class="text-xs text-neutral-500">Menu ini menampilkan aktifitas di dalam aplikasi.</p>
             </div>
 
             {{-- Action --}}
             <div class="flex flex-row gap-3">
 
                 {{-- Add new book button --}}
-                <div x-data="{ open: false }">
-                    <div @click="open = true"
-                        class="flex flex-row items-center justify-around rounded-md cursor-pointer px-2 py-1 bg-amber-500 text-neutral-50">
-                        <i data-lucide="plus" class="block w-5 h-5"></i>
-                        <p class="text-sm">Tambah Buku</p>
-                    </div>
-
-                    <div x-cloak x-transition class="modal-add bg-amber-50 shadow-2xl rounded-lg fixed top-32 left-52 w-1/2"
-                        x-show="open">
-                        <div class="bg-neutral-800 w-full p-4 rounded-t-lg cursor-move modal-add-header">
-                            <h2 class="text-xl font-bold flex align-middle justify-between">
-                                <span class="block text-white">Tambah Buku Baru</span>
-                                <button @click="open=false"><i class="block w-6 h-6 text-white text-sm cursor-pointer"
-                                        data-lucide="x"></i></button>
-                            </h2>
-                        </div>
-
-                        <form action="{{ route('books.store') }}" method="POST" enctype="multipart/form-data"
-                            class="grid grid-cols-2 gap-4 p-5 w-full">
-                            @csrf
-
-                            <div>
-                                <label for="title" class="block font-semibold">Judul Buku</label>
-                                <input type="text" name="title" id="title"
-                                    class="form-input w-full border-b border-neutral-300 focus: outline-0 p-2 placeholder: text-xs"
-                                    placeholder="Contoh: Pemrograman Web" required>
-                            </div>
-
-                            <div>
-                                <label for="author" class="block font-semibold">Penulis</label>
-                                <input type="text" name="author" id="author"
-                                    class="form-input w-full border-b border-neutral-300 focus: outline-0 p-2 placeholder: text-xs"
-                                    required placeholder="Contoh: Rio, Andi, Rahmat">
-                            </div>
-
-                            <div>
-                                <label for="publisher" class="block font-semibold">Penerbit</label>
-                                <input type="text" name="publisher" id="publisher"
-                                    class="form-input w-full border-b border-neutral-300 focus: outline-0 p-2 placeholder: text-xs"
-                                    placeholder="Contoh: Solok Publisher">
-                            </div>
-
-                            <div>
-                                <label for="year" class="block font-semibold">Tahun</label>
-                                <input type="number" name="year" id="year"
-                                    class="form-input w-full border-b border-neutral-300 focus: outline-0 p-2 placeholder: text-xs"
-                                    min="1900" max="{{ date('Y') }}" placeholder="Contoh: 1998">
-                            </div>
-
-                            <div>
-                                <label for="isbn" class="block font-semibold">ISBN</label>
-                                <input type="text" name="isbn" id="isbn"
-                                    class="form-input w-full border-b border-neutral-300 focus: outline-0 p-2 placeholder: text-xs"
-                                    placeholder="Contoh: 987654321">
-                            </div>
-
-                            <div>
-                                <div x-data="categorySearch({{ $categories->sortByDesc('books_count')->values()->toJson() }})" class="relative">
-                                    <label for="keyword" class="block font-semibold">Kategori</label>
-                                    <input type="text" x-model="search" @focus="show = true"
-                                        @keydown.tab.prevent="selectFirst()" @keydown.enter.prevent="selectFirst()"
-                                        @click.outside="show = false" id="keyword" name="keyword"
-                                        class="form-input w-full border-b border-neutral-300 focus: outline-0 p-2 placeholder: text-xs"
-                                        placeholder="Ketikkan kategori...">
-
-                                    <!-- Dropdown kategori -->
-                                    <div x-show="show"
-                                        class="absolute w-full bg-white shadow border mt-1 rounded z-50 max-h-60 overflow-y-auto">
-                                        <template x-for="(cat, index) in filtered" :key="cat.id">
-                                            <div @click="select(cat)"
-                                                class="px-4 py-2 text-sm hover:bg-neutral-500 hover:text-amber-50 cursor-pointer"
-                                                :class="index === 0 ? 'bg-neutral-200' : ''">
-                                                <span x-text="cat.name"></span>
-                                                <span class="text-xs" x-text="'(' + cat.books_count + ' buku)'"></span>
-                                            </div>
-                                        </template>
-
-                                        <template x-if="filtered.length === 0">
-                                            <div class="px-4 py-2 text-sm text-neutral-400">Tidak ditemukan</div>
-                                        </template>
-                                    </div>
-
-                                    <!-- Tampilkan kategori yang dipilih -->
-                                    <div class="mt-2 flex flex-wrap gap-1">
-                                        <template x-for="(cat, i) in selected" :key="cat.id">
-                                            <div
-                                                class="bg-neutral-700 text-amber-50 px-2 py-1 rounded text-xs flex items-center">
-                                                <span x-text="cat.name"></span>
-                                                <button type="button" class="ml-2 w-5 h-5" @click="remove(cat.id)">
-                                                    x
-                                                </button>
-                                                <input type="hidden" name="categories[]" :value="cat.id">
-                                            </div>
-                                        </template>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div>
-                                <label for="stock" class="block font-semibold">Stok</label>
-                                <input type="number" name="stock" id="stock"
-                                    class="form-input w-full border-b border-neutral-300 focus: outline-0 p-2 placeholder: text-xs"
-                                    min="0" placeholder="Contoh: 23">
-                            </div>
-
-                            <div>
-                                <label for="cover" class="block font-semibold">Cover Buku</label>
-                                <input type="file" name="cover" id="cover"
-                                    class="form-input w-full border-b border-neutral-300 focus: outline-0 p-2 placeholder: text-xs">
-                            </div>
-
-                            <div class="col-span-2">
-                                <label for="description" class="block font-semibold">Deskripsi</label>
-                                <textarea name="description" id="description" rows="5"
-                                    placeholder="Bagian ini bisa di isi dengan sinopsis atau abstrak"
-                                    class="form-textarea w-full border-b border-neutral-300 focus: outline-0 placeholder:text-sm placeholder:text-center resize-y"></textarea>
-                            </div>
-
-                            <div class="col-span-2 pt-4 flex flex-row content-end gap-4 justify-end-safe">
-                                <button @click="open = false"
-                                    class="block rounded-sm font-bold bg-red-500 px-3 py-1 w-28 text-white hover:scale-105 transition-all">Batal</button>
-                                <button type="submit"
-                                    class="bg-emerald-700 px-3 py-1 rounded-sm font-bold text-white block w-28 hover:scale-105 transition-all">
-                                    Simpan
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-
+                <div
+                    class="flex items-center justify-around rounded-sm cursor-pointer px-2 py-1 bg-sky-700 text-xs text-neutral-50">
+                    <a href="{{ route('books.create') }}" class="flex items-center">
+                        <i data-lucide="plus" class="block w-4 h-4"></i>
+                        <p>Tambah Buku</p>
+                    </a>
                 </div>
 
                 {{-- Add new category button --}}
                 <div x-data="{ open: false }">
                     <div @click="open = true"
-                        class="flex flex-row items-center justify-around cursor-pointer rounded-md px-2 py-1 bg-teal-950 text-slate-200">
-                        <i data-lucide="plus" class="block w-5 h-5"></i>
-                        <p class="text-sm">Tambah Kategori</p>
+                        class="flex flex-row items-center justify-around cursor-pointer rounded-md px-2 py-1 bg-sky-700 text-neutral-50 text-xs">
+                        <i data-lucide="plus" class="block w-4 h-4"></i>
+                        <p>Tambah Kategori</p>
                     </div>
 
-                    <div x-cloak x-transition class="modal-add bg-white shadow-2xl rounded-lg fixed top-32 left-52 w-fit"
-                        x-show="open">
-                        <div class="bg-teal-950 w-full p-4 rounded-t-lg cursor-move modal-add-header">
-                            <h2 class="text-xl font-bold flex align-middle justify-between">
-                                <span class="block text-white">Tambah Kategori Baru</span>
+                    <div x-cloak x-transition
+                        class="modal-add bg-neutral-50 shadow-2xl rounded-lg fixed top-32 left-52 w-1/3" x-show="open">
+                        <div class="bg-sky-950 p-4 rounded-t-lg cursor-move modal-add-header">
+                            <h2 class="flex align-middle justify-between">
+                                <div>
+                                    <p class="text-xl font-semibold text-neutral-100">Tambah Kategori Baru</p>
+                                    <p class="text-xs text-neutral-300">Menu untuk menambah kategori baru untuk sebuah
+                                        koleksi</p>
+                                </div>
                                 <button @click="open=false"><i class="block w-6 h-6 text-white text-sm cursor-pointer"
                                         data-lucide="x"></i></button>
                             </h2>
@@ -174,14 +54,14 @@
                                 <label for="name" class="block font-semibold">Kategori</label>
                                 <input type="text" name="name" id="name"
                                     class="form-input w-full border-b border-neutral-300 focus: outline-0 p-2 placeholder: text-sm"
-                                    placeholder="Contoh: Pemrograman Web" required>
+                                    placeholder="Masukkan kategori baru..." required>
                             </div>
 
                             <div class="col-span-2 pt-4 flex flex-row content-end gap-4 justify-end-safe">
                                 <button @click="open = false"
-                                    class="block rounded-sm font-bold bg-red-500 px-3 py-1 w-28 text-white hover:scale-105 transition-all">Batal</button>
+                                    class="block rounded-sm font-bold bg-red-700 px-3 py-1 w-28 text-white hover:scale-105 transition-all">Batal</button>
                                 <button type="submit"
-                                    class="bg-emerald-700 px-3 py-1 rounded-sm font-bold text-white block w-28 hover:scale-105 transition-all">
+                                    class="bg-sky-700 px-3 py-1 rounded-sm font-bold text-white block w-28 hover:scale-105 transition-all">
                                     Simpan
                                 </button>
                             </div>
@@ -193,16 +73,19 @@
                 {{-- Add new borrow button --}}
                 <div x-data="{ open: false }">
                     <div @click="open = true"
-                        class="flex flex-row items-center justify-around cursor-pointer rounded-md px-2 py-1 bg-teal-950 text-slate-200">
-                        <i data-lucide="plus" class="block w-5 h-5"></i>
-                        <p class="text-sm">Tambah Peminjaman</p>
+                        class="flex flex-row items-center justify-around cursor-pointer rounded-md px-2 py-1 bg-sky-700 text-neutral-200">
+                        <i data-lucide="plus" class="block w-4 h-4"></i>
+                        <p class="text-xs">Tambah Peminjaman</p>
                     </div>
 
                     <div x-cloak x-transition class="modal-add bg-white shadow-2xl rounded-lg fixed top-32 left-52 w-fit"
                         x-show="open">
-                        <div class="bg-teal-950 w-full p-4 rounded-t-lg cursor-move modal-add-header">
-                            <h2 class="text-xl font-bold flex align-middle justify-between">
-                                <span class="block text-white">Tambah Peminjaman Baru</span>
+                        <div class="bg-sky-950 w-full p-4 rounded-t-lg cursor-move modal-add-header">
+                            <h2 class="flex align-middle justify-between">
+                                <div>
+                                    <p class="text-xl font-semibold text-neutral-100">Tambah Peminjaman Baru</p>
+                                    <p class="text-xs text-neutral-300">Menu untuk membuat peminjaman buku/koleksi</p>
+                                </div>
                                 <button @click="open=false"><i class="block w-6 h-6 text-white text-sm cursor-pointer"
                                         data-lucide="x"></i></button>
                             </h2>
@@ -217,8 +100,7 @@
                                 <label for keyword class="block font-semibold">Pilih Buku</label>
                                 <input type="text" x-model="search" @focus="show = true"
                                     @keydown.tab.prevent="selectFirst()" @keydown.enter.prevent="selectFirst()"
-                                    @click.outside="show = false" id="keyword" name="keyword"
-                                    placeholder="Cari buku..."
+                                    @click.outside="show = false" id="keyword" name="keyword" placeholder="Cari buku..."
                                     class="form-input w-full border-b border-neutral-300 focus:outline-0 p-2 placeholder:text-sm">
 
                                 {{-- Dropdown --}}
@@ -242,8 +124,7 @@
                                 <label for keyword class="block font-semibold">Pilih Pengguna</label>
                                 <input type="text" x-model="search" @focus="show = true"
                                     @keydown.tab.prevent="selectFirst()" @keydown.enter.prevent="selectFirst()"
-                                    @click.outside="show = false" id="keyword" name="keyword"
-                                    placeholder="Cari buku..."
+                                    @click.outside="show = false" id="keyword" name="keyword" placeholder="Cari buku..."
                                     class="form-input w-full border-b border-neutral-300 focus:outline-0 p-2 placeholder:text-sm">
 
                                 {{-- Dropdown --}}
@@ -280,15 +161,15 @@
                             <!-- Tombol -->
                             <div class="col-span-2 pt-4 flex justify-end gap-4">
                                 <button type="reset"
-                                    class="block rounded-sm font-bold bg-red-500 px-3 py-1 w-28 text-white hover:scale-105 transition-all">
+                                    class="block rounded-sm font-bold bg-red-700 px-3 py-1 w-28 text-white hover:scale-105 transition-all">
                                     Reset
                                 </button>
                                 <button type="button" @click="openAddborrowModal = false"
-                                    class="block rounded-sm font-bold bg-red-500 px-3 py-1 w-28 text-white hover:scale-105 transition-all">
+                                    class="block rounded-sm font-bold bg-red-700 px-3 py-1 w-28 text-white hover:scale-105 transition-all">
                                     Batal
                                 </button>
                                 <button type="submit"
-                                    class="bg-emerald-700 px-3 py-1 rounded-sm font-bold text-white block w-28 hover:scale-105 transition-all">
+                                    class="bg-sky-700 px-3 py-1 rounded-sm font-bold text-white block w-28 hover:scale-105 transition-all">
                                     Simpan
                                 </button>
                             </div>
@@ -307,7 +188,10 @@
 
         {{-- New Book --}}
         <div class="mx-4 p-4 shadow rounded-xl bg-white text-sm text-slate-800 w-auto h-fit">
-            <h2 class="text-lg font-bold">Buku Terbaru</h2>
+            <div>
+                <h2 class="text-lg text-neutral-700 font-bold">Buku Terbaru</h2>
+                <p class="text-xs text-neutral-500">6 buku terbaru ditambahkan</p>
+            </div>
 
             <div class="py-2 grid xl:grid-cols-6 gap-2 sm:grid-cols-3" x-data="{ open: false, book: {} }" x-ref="modal">
                 @forelse ($latestBooks as $book)
@@ -316,34 +200,31 @@
                             'title' => $book->title,
                             'author' => $book->author,
                             'publisher' => $book->publisher,
+                            'publication_place' => $book->publication_place,
+                            'pages' => $book->pages,
                             'year' => $book->year,
                             'isbn' => $book->isbn,
                             'stock' => $book->stock,
                             'description' => $book->description,
-                            'cover' => $book->cover ? asset('storage/covers/' . $book->cover) : '',
+                            'cover' => $book->cover ? asset('storage/' . $book->cover) : '',
                             'initial' => $book->initial,
                             'categories' => $book->categories->pluck('name')->join(', '),
                             'created_at' => $book->created_at->format('d M Y'),
                         ]) }}">
                         <div
-                            class="xl:h-70 sm:h-40 bg-teal-600 text-white flex items-center justify-center rounded shadow text-3xl font-bold">
+                            class="xl:h-70 sm:h-40 bg-gradient-to-bl from-sky-700 to-sky-400 text-white flex items-center justify-center rounded shadow text-3xl font-bold">
                             @if ($book->cover)
-                                <img src="{{ asset('storage/covers/' . $book->cover) }}" alt="{{ $book->title }}"
+                                <img src="{{ asset('storage/' . $book->cover) }}" alt="{{ $book->title }}"
                                     class="w-full h-full object-cover rounded-xl">
                             @else
                                 {{ $book->initial }}
                             @endif
                         </div>
                         <div class="pt-2">
-                            <strong>{{ $book->title }}</strong><br>
-                            <p class="text-xs"> {{ $book->author }} </p>
-                            <p class="text-xs">
-                                @foreach ($book->categories as $category)
-                                    {{ $category->name }},
-                                @endforeach
-                            </p>
+                            <strong>{{ $book->title }} ({{ $book->year }})</strong><br>
+                            <p class="text-xs">Penulis: {{ $book->author }} </p>
                             <span class="text-xs text-slate-500">Ditambahkan pada
-                                {{ $book->created_at->format('d M Y') }}</span>
+                                {{ $book->created_at->diffForHumans() }}</span>
                         </div>
                     </div>
                 @empty
@@ -370,7 +251,7 @@
                             <img :src="book.cover" alt="Book Cover" class="w-full h-64 object-cover rounded mb-4" />
                         </template>
                         <template x-if="!book.cover">
-                            <div class="w-full h-64 bg-teal-600 text-white flex items-center justify-center rounded text-5xl font-bold mb-4"
+                            <div class="w-full h-64 bg-gradient-to-bl from-sky-700 to-sky-400 text-white flex items-center justify-center rounded text-5xl font-bold mb-4"
                                 x-text="book.initial"></div>
                         </template>
 
@@ -379,6 +260,14 @@
                             <div>
                                 <strong>Penerbit</strong>
                                 <span class="block text-xs text-slate-700" x-text="book.publisher"></span>
+                            </div>
+                            <div>
+                                <strong>Bahasa</strong>
+                                <span class="block text-xs text-slate-700" x-text="book.language"></span>
+                            </div>
+                            <div>
+                                <strong>Halaman</strong>
+                                <span class="block text-xs text-slate-700" x-text="book.pages"></span>
                             </div>
                             <div>
                                 <strong>Tahun</strong>

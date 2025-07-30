@@ -13,7 +13,7 @@ class GuestController extends Controller
     {
         $latestBook = Book::latest()->take(6)->get();
 
-        return view('welcome', compact('latestBook'));
+        return view('home', compact('latestBook'));
     }
 
     public function collection(Request $request)

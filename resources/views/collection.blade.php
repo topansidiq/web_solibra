@@ -1,4 +1,6 @@
-@extends('welcome')
+@extends('layouts.app')
+
+@section('title', 'Koleksi | Perpustakaan Umum Kota Solok')
 
 @section('content')
     <div>
@@ -59,7 +61,7 @@
             </div>
             <div class=" bg-gray-50 gap-4 p-4 grid grid-cols-6 mx-auto content-around">
                 @foreach ($books as $book)
-                    <a href="{{ route('show.book', $book) }}">
+                    <a href="{{ route('show.book', $book->id) }}">
                         <div
                             class="book h-full bg-slate-50 rounded shadow border border-slate-300 cursor-pointer hover:scale-105 transition">
                             <div class="h-fit bg-slate-400">

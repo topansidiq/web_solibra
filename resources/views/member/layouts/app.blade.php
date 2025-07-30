@@ -5,16 +5,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>SOLIBRA - Perpustakaan Umum Kota Solok</title>
+    <title>@yield('title', 'Perpustakaan Umum Kota Solok')</title>
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
 </head>
 
-<body class="scrollbar-custom  overflow-y-scroll hide-scrollbar">
-    <div class="flex flex-col items-center justify-between h-screen w-screen">
-        @include('member.layouts.header')
-        @yield('content')
-        <x-footer-guest />
+<body class="bg-white">
+    @if (session('success'))
+        <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 4000)"
+            class="fixed top-5 bg-sky-500 text-white px-4 py-3 rounded shadow z-50">
+            {{ session('success') }}
+            <button @click="show = false" class="ml-2 font-bold">×</button>
+        </div>
+    @endif
+
+
+    @include('member.layouts.header')
+    @yield('content')
+    <div class="static bottom-0">
+        @include('components.footer-guest')
     </div>
 </body>
 

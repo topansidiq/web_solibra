@@ -1,19 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>SOLIBRA - Perpustakaan Umum Kota Solok</title>
-    @vite('resources/css/app.css')
-    @vite('resources/js/app.js')
-</head>
+@section('title', 'Beranda | Perpustakaan Umum Kota Solok')
 
-<body>
+@section('content')
     <x-header-guest />
 
-    @if (request()->is('/') || request()->is(app()->getLocale()) || request()->is('home'))
+    @if (request()->is('/') || request()->is('home'))
         <main>
             <div>
                 <section
@@ -21,14 +13,15 @@
                     style="background-image: url({{ asset('img/Perpustakaan_Umum_Kota_Solok.jpg') }})">
                     <div class="md:p-10 lg:p-16 p-5">
                         <h1 class="text-3xl md:text-5xl font-extrabold leading-tight mb-4">
-                            <span class="block text-4xl">
-                                {{ __('message.welcome') }}
+                            <span class="block text-xl">Selamat Datang di</span>
+                            <span>
+                                Perpustakaan<br>Umum Kota Solok
                             </span>
                         </h1>
                         <div class="hidden lg:flex gap-4">
                             <a href="#"
                                 class=" bg-yellow-500 hover:bg-yellow-700 text-white px-5 py-2 rounded-full shadow-md transition duration-300">
-                                {{ __('message.contact_us') }}
+                                Hubungi Kami
                             </a>
                         </div>
                     </div>
@@ -142,6 +135,4 @@
         @yield('content')
     @endif
     <x-footer-guest />
-</body>
-
-</html>
+@endsection

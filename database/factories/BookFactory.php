@@ -21,14 +21,25 @@ class BookFactory extends Factory
     {
 
         return [
-            'title' => $this->faker->sentence(5),
+            'supply_date' => $this->faker->date(),
+            'identification_number' => $this->faker->unique()->regexify('[A-Z]{3}-[0-9]{4}'),
+            'material' => $this->faker->randomElement(['Monograf', 'Multimedia']),
+            'physical_shape' => $this->faker->randomElement(['Buku', 'Majalah', 'CD']),
+            'title' => $this->faker->sentence(3),
             'author' => $this->faker->name(),
+            'edition' => $this->faker->randomElement(['Cet.1', 'Cetakan II', 'Revisi']),
+            'publication_place' => $this->faker->city(),
             'publisher' => $this->faker->company(),
             'year' => $this->faker->year(),
+            'physical_description' => $this->faker->sentence(),
+            'acquisition_source' => $this->faker->randomElement(['Pembelian', 'Hibah', 'Donasi']),
+            'acquisition_name' => $this->faker->company(),
             'isbn' => $this->faker->unique()->isbn13(),
-            'stock' => $this->faker->numberBetween(0, 100),
+            'price' => $this->faker->randomNumber(5),
+            'language' => $this->faker->randomElement(['Indonesia', 'Inggris']),
+            'stock' => $this->faker->numberBetween(1, 10),
             'description' => $this->faker->paragraph(),
-            'cover' => 'covers/default.jpg',
+            'cover' => null, // or use fake image path if needed
         ];
     }
 }

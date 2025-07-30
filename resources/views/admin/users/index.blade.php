@@ -58,18 +58,24 @@
                                 placeholder="Contoh: email@gmail.com" value="{{ old('email') }}">
                         </div>
 
+                        @php
+                            use App\Models\Role;
+                        @endphp
+
                         <div>
-                            <label for="role_id" class="block font-semibold">Role</label>
-                            <select name="role_id" id="role_id" class="form-select w-full border-b border-slate-400 p-2"
+                            <label for="role" class="block font-semibold">Role</label>
+                            <select name="role" id="role" class="form-select w-full border-b border-slate-400 p-2"
                                 required>
                                 <option disabled selected>Pilih Role</option>
-                                @foreach ($roles as $role)
-                                    <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>
-                                        {{ ucfirst($role->name) }}
+                                @foreach (Role::cases() as $role)
+                                    <option value="{{ $role->value }}"
+                                        {{ old('role') === $role->value ? 'selected' : '' }}>
+                                        {{ $role->label() }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
+
 
                         <div>
                             <label for="profile_picture" class="block font-semibold">Foto Profil</label>
@@ -150,14 +156,9 @@
                             </td>
                             <td class="px-4 py-1 border border-slate-300 text-center">{{ $user->id_number }}</td>
                             <td class="px-4 py-1 border border-slate-300 text-center">
-                                @if ($user->role_id == 4)
-                                    <span>Anggota</span>
-                                @elseif ($user->role_id == 2)
-                                    <span>Petugas Perpustakaan</span>
-                                @elseif ($user->role_id == 1)
-                                    <span>Admin</span>
-                                @endif
+                                {{ $user->role->label() }}
                             </td>
+
                             <td class="px-4 py-1 border border-slate-300 text-center">{{ $user->created_at }}</td>
                             <td class="px-4 py-1 border border-slate-300 text-center mx-auto">
                                 @if ($user->phone_number_verified === 'unverified')

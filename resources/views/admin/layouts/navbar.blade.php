@@ -1,18 +1,18 @@
-<div class="flex flex-col bg-teal-950 w-80 h-screen" x-data="{ active: '{{ Route::currentRouteName() }}' }">
+<div class="sticky top-0 left-0 flex flex-col bg-sky-950 w-80 h-screen" x-data="{ active: '{{ Route::currentRouteName() }}' }">
 
     <div class="flex items-center space-x-3 p-4">
-        <i data-lucide="library" class="w-8 h-8 text-teal-400"></i>
+        <i data-lucide="library" class="w-8 h-8 text-neutral-200"></i>
 
         <div class="logo leading-tight">
-            <p class="font-extrabold font-serif text-teal-400 text-lg">SOLIBRA</p>
-            <p class="text-xs text-slate-300">Perpustakaan Umum Kota Solok</p>
+            <p class="font-extrabold font-serif text-neutral-200 text-lg">SOLIBRA</p>
+            <p class="text-xs text-neutral-400">Perpustakaan Umum Kota Solok</p>
         </div>
     </div>
 
     <div class="flex items-center space-x-3 p-4">
         <div class="logo leading-tight">
-            <p class="text-slate-50 text-xs font-bold">Admin: {{ Auth::user()->id }}</p>
-            <p class="text-xs text-slate-300">{{ Auth::user()->name }}</p>
+            <p class="text-neutral-50 text-xs font-bold">Admin: {{ Auth::user()->id }}</p>
+            <p class="text-xs text-neutral-300">{{ Auth::user()->name }}</p>
         </div>
     </div>
 
@@ -23,14 +23,14 @@
             ['label' => 'Kategori', 'name' => 'categories.index', 'icon' => 'layers'],
             ['label' => 'Peminjaman', 'name' => 'borrows.index', 'icon' => 'list'],
             ['label' => 'Pengguna', 'name' => 'users.index', 'icon' => 'user'],
-            ['label' => 'Acara', 'name' => 'events.index', 'icon' => 'calendar'],
+            ['label' => 'Notifikasi', 'name' => 'notifications.index', 'icon' => 'bell'],
         ];
     @endphp
 
     @foreach ($menu as $item)
         <a href="{{ route($item['name']) }}" @click="active = '{{ $item['name'] }}'"
-            class="flex items-center gap-2 px-4 py-2 hover:bg-teal-400 hover:text-teal-950 transition-all text-xs"
-            :class="active === '{{ $item['name'] }}' ? 'bg-teal-400 text-teal-950' : 'bg-teal-950 text-slate-200'">
+            class="flex items-center gap-2 px-4 py-2 hover:bg-neutral-400 hover:text-sky-950 transition-all text-xs"
+            :class="active === '{{ $item['name'] }}' ? 'bg-neutral-400 text-sky-950' : 'text-neutral-200'">
 
             <i data-lucide="{{ $item['icon'] }}" class="w-4 h-4"></i>
             <span>{{ $item['label'] }}</span>

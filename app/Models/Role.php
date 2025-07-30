@@ -4,10 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Role extends Model
+enum Role: string
 {
-    public function users()
+    case Admin = 'admin';
+    case Librarian = 'librarian';
+    case Member = 'member';
+
+    public function label(): string
     {
-        return $this->hasMany(User::class);
+        return match ($this) {
+            self::Admin => 'Administrator',
+            self::Librarian => 'Pustakawan',
+            self::Member => 'Anggota',
+        };
     }
 }

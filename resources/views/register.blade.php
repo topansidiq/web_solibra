@@ -86,7 +86,7 @@
                 <div>
                     <label for="last_education" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Lahir <span
                             class="text-xs text-neutral-400">(Sesuai KTP)</span> </label>
-                    <select name="role_id" id="role_id" required
+                    <select name="last_education" id="last_education" required
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm">
                         <option disabled selected>Pilih Pendidikan Terakhir</option>
                         <option value="Tidak ada">
@@ -139,22 +139,20 @@
                         placeholder="Contoh: 081234567890" value="{{ old('phone_number') }}">
                 </div>
                 <div>
-                    <label for="role_id" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                    <select name="role_id" id="role_id"
+                    <label for="role" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <select name="role" id="role"
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
                         required>
                         <option disabled selected>Pilih Role</option>
-                        @foreach ($roles as $role)
-                            @if ($role->id == 1 || $role->id == 2 || $role->id == 3)
-                                <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}
-                                    disabled>
-                                    {{ ucfirst($role->name) }} <span class="text-xs text-neutral-400">(Khusus
-                                        petugas)</span>
+                        @foreach (\App\Models\Role::cases() as $role)
+                            @if ($role->value == 'admin' || $role->value == 'librarian')
+                                <option value="{{ $role->value }}" disabled>
+                                    {{ $role->label() }} (Khusus Petugas)
                                 </option>
                             @else
-                                <option value="{{ $role->id }}"
-                                    {{ old('role_id') == $role->id ? 'selected' : '' }}>
-                                    {{ ucfirst($role->name) }}
+                                <option value="{{ $role->value }}"
+                                    {{ old('role') == $role->value ? 'selected' : '' }}>
+                                    {{ ucfirst($role->label()) }}
                                 </option>
                             @endif
                         @endforeach

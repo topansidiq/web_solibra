@@ -46,6 +46,20 @@
                                     placeholder="Masukkan nama penerbit...." required="" value="{{ $book->publisher }}">
                             </div>
                             <div>
+                                <label for="language"
+                                    class="block mb-2 text-sm font-medium text-neutral-900 dark:text-white">Bahasa</label>
+                                <input type="text" name="language" id="language"
+                                    class="bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="Masukkan bahasa...." required="" value="{{ $book->language }}">
+                            </div>
+                            <div>
+                                <label for="pages"
+                                    class="block mb-2 text-sm font-medium text-neutral-900 dark:text-white">Halaman</label>
+                                <input type="number" name="pages" id="pages"
+                                    class="bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="Masukkan nama penerbit...." required="" value="{{ $book->pages }}">
+                            </div>
+                            <div>
                                 <label for="year"
                                     class="block mb-2 text-sm font-medium text-neutral-900 dark:text-white">Tahun</label>
                                 <input type="number" name="year" id="year"

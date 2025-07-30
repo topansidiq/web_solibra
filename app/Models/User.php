@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * @property \Illuminate\Database\Eloquent\Collection|\App\Models\Notification[] $notifications
+ */
+
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -19,18 +23,59 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'role',
+        'phone_number',
+        'gender',
+        'birth_date',
+        'age',
+        'id_type',
         'id_number',
-        'role_id',
+        'address',
+        'regence',
+        'province',
+        'member_status',
+        'jobs',
+        'education',
+        'class_department',
         'email',
         'password',
-        'phone_number',
+        'status_account',
+        'expired_date',
         'profile_picture',
-        'gender',
-        'place_birth',
-        'birth_date',
-        'last_education',
-        'job'
     ];
+
+
+    protected $casts = [
+        'role' => Role::class
+    ];
+
+    public function isAdmin(): bool
+    {
+        return $this->role === Role::Admin;
+    }
+
+    public function isLibrarian(): bool
+    {
+        return $this->role === Role::Librarian;
+    }
+
+    public function isMember(): bool
+    {
+        return $this->role === Role::Member;
+    }
+
+    public function otpCodes()
+    {
+        return $this->hasMany(OTP::class);
+    }
+
+
+    // @phpstan-ignore-next-line
+    public function notifications()
+    {
+        return $this->hasMany(\App\Models\Notification::class);
+    }
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -55,11 +100,6 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
-    }
-
-    public function role()
-    {
-        return $this->belongsTo(Role::class);
     }
 
     public function borrows()

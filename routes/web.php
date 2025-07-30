@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\GuestController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\OTPController;
+use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\{
@@ -37,18 +41,23 @@ Route::group(
         Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
         Route::post('/register', [RegisterController::class, 'register']);
 
-        // 🔒 Member Routes
-        Route::middleware(['auth', 'role:member'])->group(function () {
-            Route::get('/member/dashboard', [MemberController::class, 'dashboard'])->name('member.index');
-            Route::get('/member/collection', [MemberController::class, 'collection'])->name('member.collection');
-            Route::get('/member/profile', [MemberController::class, 'profile'])->name('member.profile');
-            Route::patch('/users/{user}/verified-phone-number', [UserController::class, 'verifiedPhoneNumber'])->name('users.verified-phone-number');
-            Route::get('/member/borrow', [MemberController::class, 'borrow'])->name('member.borrow');
-        });
-    }
-);
+// Member/User Routes
+Route::middleware(['auth', 'role:member'])->group(function () {
+    Route::get('/member/dashboard', [MemberController::class, 'dashboard'])->name('member.index');
 
-// 🔒 Admin or Librarian Routes
+    Route::get('/member/collection', [MemberController::class, 'collection'])->name('member.collection');
+    Route::get('/member/profile', [MemberController::class, 'profile'])->name('member.profile');
+    Route::get('/member/account', [MemberController::class, 'account'])->name('member.account');
+
+    // Borrow Menu
+    Route::get('/member/borrow', [MemberController::class, 'borrow'])->name('member.borrow');
+    // Route::patch('/borrows/{borrow}', [BorrowController::class, 'showBorrowForm'])->name('member.borrow');
+
+    // Phone Number Verification
+    Route::get('/member/verification', [MemberController::class, 'phoneNumberVerification'])->name('member.verification');
+});
+
+// Admin or Librarian Routes
 Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
@@ -68,4 +77,19 @@ Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
     Route::patch('/borrows/{borrow}/return', [BorrowController::class, 'return'])->name('borrows.return');
     Route::patch('/borrows/{borrow}/overdue', [BorrowController::class, 'overdue'])->name('borrows.overdue');
     Route::patch('/borrows/{borrow}/archive', [BorrowController::class, 'archive'])->name('borrows.archive');
+});
+
+// All User Route
+Route::middleware(['auth', 'role:admin,librarian,member'])->group(function () {
+
+    // Notification
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+
+    // Borrow
+    Route::patch('/users/{user}/verified-phone-number', [UserController::class, 'verifiedPhoneNumber'])->name('users.verified-phone-number');
+
+    // WhatsApp Bot
+    Route::post('/otp/send', [OTPController::class, 'sendOtp'])->name('otp.send');
+    Route::post('/otp/verify', [OTPController::class, 'verifyOtp'])->name('otp.verify');
 });
