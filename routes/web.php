@@ -1,27 +1,33 @@
 <?php
 
-use App\Http\Controllers\GuestController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OTPController;
-use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BookController;
-use App\Http\Controllers\BorrowController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\MemberController;
-use App\Http\Controllers\UserController;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use App\Http\Controllers\{
+    GuestController,
+    RegisterController,
+    LoginController,
+    BookController,
+    BorrowController,
+    CategoryController,
+    DashboardController,
+    EventController,
+    MemberController,
+    UserController
+};
 
-// Guest
+
+// ✅ Guest Routes
 Route::get('/', [GuestController::class, 'home'])->name('home');
 Route::get('/collection', [GuestController::class, 'collection'])->name('collection');
 Route::get('/profile', [GuestController::class, 'profile'])->name('profile');
+Route::get('/event', [GuestController::class, 'event'])->name('event');
 
-// Show
+// ✅ Show Book
 Route::get('/show/book/{book}', [GuestController::class, 'showBook'])->name('show.book');
 
-// Authentication Routes
+// ✅ Auth Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -53,12 +59,13 @@ Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
     Route::resource('categories', CategoryController::class);
     Route::resource('borrows', BorrowController::class);
     Route::resource('users', UserController::class);
+    Route::resource('events', EventController::class);
 
-    // Custom Book routes
+    // Custom book routes
     Route::put('/books/{book}', [BookController::class, 'update'])->name('books.update');
     Route::get('/books/search', [BookController::class, 'search'])->name('books.search');
 
-    // Borrow custom actions
+    // Custom borrow actions
     Route::patch('/borrows/{borrow}/confirm', [BorrowController::class, 'confirm'])->name('borrows.confirm');
     Route::patch('/borrows/{borrow}/return', [BorrowController::class, 'return'])->name('borrows.return');
     Route::patch('/borrows/{borrow}/overdue', [BorrowController::class, 'overdue'])->name('borrows.overdue');

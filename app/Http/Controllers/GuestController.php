@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\Category;
+use App\Models\Event;
 use Illuminate\Http\Request;
 
 class GuestController extends Controller
@@ -35,6 +36,11 @@ class GuestController extends Controller
     {
         return view('profile');
     }
+    public function event()
+    {
+        $events = Event::all()->groupBy('status');
+        return view('event', compact('events'));
+    }
 
     public function showBook(Book $book)
     {
@@ -46,7 +52,7 @@ class GuestController extends Controller
         $relatedBooks = Book::whereHas('categories', function ($query) use ($categoryIds) {
             $query->whereIn('categories.id', $categoryIds);
         })
-            ->where('id', '!=', $book->id) // Jangan tampilkan dirinya sendiri
+            ->where('id', '!=', $book)
             ->with('categories')
             ->latest()
             ->take(6)
