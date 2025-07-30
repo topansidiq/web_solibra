@@ -1,10 +1,9 @@
 <?php
 
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\OTPController;
 use Illuminate\Support\Facades\Route;
-use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\{
+    NotificationController,
+    OTPController,
     GuestController,
     RegisterController,
     LoginController,
@@ -18,16 +17,16 @@ use App\Http\Controllers\{
 };
 
 
-// ✅ Guest Routes
+// Guest Routes
 Route::get('/', [GuestController::class, 'home'])->name('home');
 Route::get('/collection', [GuestController::class, 'collection'])->name('collection');
 Route::get('/profile', [GuestController::class, 'profile'])->name('profile');
 Route::get('/event', [GuestController::class, 'event'])->name('event');
 
-// ✅ Show Book
+// Show Book
 Route::get('/show/book/{book}', [GuestController::class, 'showBook'])->name('show.book');
 
-// ✅ Auth Routes
+// Auth Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
