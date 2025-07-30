@@ -1,9 +1,7 @@
 <?php
 
-use App\Http\Controllers\GuestController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OTPController;
-use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\{
@@ -19,27 +17,22 @@ use App\Http\Controllers\{
     UserController
 };
 
-Route::group(
-    [
-        'prefix' => LaravelLocalization::setLocale(),
-        'middleware' => ['localize', 'localeSessionRedirect', 'localizationRedirect']
-    ],
-    function () {
-        // ✅ Guest Routes
-        Route::get('/', [GuestController::class, 'home'])->name('home');
-        Route::get('/collection', [GuestController::class, 'collection'])->name('collection');
-        Route::get('/profile', [GuestController::class, 'profile'])->name('profile');
-        Route::get('/event', [GuestController::class, 'event'])->name('event');
 
-        // ✅ Show Book
-        Route::get('/show/book/{book}', [GuestController::class, 'showBook'])->name('show.book');
+// ✅ Guest Routes
+Route::get('/', [GuestController::class, 'home'])->name('home');
+Route::get('/collection', [GuestController::class, 'collection'])->name('collection');
+Route::get('/profile', [GuestController::class, 'profile'])->name('profile');
+Route::get('/event', [GuestController::class, 'event'])->name('event');
 
-        // ✅ Auth Routes
-        Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-        Route::post('/login', [LoginController::class, 'login']);
-        Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-        Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
-        Route::post('/register', [RegisterController::class, 'register']);
+// ✅ Show Book
+Route::get('/show/book/{book}', [GuestController::class, 'showBook'])->name('show.book');
+
+// ✅ Auth Routes
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
+Route::post('/register', [RegisterController::class, 'register']);
 
 // Member/User Routes
 Route::middleware(['auth', 'role:member'])->group(function () {
