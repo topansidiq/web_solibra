@@ -42,15 +42,7 @@
 
         <div class="profile hidden lg:flex gap-3 items-center p-3">
             <div class="text-sm">
-                @foreach (LaravelLocalization::getSupportedLocales() as $code => $locale)
-                    <a href="{{ LaravelLocalization::getLocalizedURL($code) }}"
-                        class="px-1 {{ LaravelLocalization::getCurrentLocale() === $code ? 'font-bold text-sky-300' : 'text-neutral-200' }}">
-                        {{ strtoupper($code) }}
-                    </a>
-                    @if (!$loop->last)
-                        |
-                    @endif
-                @endforeach
+
             </div>
 
             <div class="login flex gap-3">
