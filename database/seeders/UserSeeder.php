@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
 
-        User::factory(200)->create();
+        // User::factory(200)->create();
 
         // User::create([
         //     'name' => "Topan Sidiq",
@@ -30,16 +30,28 @@ class UserSeeder extends Seeder
         //     'remember_token' => "topan12345",
         // ]);
 
-        // User::create([
-        //     'name' => "Salsabila Agustin Putri Yendi",
-        //     'email' => 'salsabilaagustinpy@gmail.com',
-        //     'id_number' => "1305072807020001",
-        //     'email_verified_at' => null,
-        //     'phone_number' => '082388407308',
-        //     'phone_number_verified' => 'unverified',
-        //     'role' => Role::Member,
-        //     'password' => Hash::make('Salsabila2311'),
-        //     'remember_token' => "topan12345",
-        // ]);
+        User::create([
+            'name' => 'Salsabila Agustin Putri Yendi',
+            'role' => 'member',
+            'phone_number' => '082388407308',
+            'gender' => 'P',
+            'birth_date' => '2002-07-28',
+            'age' => 23,
+            'id_type' => 'KTP',
+            'id_number' => 1305072807020001,
+            'address' => 'Jl. Contoh No. 123, Padang',
+            'regency' => 'Padang',
+            'province' => 'Sumatera Barat',
+            'member_status' => 'aktif',
+            'jobs' => 'Mahasiswa',
+            'education' => 'S1',
+            'class_department' => 'Ilmu Perpustakaan',
+            'email' => 'salsabilaagustingpy@gmail.com',
+            'password' => Hash::make('Salsabila2311'),
+            'remember_token' => 'topan12345',
+            'status_account' => 'active',
+            'expired_date' => now()->addYear(),
+            'profile_picture' => null,
+        ]);
     }
 }

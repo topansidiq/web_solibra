@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Validation\Rules\Email;
 
 return new class extends Migration
 {
@@ -14,20 +15,27 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('id_number')->unique();
-            $table->string('gender')->nullable();
-            $table->string('place_birth')->nullable();
-            $table->date('birth_date')->nullable();
-            $table->string('last_education')->nullable();
-            $table->string('job')->nullable();
-            $table->string('role');
-            $table->string('profile_picture')->nullable();
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->enum('role', ['admin', 'librarian', 'member'])->default('member');
             $table->string('phone_number')->unique();
-            $table->string('phone_number_verified')->nullable()->default('unverified');
+            $table->boolean('is_phone_verified')->default(false);
+            $table->enum('gender', ['L', 'P'])->nullable();
+            $table->string('birth_date')->nullable();
+            $table->unsignedInteger('age')->nullable();
+            $table->string('id_type')->nullable();
+            $table->unsignedBigInteger('id_number')->unique()->nullable();
+            $table->string('address')->nullable();
+            $table->string('regency')->nullable();
+            $table->string('province')->nullable();
+            $table->string('member_status')->nullable();
+            $table->string('jobs')->nullable();
+            $table->string('education')->nullable();
+            $table->string('class_department')->nullable();
+            $table->string('email')->unique();
             $table->string('password');
             $table->rememberToken();
+            $table->enum('status_account', ['active', 'inactive', 'suspended'])->default('active');
+            $table->date('expired_date')->nullable();
+            $table->string('profile_picture')->nullable();
             $table->timestamps();
         });
 

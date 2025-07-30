@@ -56,6 +56,8 @@ class RegisterController extends Controller
 
         Auth::login($user);
 
+        session()->flash('success', 'Selamat datang, ' . Auth::user()->name . '!');
+
         return redirect()->route('member.index')->with('success', 'User created successfully.');
     }
 }

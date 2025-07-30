@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Borrow;
 use App\Models\Category;
+use App\Models\Notification;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BorrowController extends Controller
 {
@@ -98,15 +100,21 @@ class BorrowController extends Controller
         $borrowedAt = Carbon::parse($validated['borrowed_at']);
 
 
-        Borrow::create([
+        $borrow = Borrow::create([
             'book_id' => $validated['book_id'],
             'user_id' => $validated['user_id'],
             'borrowed_at' => $borrowedAt,
             'due_date' => $borrowedAt->copy()->addDays(7),
-            'status' => 'unconfirmed', // default status
+            'status' => 'unconfirmed',
         ]);
 
-        return redirect()->route('borrows.index')->with('success', 'Peminjaman berhasil diajukan!');
+        Notification::create([
+            'user_id' => $borrow->user()->name,
+            'type' => 'loan_request',
+            'message' => "Peminjaman buku '{$book->title}' telah diajukan pada '{$borrow->borrowed_at}'.",
+        ]);
+
+        return redirect()->route('borrows.index')->with('success', 'Peminjaman berhasil dibuat!');
     }
 
     /**

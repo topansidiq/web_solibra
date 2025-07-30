@@ -32,6 +32,8 @@ class LoginController extends Controller
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
 
+            session()->flash('success', 'Selamat datang kembali, ' . Auth::user()->name . '!');
+
             return redirect()->intended($this->redirectTo());
         }
 
