@@ -14,9 +14,14 @@ use App\Http\Controllers\{
     DashboardController,
     EventController,
     MemberController,
-    UserController
+    UserController,
+    WebhookController,
+    WhatsAppController
 };
 
+// WhatsApp Route
+Route::post('/api/wa/response', [WebhookController::class, 'handleAction']);
+Route::get('/api/wa/user-exists', [WhatsAppController::class, 'checkUserExists']);
 
 // Guest Routes
 Route::get('/', [GuestController::class, 'home'])->name('home');

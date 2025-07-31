@@ -21,7 +21,7 @@ class OTPController extends Controller
     {
         $this->whatsapp = $whatsapp;
     }
-    public function sendOtp(Request $request)
+    public function send(Request $request)
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
@@ -39,7 +39,7 @@ class OTPController extends Controller
         ]);
 
         $message = "Kode OTP kamu adalah *$otp*. Berlaku selama 5 menit.";
-        // $this->whatsapp->sendMessage($request->phone_number, $message);
+        $this->whatsapp->sendMessage($request->phone_number, $message);
 
         Notification::create([
             'user_id' => $request->user_id,
@@ -47,8 +47,6 @@ class OTPController extends Controller
             'type' => 'whatsapp_verification',
             'is_read' => false
         ]);
-
-        // dd($message, $otp);
 
         return redirect()->back()
             ->with('otp_sent', true)

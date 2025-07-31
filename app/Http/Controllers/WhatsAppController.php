@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Notification;
 use App\Models\OTP;
 use App\Models\Role;
+use App\Models\User;
 use App\Models\WhatsApp;
 use App\Services\WhatsAppBotService;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 class WhatsAppController extends Controller
 {
+
     public function sendOTP(Request $request, WhatsAppBotService $bot, OTP $otp)
     {
         try {
@@ -51,5 +53,14 @@ class WhatsAppController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
         }
+    }
+
+    public function checkUserExists(Request $request)
+    {
+        $phone = $request->query('phone');
+
+        $exists = User::where('phone_number', $phone)->exists();
+
+        return response()->json(['exists' => $exists]);
     }
 }

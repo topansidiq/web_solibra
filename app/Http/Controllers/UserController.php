@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Notification;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\WhatsApp;
+use App\Services\WhatsAppBotService;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +16,14 @@ use Throwable;
 
 class UserController extends Controller
 {
+
+    protected $whatsapp;
+
+    public function __construct(WhatsAppBotService $whatsapp)
+    {
+        $this->whatsapp = $whatsapp;
+    }
+
     public function index()
     {
         $user = Auth::user();
@@ -74,9 +84,14 @@ class UserController extends Controller
     {
         try {
             $request->validate([
+                // Primary
                 'name' => 'required|string|max:255',
                 'role' => ['required', new Enum(Role::class)],
                 'phone_number' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'nullable|string|min:8|confirmed',
+
+                // Profile/Biodata
                 'gender' => 'nullable|in:L,P',
                 'birth_date' => 'nullable|date',
                 'age' => 'nullable|integer|min:0|max:150',
@@ -85,21 +100,19 @@ class UserController extends Controller
                 'address' => 'nullable|string|max:255',
                 'regency' => 'nullable|string|max:100',
                 'province' => 'nullable|string|max:100',
-                'member_status' => 'nullable|string|max:50',
                 'jobs' => 'nullable|string|max:100',
                 'education' => 'nullable|string|max:100',
                 'class_department' => 'nullable|string|max:100',
-                'email' => 'required|email|unique:users,email',
-                'password' => 'nullable|string|min:8|confirmed',
-                'status_account' => 'nullable|in:active,inactive,suspended',
-                'expired_date' => 'nullable|date|after_or_equal:today',
                 'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+
             ]);
 
             $user = User::create([
                 'name' => $request->name,
                 'role' => Role::from($request->role),
                 'phone_number' => $request->phone_number,
+                'email' => $request->email,
+                'password' => $request->password ? bcrypt($request->password) : null,
                 'gender' => $request->gender,
                 'birth_date' => $request->birth_date,
                 'age' => $request->age,
@@ -108,18 +121,13 @@ class UserController extends Controller
                 'address' => $request->address,
                 'regency' => $request->regency,
                 'province' => $request->province,
-                'member_status' => $request->member_status,
                 'jobs' => $request->jobs,
                 'education' => $request->education,
                 'class_department' => $request->class_department,
-                'email' => $request->email,
-                'password' => $request->password ? bcrypt($request->password) : null,
-                'status_account' => $request->status_account,
-                'expired_date' => $request->expired_date,
             ]);
 
             if ($request->hasFile('profile_picture')) {
-                $path = $request->file('profile_picture')->store('profile_pictures', 'public');
+                $path = $request->file($request->id_number)->store('profile_pictures', 'public');
                 $user->profile_picture = $path;
                 $user->save();
             }
@@ -128,6 +136,12 @@ class UserController extends Controller
                 'user_id' => $user->id,
                 'type' => 'new_member',
                 'message' => "Selamat datang {$user->name}, anda telah berhasil membuat akun. Verifikasi nomor WhatsApp anda untuk dapat mengakses fitur lainnya.",
+            ]);
+
+            Notification::create([
+                'user_id' => $user->id,
+                'type' => 'new_member',
+                'message' => "Lengkapi data diri anda dan lakukan validasi di Perpustakaam Umum Kota Solok",
             ]);
 
             return redirect()->route('users.index')->with('success', 'Akun berhasil dibuat.');
@@ -143,9 +157,20 @@ class UserController extends Controller
 
     public function verifiedPhoneNumber(User $user)
     {
-        $user->phone_number_verified->update([
-            'phone_number_verified' => true,
+        $user->update([
+            'is_phone_verified' => true,
         ]);
+
+        $message = "Selamat, nomor anda telah terverifikasi. Status anggota saat ini adalah aktif. Lakukan validasi data ke Perpustakaan Umum Kota Solok untuk dapat menggunakan fitur peminjaman.";
+
+        Notification::create([
+            'user_id' => $user->id,
+            'type' => 'phone_verified',
+            'message' => $message
+        ]);
+
+        $this->whatsapp->sendMessage($user->phone_number, $message);
+
         return redirect()->route('users.index')->with('success', 'Phone number verification status updated successfully.');
     }
 
