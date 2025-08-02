@@ -3,10 +3,9 @@
 @section('title', 'Beranda | Perpustakaan Umum Kota Solok')
 
 @section('content')
-    <x-header-guest />
-
     @if (request()->is('/') || request()->is('home'))
         <main>
+            <script src="{{ asset('js/guest/home.js') }}"></script>
             <div>
                 <section
                     class="xl:flex grid w-full overflow-hidden shadow-lg bg-cover bg-no-repeat bg-center items-center justify-between 2xl:px-30 2xl:py-24 text-slate-50 text-shadow-md"
@@ -27,41 +26,89 @@
                     </div>
                 </section>
 
+                {{-- Beranda --}}
+                <section class="py-10 px-6 mx-auto w-full bg-white">
+                    <div
+                        class="flex flex-col xl:flex-row w-full h-auto xl:h-96 max-w-7xl items-center justify-center gap-6 m-auto">
+                        <!-- Kolom kiri -->
+                        <div class="w-full xl:w-3/5 h-64 xl:h-full rounded-3xl p-6 overflow-hidden">
+                            <div class="relative w-full h-full mx-auto overflow-hidden rounded-2xl">
+
+                                {{-- Radio dan Media --}}
+                                @foreach ($latestMedia as $index => $media)
+                                    <input type="radio" name="carousel" id="carousel-{{ $index }}"
+                                        class="hidden peer" @checked($loop->first)>
+
+                                    <div
+                                        class="absolute inset-0 transition-opacity duration-700 ease-in-out opacity-0 peer-checked:opacity-100">
+                                        @if ($media->type === 'image')
+                                            <img src="{{ asset('storage/' . $media->file) }}"
+                                                alt="Gallery Image {{ $index }}"
+                                                class="w-full h-full object-cover rounded-2xl">
+                                        @elseif ($media->type === 'video')
+                                            <video controls class="w-full h-full object-cover rounded-2xl">
+                                                <source src="{{ asset('storage/' . $media->file) }}" type="video/mp4">
+                                                Browser tidak mendukung pemutaran video.
+                                            </video>
+                                        @endif
+                                    </div>
+                                @endforeach
+
+                                {{-- Navigasi --}}
+                                <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                                    @foreach ($latestMedia as $index => $media)
+                                        <label for="carousel-{{ $index }}"
+                                            class="w-3 h-3 rounded-full bg-white opacity-70 cursor-pointer ring-1 ring-gray-300 hover:bg-gray-400 transition">
+                                        </label>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
 
 
-                <!-- Sambutan -->
+                        <!-- Kolom kanan -->
+                        <div class="grid w-full xl:w-2/5 h-64 xl:h-full gap-6">
+                            <div class="bg-amber-100 rounded-2xl h-full overflow-hidden">
+                                <img src="{{ asset('img/weekend-sale-banner-template-promotion-vector.jpg') }}"
+                                    alt="" class="w-full h-full object-cover rounded-2xl">
+                            </div>
+                            <div class="bg-amber-400 rounded-2xl h-full overflow-hidden">
+                                <img src="{{ asset('img/discount-promo-landscape-banner-template-design-b2d961494cf7721d73884d8a307ac771_screen.jpg') }}"
+                                    alt="" class="w-full h-full object-cover rounded-2xl">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {{-- Koleksi Terbaru --}}
                 <section class="py-10 px-6 w-full mx-auto bg-white">
                     <div class="bg-neutral-50 max-w-7xl mx-auto rounded-md shadow-md border border-gray-200 p-6">
-                        <h2
-                            class="text-left text-2xl font-bold pb-7 mb-3 border-b border-neutral-200 max-w-fit mx-auto text-neutral-700">
-                            Selamat
-                            Datang di
-                            Perpustakaan Umum Kota Solok
-                        </h2>
+                        <div>
+                            <h1 class="font-bold text-neutral-700 text-xl">Terbaru</h1>
+                        </div>
+                        <div class=" bg-gray-50 gap-4 p-4 grid grid-cols-6 mx-auto content-around">
+                            @foreach ($latestBook as $book)
+                                <a href="{{ route('show.book', $book) }}">
+                                    <div
+                                        class="book h-full bg-slate-50 rounded shadow border border-slate-300 cursor-pointer hover:scale-105 transition">
+                                        <div class="h-fit bg-slate-400">
+                                            <img src="{{ asset('storage/' . $book->cover) }}" alt=""
+                                                class="shadow-sm">
+                                        </div>
 
-                        <div class="border-l-4 border-l-yellow-500 p-5">
-                            <p class="text-gray-700 leading-relaxed text-justify pl-1">
-                                <strong class="text-neutral-700">Perpustakaan Umum Kota Solok</strong> adalah salah satu
-                                lembaga
-                                penting
-                                di kota Solok, Sumatera
-                                Barat,
-                                yang berfungsi sebagai pusat pembelajaran dan pengembangan literasi di kalangan
-                                masyarakat.
-                                Dikenal dengan kota yang kaya akan budaya dan tradisi, Perpustakaan Kota Solok berperan
-                                besar
-                                dalam mendukung pembangunan pendidikan yang berkualitas, sekaligus memberikan akses bagi
-                                warga
-                                untuk memperoleh informasi dan pengetahuan yang mereka butuhkan. Sebagai lembaga
-                                pendidikan
-                                non-formal, perpustakaan ini terus berupaya untuk memperbaiki kualitas layanan dan
-                                meningkatkan
-                                minat baca masyarakat dari segala usia. Dalam artikel ini, kita akan membahas secara
-                                mendalam
-                                mengenai berbagai aspek yang ada di Perpustakaan Kota Solok, termasuk sejarah, visi dan
-                                misi,
-                                layanan, serta program-program unggulan yang mereka tawarkan.
-                            </p>
+                                        <div class="p-3">
+                                            <h2 class="font-bold text-sm">{{ $book->title }} ({{ $book->year }})</h2>
+                                            <div class="text-xs">
+                                                @foreach ($book->categories as $category)
+                                                    <span class="">{{ $category->name }}, </span>
+                                                @endforeach
+                                            </div>
+                                            <p class="text-xs font-semibold text-slate-500">Penulis: {{ $book->author }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            @endforeach
                         </div>
                     </div>
                 </section>

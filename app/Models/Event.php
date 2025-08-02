@@ -13,5 +13,6 @@ class Event extends Model
         'description',
         'location',
         'status',
+        'poster'
     ];
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\Event;
+use App\Models\Gallery;
 use Illuminate\Http\Request;
 
 class GuestController extends Controller
@@ -12,8 +13,9 @@ class GuestController extends Controller
     public function home()
     {
         $latestBook = Book::latest()->take(6)->get();
+        $latestMedia = Gallery::all();
 
-        return view('home', compact('latestBook'));
+        return view('home', compact('latestBook', 'latestMedia'));
     }
 
     public function collection(Request $request)
