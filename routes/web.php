@@ -30,8 +30,9 @@ Route::get('/profile', [GuestController::class, 'profile'])->name('profile');
 Route::get('/event', [GuestController::class, 'event'])->name('event');
 Route::get('/information', [GuestController::class, 'information'])->name('information');
 
-// Show Book
+// Show
 Route::get('/show/book/{book}', [GuestController::class, 'showBook'])->name('show.book');
+Route::get('/show/event/{event}', [GuestController::class, 'showEvent'])->name('show.event');
 
 // Auth Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -61,20 +62,26 @@ Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
     // Resource routes
-    Route::resource('books', BookController::class);
+    // Route::resource('books', BookController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('borrows', BorrowController::class);
     Route::resource('users', UserController::class);
     Route::resource('events', EventController::class);
 
     // Custom book routes
+    Route::get('/admin/books', [BookController::class, 'index'])->name('books.index');
+    Route::get('/admin/books/create', [BookController::class, 'create'])->name('books.create');
+    Route::get('/admin/books/edit', [BookController::class, 'edit'])->name('books.edit');
+    Route::post('/admin/books', [BookController::class, 'store'])->name('books.store');
     Route::put('/books/{book}', [BookController::class, 'update'])->name('books.update');
+    Route::delete('/books/{book}', [BookController::class, 'destroy'])->name('books.destroy');
     Route::get('/books/search', [BookController::class, 'search'])->name('books.search');
 
     // Custom borrow actions
     Route::patch('/borrows/{borrow}/confirm', [BorrowController::class, 'confirm'])->name('borrows.confirm');
     Route::patch('/borrows/{borrow}/return', [BorrowController::class, 'return'])->name('borrows.return');
     Route::patch('/borrows/{borrow}/overdue', [BorrowController::class, 'overdue'])->name('borrows.overdue');
+    Route::post('/borrows/{borrow}/extend', [BorrowController::class, 'extend'])->name('borrows.extend');
     Route::patch('/borrows/{borrow}/archive', [BorrowController::class, 'archive'])->name('borrows.archive');
 });
 

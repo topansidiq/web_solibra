@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('borrowed_at');
             $table->date('return_date')->nullable();
             $table->date('due_date');
-            $table->enum('status', ['unconfirmed', 'confirmed', 'returned', 'overdue', 'archive'])->default('unconfirmed')->comment('confirmed, returned, overdue, archive');
+            $table->enum('status', ['unconfirmed', 'confirmed', 'returned', 'overdue', 'archive', 'extend'])->default('unconfirmed')->comment('confirmed, returned, overdue, archive, extend');
             $table->timestamps();
         });
     }

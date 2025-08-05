@@ -14,8 +14,9 @@ class GuestController extends Controller
     {
         $latestBook = Book::latest()->take(6)->get();
         $latestMedia = Gallery::all();
+        $latestEvent = Event::latest()->take(6)->get();
 
-        return view('home', compact('latestBook', 'latestMedia'));
+        return view('home', compact('latestBook', 'latestMedia', 'latestEvent'));
     }
 
     public function collection(Request $request)
@@ -47,6 +48,13 @@ class GuestController extends Controller
     {
 
         return view('information');
+    }
+
+    public function showEvent($id)
+    {
+        $event = Event::findOrFail($id);
+
+        return view('show.event', compact('event'));
     }
 
     public function showBook(Book $book)

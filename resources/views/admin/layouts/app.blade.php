@@ -13,9 +13,8 @@
 <body class="bg-slate-200">
 
     <div x-data="{ show: {{ session('success') ? 'true' : 'false' }} }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
-        class="fixed inset-0 flex items-center justify-center z-50">
+        class="fixed inset-0 flex items-center justify-center z-50" x-transition x-cloak>
         <div class="bg-white shadow-xl rounded-xl p-6 border border-gray-200 max-w-md text-center">
-            <h2 class="text-xl font-semibold mb-2 text-sky-600">Berhasil Login!</h2>
             <p class="text-gray-700">{{ session('success') }}</p>
             <button @click="show = false"
                 class="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Tutup</button>

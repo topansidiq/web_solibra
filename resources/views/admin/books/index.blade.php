@@ -53,9 +53,9 @@
         </div>
 
         {{-- Tabel Scrollable --}}
-        <div class="mx-4">
+        <div class="mx-4 h-screen overflow-scroll">
             <table class="table font-sans w-full">
-                <thead class="bg-teal-800 text-white text-sm sticky top-0 z-10">
+                <thead class="bg-sky-800 text-white text-sm sticky top-0 z-10">
                     @php
                         $columns = [
                             ['key' => null, 'label' => 'No.'],
@@ -72,21 +72,7 @@
                     <tr>
                         @foreach ($columns as $col)
                             <th class="p-4 {{ $col['key'] ? '' : 'text-center' }}">
-                                @if ($col['key'])
-                                    <a href="{{ route('books.index', [
-                                        'sort_by' => $col['key'],
-                                        'sort_dir' => $sortBy === $col['key'] && $sortDir === 'asc' ? 'desc' : 'asc',
-                                    ]) }}"
-                                        class="hover:underline">
-                                        {{ $col['label'] }}
-                                        @if ($sortBy === $col['key'])
-                                            <i data-lucide="{{ $sortDir === 'asc' ? 'arrow-up' : 'arrow-down' }}"
-                                                class="w-4 h-4 inline"></i>
-                                        @endif
-                                    </a>
-                                @else
-                                    {{ $col['label'] }}
-                                @endif
+                                {{ $col['label'] }}
                             </th>
                         @endforeach
                     </tr>
@@ -96,7 +82,7 @@
                     @foreach ($books as $book)
                         <tr>
                             <td class="px-4 py-1 border border-slate-300 text-center">
-                                {{ $loop->iteration + ($books->currentPage() - 1) * $books->perPage() }}
+                                {{ $book->id }}
                             </td>
 
                             <td class="px-4 py-1 border border-slate-300">
@@ -139,8 +125,22 @@
                     @endforeach
                 </tbody>
             </table>
+            @php
+                $totalPages = ceil($totalBooks / $perPage);
+            @endphp
 
-            {{ $books->links() }}
+            @if ($totalPages > 1)
+                <div class="mt-4 flex flex-wrap gap-2 text-xs">
+                    @for ($i = 1; $i <= $totalPages; $i++)
+                        <a href="{{ route('books.index', ['page' => $i]) }}"
+                            class="px-3 py-1 rounded border
+                {{ $i == $currentPage ? 'bg-sky-700 text-white' : 'bg-white text-gray-800' }}">
+                            {{ $i }}
+                        </a>
+                    @endfor
+                </div>
+            @endif
+
         </div>
     </div>
 @endsection

@@ -11,6 +11,13 @@
         "Noto Color Emoji";
 }
 
+.no-tailwind {
+    all: initial;
+    * {
+        all: unset;
+    }
+}
+
 /* Custom Scrollbar */
 .scrollbar-custom::-webkit-scrollbar {
     width: 6px;

@@ -16,8 +16,6 @@ class BorrowController extends Controller
 {
     protected $borrows = [
         'max' => 3,
-        'expired' => null,
-        'length' => 0
     ];
 
     public function index(Request $request)
@@ -52,14 +50,37 @@ class BorrowController extends Controller
 
     public function confirm(Borrow $borrow)
     {
-        $now = now();
+
+        $book = $borrow->book;
+
+        if ($book->stock <= 0) {
+            return back()->with('error', 'Stok buku sudah habis. Tidak bisa dikonfirmasi.');
+        }
+
+        $borrowsCount = Borrow::where('user_id', $borrow->user_id)->where('status', 'confirmed')->count();
+
+        if ($borrowsCount >= $this->borrows['max']) {
+            return redirect()->back()->with('error', 'Peminjaman telah mencapai maksimal ' . $this->borrows['max']);
+        }
+
+        $borrowsOverdue = Borrow::where('user_id', $borrow->user_id)->where('due_date', '<', now())->whereIn('status', ['confirmed', 'overdue'])->whereRaw('due_date > DATE_ADD(borrowed_at, INTERVAL 42 DAY)')->exists();
+
+        if ($borrowsOverdue) {
+            return redirect()->back()->with('error', 'Ada buku yang belum dikembalikan dan sudah jatuh tempo.');
+        }
 
         $borrow->update([
             'status' => 'confirmed',
-            'borrowed_at' => $now,
+            'borrowed_at' => $borrow->borrowed_at,
+            'due_date' => now()->copy()->addDays(14),
         ]);
 
-        $book = $borrow->book;
+        Notification::create([
+            'user_id' => $borrow->user_id,
+            'type' => 'borrow_confirmed',
+            'message' => "Peminjaman untuk buku yang berjudul '{$book->title}' pada {$borrow->borrowed_at} telah di konfirmasi oleh admin. Tanggal jatuh tempo atau pengembalian adalah pada {$borrow->due_date}.",
+        ]);
+
         $book->decrement('stock');
 
         return back()->with('success', 'Peminjaman berhasil dikonfirmasi.');
@@ -85,92 +106,90 @@ class BorrowController extends Controller
         return back()->with('success', 'Peminjaman berhasil diarsipkan.');
     }
 
-    public function store(Request $request)
+    public function extend(Request $request)
     {
-        // $book = Book::find($request->book_id);
-        // if ($book->stock <= 0) {
-        //     return redirect()->back()->with('error', 'Buku tidak tersedia untuk dipinjam.');
-        // }
-
-        // $user_borrowed = Borrow::where('user_id');
-        // $borrows['length'] = $user_borrowed->count();
-
-        // $validated = $request->validate([
-        //     'book_id' => 'required|exists:books,id',
-        //     'user_id' => 'required|exists:users,id',
-        //     'borrowed_at' => 'required|date',
-        // ]);
-
-        // $borrowedAt = Carbon::parse($validated['borrowed_at']);
-
-
-        // $borrow = Borrow::create([
-        //     'book_id' => $validated['book_id'],
-        //     'user_id' => $validated['user_id'],
-        //     'borrowed_at' => $borrowedAt,
-        //     'due_date' => $borrowedAt->copy()->addDays(14),
-        //     'status' => 'unconfirmed',
-        // ]);
-
-        // Notification::create([
-        //     'user_id' => $borrow->user()->name,
-        //     'type' => 'loan_request',
-        //     'message' => "Peminjaman buku '{$book->title}' telah diajukan pada '{$borrow->borrowed_at}'.",
-        // ]);
-
-        // return redirect()->route('borrows.index')->with('success', 'Peminjaman berhasil dibuat!');
-
-
-
         $validated = $request->validate([
             'book_id' => 'required|exists:books,id',
             'user_id' => 'required|exists:users,id',
             'borrowed_at' => 'required|date',
         ]);
-
-        $userId = $validated['user_id'];
         $book = Book::findOrFail($validated['book_id']);
+        $borrow = Borrow::findOrFail($validated['user_id']);
+        $userId = $validated['user_id'];
 
-        if ($book->stock <= 0) {
-            return redirect()->back()->with('error', 'Buku tidak tersedia untuk dipinjam.');
-        }
-
-        // Ambil semua peminjaman aktif (belum dikembalikan)
         $activeBorrows = Borrow::where('user_id', $userId)
             ->whereNull('return_date')
             ->get();
 
-        // Update array borrows
-        $this->borrows['length'] = $activeBorrows->count();
-
-        $this->borrows['expired'] = $activeBorrows->contains(function ($borrow) {
-            return now()->gt(Carbon::parse($borrow->due_date));
+        $hasExpired = $activeBorrows->contains(function ($b) {
+            return now()->gt(Carbon::parse($b->due_date));
         });
 
-        if ($this->borrows['expired']) {
-            return redirect()->back()->with('error', 'Ada buku yang belum dikembalikan dan sudah jatuh tempo.');
-        }
-
-        if ($this->borrows['length'] >= $this->borrows['max']) {
-            return redirect()->back()->with('error', 'Kamu telah mencapai batas maksimum peminjaman.');
+        if ($hasExpired) {
+            return redirect()->back()->with('error', 'Ada buku yang belum dikembalikan. Tidak dapat melakukan perpanjangan.');
         }
 
         // Lanjutkan membuat peminjaman
         $borrowedAt = Carbon::parse($validated['borrowed_at']);
+        $dueDate = $borrowedAt->copy()->addDays(14);
 
-        $borrow = Borrow::create([
-            'book_id' => $validated['book_id'],
-            'user_id' => $userId,
+        $borrow->update([
             'borrowed_at' => $borrowedAt,
-            'due_date' => $borrowedAt->copy()->addDays(14),
-            'status' => 'unconfirmed',
+            'due_date' => $dueDate,
+            'status' => 'extend',
         ]);
 
         Notification::create([
             'user_id' => $userId,
-            'type' => 'loan_request',
-            'message' => "Peminjaman buku '{$book->title}' telah diajukan pada '{$borrow->borrowed_at}'.",
+            'type' => 'extend_confirmed',
+            'message' => "Perpanjangan buku '{$book->title}' telah konfirmasi dan jatuh tempo pada '{$dueDate->format('d M Y')}'.",
         ]);
+
+        return back()->with('success', 'Peminjaman berhasil diperpanjang.');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'book_id' => 'required|exists:books,id',
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        $book = Book::findOrFail($validated['book_id']);
+
+        $borrowsCount = Borrow::where('user_id', $validated['user_id'])->where('status', 'confirmed')->count();
+
+        if ($borrowsCount >= $this->borrows['max']) {
+            return redirect()->back()->with('error', 'Peminjaman telah mencapai maksimal ' . $this->borrows['max']);
+        }
+
+        $borrowsOverdue = Borrow::where('user_id', $validated['user_id'])->where('status', 'overdue')->exists();
+
+        if ($borrowsOverdue) {
+            return redirect()->back()->with('error', 'Ada buku yang belum dikembalikan dan sudah jatuh tempo.');
+        }
+
+        $borrow = Borrow::create([
+            'book_id' => $validated['book_id'],
+            'user_id' => $validated['user_id'],
+            'borrowed_at' => now(),
+            'due_date' => now()->addDays(42),
+            'status' => 'unconfirmed',
+        ]);
+
+        if (Auth::user()->role == 'member') {
+            Notification::create([
+                'user_id' => $validated['user_id'],
+                'type' => 'loan_request',
+                'message' => "Anda telah mengajukan peminjaman untuk buku yang berjudul '{$book->title}' pada {$borrow->borrowed_at}. Silahkan menunggu konfirmasi dari admin.",
+            ]);
+        } elseif (Auth::user()->role == 'admin' || Auth::user()->role == 'librarian') {
+            Notification::create([
+                'user_id' => $validated['user_id'],
+                'type' => 'loan_request',
+                'message' => "Peminjaman buku '{$book->title}' telah diajukan pada '{$borrow->borrowed_at} oleh {$borrow->user_id}'.",
+            ]);
+        }
 
         return redirect()->route('borrows.index')->with('success', 'Peminjaman berhasil dibuat!');
     }

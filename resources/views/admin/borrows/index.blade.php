@@ -1,7 +1,21 @@
 @extends('admin.layouts.app')
 
 @section('content')
-    <div class="content flex flex-col flex-auto bg-gray-50 w-full" x-data="{ openAddborrowModal: false }">
+    <div class="content flex flex-col flex-auto bg-gray-50 w-full" x-data="{ openAddborrowModal: false }" x-cloak>
+        <div x-data="{ show: {{ session('error') ? 'true' : 'false' }} }" x-show="show" x-init="setTimeout(() => show = false, 6000)" class="transition-all ease-in-out" x-transition
+            x-cloak>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <strong class="font-bold bg-red-300 px-2 py-1 rounded-sm">Gagal</strong>
+                <span class="block sm:inline">{{ session('error') }}</span>
+            </div>
+        </div>
+        <div x-data="{ show: {{ session('success') ? 'true' : 'false' }} }" x-show="show" x-init="setTimeout(() => show = false, 6000)" class="transition-all ease-in-out" x-transition
+            x-cloak>
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <strong class="font-bold bg-green-300 px-2 py-1 rounded-sm">Berhasil</strong>
+                <span class="block sm:inline">{{ session('success') }}</span>
+            </div>
+        </div>
         <div class="title p-4 flex flex-row items-center justify-between">
             {{-- Header/Page Title/Page Description --}}
             <div>
@@ -78,20 +92,13 @@
                             <input class="text-xs" type="hidden" name="user_id" :value="user_id">
                         </div>
 
-                        <!-- Tanggal Pengembalian -->
-                        @php
-                            $dueDate = now()->addDays(7)->locale('id')->translatedFormat('d F Y');
-                        @endphp
-
                         <div>
                             <label class="block font-semibold">Harus dikembalikan pada</label>
-                            <input type="date" readonly name="due_date" value="{{ now()->addDays(7)->toDateString() }}">
+                            <input type="date" readonly value="{{ now()->addDays(14)->toDateString() }}">
                             <p class="text-sm text-gray-700 mt-1">
-                                (otomatis 7 hari setelah tanggal peminjaman)
+                                (otomatis 14 hari setelah tanggal konfirmasi peminjaman)
                             </p>
                         </div>
-
-                        <input type="hidden" name="borrowed_at" value="{{ now()->toDateString() }}">
 
                         <!-- Tombol -->
                         <div class="col-span-2 pt-4 flex justify-end gap-4">
@@ -126,6 +133,7 @@
                         <th class="p-4 text-center">Tanggal Pengembalian</th>
                         <th class="p-4 text-center">Jatuh Tempo</th>
                         <th class="p-4 text-center">Status</th>
+                        <th class="p-4 text-center">Perpanjangan</th>
                     </tr>
                 </thead>
                 <tbody class="text-xs">
@@ -182,6 +190,8 @@
                                         onsubmit="return confirm('Setujui peminjaman buku ini?')">
                                         @csrf
                                         @method('PATCH')
+                                        <input type="hidden" name="book_id" value="{{ $borrow->book_id }}">
+                                        <input type="hidden" name="user_id" value="{{ $borrow->user_id }}">
                                         <button class="flex items-center justify-between px-2" type="submit"
                                             title="Konfirmasi Peminjaman">
                                             <i data-lucide="check" class="w-5 h-5 text-green-500"></i>
@@ -226,6 +236,39 @@
                                             <i data-lucide="bell" class="w-5 h-5 text-yellow-500"></i>
                                             <span class="block px-2">
                                                 Jatuh Tempo
+                                            </span>
+                                        </button>
+                                    </form>
+                                @elseif ($borrow->status === 'extend')
+                                    <form action="{{ route('borrows.return', $borrow->id) }}" method="POST"
+                                        onsubmit="return confirm('Kembalikan sekarang??')">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button class="flex items-center justify-between px-2" type="submit"
+                                            title="Konfirmasi Pengembalian">
+                                            <i data-lucide="undo-2" class="w-5 h-5 text-blue-500"></i>
+                                            <span class="block px-2">
+                                                Diperpanjang
+                                            </span>
+                                        </button>
+                                    </form>
+                                @endif
+                            </td>
+                            <td class="border border-slate-300 text-center">
+                                {{-- Tombol Konfirmasi Perpanjangan --}}
+                                @if ($borrow->status === 'confirmed' || $borrow->status === 'extend')
+                                    <form action="{{ route('borrows.extend', $borrow->id) }}" method="POST"
+                                        onsubmit="return confirm('Konfirmasi Perpanjangan??')">
+                                        @csrf
+                                        <input type="hidden" name="borrow_id" value="{{ $borrow->id }}">
+                                        <input type="hidden" name="book_id" value="{{ $borrow->book_id }}">
+                                        <input type="hidden" name="user_id" value="{{ $borrow->user_id }}">
+                                        <input type="hidden" name="borrowed_at" value="{{ $borrow->borrowed_at }}">
+                                        <button class="flex items-center justify-between px-2" type="submit"
+                                            title="Konfirmasi Perpanjangan">
+                                            <i data-lucide="repeat" class="w-5 h-5 text-blue-500"></i>
+                                            <span class="block px-2">
+                                                Perpanjangan
                                             </span>
                                         </button>
                                     </form>

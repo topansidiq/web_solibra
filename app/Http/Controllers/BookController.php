@@ -17,35 +17,44 @@ class BookController extends Controller
     {
         try {
             $user = Auth::user();
-            $sortBy = $request->get("sort_by", 'title');
-            $sortDir = $request->get('sort_dir', 'asc');
-            $validSorts = ["id", "title", "author", "publisher", "year", "isbn", "stock"];
             $categoryId = $request->get('category');
+            $page = (int) $request->get('page', 1);
+            $perPage = 20;
+            $offset = ($page - 1) * $perPage;
 
-            if (!in_array($sortBy, $validSorts)) {
-                $sortBy = "title";
-            }
-
+            // Query dasar
             $booksQuery = Book::with(['categories', 'borrows.user']);
+
+            // Filter kategori (jika ada)
             if ($categoryId) {
                 $booksQuery->whereHas('categories', function ($query) use ($categoryId) {
                     $query->where('categories.id', $categoryId);
                 });
             }
 
-            $books = $booksQuery
-                ->orderBy($sortBy, $sortDir)
-                ->paginate(20)
-                ->appends($request->all());
+            // Hitung total data untuk pagination
+            $totalBooks = $booksQuery->count();
 
+            // Ambil data sesuai halaman
+            $books = $booksQuery
+                ->skip($offset)
+                ->take($perPage)
+                ->get();
+
+            // Ambil semua kategori
             $categories = Category::withCount('books')->get();
 
-            return view("admin.books.index", compact("books", "categories", "sortBy", "sortDir", "user"));
+            // Kirim ke view
+            return view('admin.books.index', [
+                'books' => $books,
+                'categories' => $categories,
+                'user' => $user,
+                'currentPage' => $page,
+                'perPage' => $perPage,
+                'totalBooks' => $totalBooks
+            ]);
         } catch (Exception $e) {
-            // Logging error (opsional)
             Log::error("Error fetching books: " . $e->getMessage());
-
-            // Redirect ke halaman error atau kembali dengan pesan
             return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data buku.');
         }
     }
