@@ -12,15 +12,15 @@
                 style="background-image: url({{ asset('img/Perpustakaan_Umum_Kota_Solok.jpg') }})">
                 <div class="md:p-10 lg:p-16 p-5">
                     <h1 class="text-3xl md:text-5xl font-extrabold leading-tight mb-4">
-                        <span class="block text-xl">Selamat Datang di</span>
+                        <span class="block text-xl">{{ __('message.welcome', ['puks' => '']) }}</span>
                         <span>
-                            Perpustakaan<br>Umum Kota Solok
+                            Perpustakaan Umum Kota Solok
                         </span>
                     </h1>
                     <div class="hidden lg:flex gap-4">
                         <a href="#"
                             class=" bg-yellow-500 hover:bg-yellow-700 text-white px-5 py-2 rounded-full shadow-md transition duration-300">
-                            Hubungi Kami
+                            {{ __('message.contact_us') }}
                         </a>
                     </div>
                 </div>

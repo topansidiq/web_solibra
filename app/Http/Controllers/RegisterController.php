@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Notification;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -19,45 +20,46 @@ class RegisterController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'id_number' => 'required|string|max:20|unique:users,id_number',
             'phone_number' => 'required|string|max:15|unique:users,phone_number',
             'role' => ['required', new Enum(Role::class)],
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
-            'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'gender' => 'nullable|string|max:255',
-            'place_birth' => 'nullable|string|max:255',
-            'birth_date' => 'nullable|date',
-            'last_education' => 'nullable|string|max:255',
+
+            'id_type' => 'nullable|string|max:255',
+            'id_number' => 'nullable|string|max:255|unique:users,id_number',
+            'birth_place' => 'nullable|string|max:255',
+            'birth_date' => 'nullable|string|max:255',
+            'gender' => 'nullable|in:male,female',
+            'education' => 'nullable|string|max:255',
             'job' => 'nullable|string|max:255',
         ]);
+
+        $birth = $request->birth_place . ', ' . $request->birth_date;
 
         // Save user first
         $user = User::create([
             'name' => $request->name,
-            'id_number' => $request->id_number,
-            'gender' => $request->gender,
-            'place_birth' => $request->place_birth,
-            'birth_date' => $request->birth_date,
-            'last_education' => $request->last_education,
-            'job' => $request->job,
             'phone_number' => $request->phone_number,
             'role' => Role::from($request->role),
             'email' => $request->email,
             'password' => bcrypt($request->password),
-        ]);
 
-        // Save profile picture to storage
-        if ($request->hasFile('profile_picture')) {
-            $path = $request->file('profile_picture')->store('profile_pictures', 'public');
-            $user->profile_picture = $path;
-            $user->save();
-        }
+            'id_type' => $request->id_type,
+            'id_number' => $request->id_number,
+            'gender' => $request->gender,
+            'birth_date' => $birth,
+            'last_education' => $request->last_education,
+            'job' => $request->job,
+        ]);
 
         Auth::login($user);
 
-        session()->flash('success', 'Selamat datang, ' . Auth::user()->name . '!');
+        Notification::create([
+            'user_id' => $user->id,
+            'type' => 'account_created',
+            'message' => "Selamat datang, {$user->name}. Anda telah berhasil membuat akun. Untuk menikmati layanan kami, silakan lengkapi profil Anda.Verifikasi nomor telepon/whatsapp anda untuk mendapatkan layanan peminjaman buku.",
+        ]);
 
-        return redirect()->route('member.index')->with('success', 'User created successfully.');
+        return redirect()->route('member.index')->with('success', 'Berhasil membuat akun!');
     }
 }

@@ -142,7 +142,7 @@ class BorrowController extends Controller
         Notification::create([
             'user_id' => $userId,
             'type' => 'extend_confirmed',
-            'message' => "Perpanjangan buku '{$book->title}' telah konfirmasi dan jatuh tempo pada '{$dueDate->format('d M Y')}'.",
+            'message' => "Perpanjangan buku {$book->title} telah konfirmasi dan jatuh tempo pada {$dueDate->format('d M Y')}.",
         ]);
 
         return back()->with('success', 'Peminjaman berhasil diperpanjang.');

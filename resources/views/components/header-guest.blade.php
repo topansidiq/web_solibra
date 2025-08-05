@@ -96,7 +96,8 @@
 
         <div class="profile hidden lg:flex gap-3 items-center p-3">
             <div class="text-sm">
-
+                <a href="{{ url()->current() }}?lang=id">Bahasa Indonesia</a> |
+                <a href="{{ url()->current() }}?lang=en">English</a>
             </div>
 
             <div class="login flex gap-3">

@@ -26,14 +26,14 @@ return new class extends Migration
             $table->boolean('is_phone_verified')->default(false);
             $table->string('member_status')->nullable()->default('new');
             $table->enum('status_account', ['active', 'inactive', 'suspended'])->default('active');
-            $table->date('expired_date')->nullable()->default(Carbon::today()->addDays(89));
+            $table->date('expired_date')->nullable();
 
             // Profile/Biodata
             $table->enum('gender', ['male', 'female'])->nullable();
             $table->string('birth_date')->nullable();
             $table->unsignedInteger('age')->nullable();
             $table->string('id_type')->nullable();
-            $table->string('id_number')->unique()->nullable();
+            $table->string('id_number')->nullable()->unique();
             $table->string('address')->nullable();
             $table->string('regency')->nullable();
             $table->string('province')->nullable();
@@ -45,7 +45,7 @@ return new class extends Migration
             // Others
             $table->rememberToken();
             $table->timestamps();
-            $table->date('email_verified_at');
+            $table->date('email_verified_at')->nullable();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
