@@ -52,7 +52,7 @@ class RegisterController extends Controller
             'job' => $request->job,
         ]);
 
-        Auth::login($user);
+        Auth::guard('member')->login($user);
 
         Notification::create([
             'user_id' => $user->id,

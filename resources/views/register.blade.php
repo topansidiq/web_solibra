@@ -40,12 +40,25 @@
                         placeholder="Contoh: Budiono Siregar" value="{{ old('name') }}">
                 </div>
 
-                <div>
-                    <label for="id_number" class="block text-sm font-medium text-gray-700 mb-1">Nomor Identitas <span
-                            class="text-xs text-neutral-400">(KTP)</span> </label>
-                    <input type="text" name="id_number" id="id_number" required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
-                        placeholder="Contoh: 1305072807020001" value="{{ old('id_number') }}">
+                <div class="grid grid-cols-2 items-center content-between gap-2">
+                    <div>
+                        <label for="id_type" class="block text-sm font-medium text-gray-700 mb-1">Pilih
+                            Identitas<span class="text-xs text-neutral-400">(Default KTP)</span> </label>
+                        <select name="id_type" id="id_type"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm">
+                            <option value="KTP">KTP</option>
+                            <option value="Paspor">Paspor</option>
+                            <option value="Kartu Pelajar">Kartu Pelajar</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="id_number" class="block text-sm font-medium text-gray-700 mb-1">Nomor Identitas<span
+                                class="text-xs text-neutral-400">(KTP)</span> </label>
+                        <input type="text" name="id_number" id="id_number"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
+                            placeholder="Contoh: 1305072807020001" value="{{ old('id_number') }}">
+                    </div>
                 </div>
                 <div>
                     <label for="gender" class="block text-sm font-medium text-gray-700 mb-1">Jenis Kelamin</label>
@@ -78,17 +91,10 @@
                     </div>
                 </div>
                 <div>
-                    <label for="jpb" class="block text-sm font-medium text-gray-700 mb-1">Pekerjaan</label>
-                    <input type="text" name="jpb" id="jpb" required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
-                        placeholder="Contoh: Mahasiswa/Pelajar" value="{{ old('jpb') }}">
-                </div>
-                <div>
-                    <label for="last_education" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Lahir <span
-                            class="text-xs text-neutral-400">(Sesuai KTP)</span> </label>
-                    <select name="last_education" id="last_education" required
+                    <label for="education" class="block text-sm font-medium text-gray-700 mb-1">Pendidikan</label>
+                    <select name="education" id="education"
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm">
-                        <option disabled selected>Pilih Pendidikan Terakhir</option>
+                        <option disabled>Pilih Pendidikan Terakhir</option>
                         <option value="Tidak ada">
                             Tidak ada
                         </option>
@@ -132,31 +138,18 @@
                 </div>
 
                 <div>
-                    <label for="phone_number" class="block text-sm font-medium text-gray-700 mb-1">Nomor WhatsApp <span
-                            class="text-xs text-neutral-400">(Harus Aktif)</span> </label>
+                    <label for="jpb" class="block text-sm font-medium text-gray-700 mb-1">Pekerjaan</label>
+                    <input type="text" name="jpb" id="jpb"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
+                        placeholder="Contoh: Mahasiswa/Pelajar" value="{{ old('jpb') }}">
+                </div>
+
+                <div>
+                    <label for="phone_number" class="block text-sm font-medium text-gray-700 mb-1">Nomor WhatsApp
+                        <span class="text-xs text-neutral-400">(Harus Aktif)</span> </label>
                     <input type="text" name="phone_number" id="phone_number" required
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
                         placeholder="Contoh: 081234567890" value="{{ old('phone_number') }}">
-                </div>
-                <div>
-                    <label for="role" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                    <select name="role" id="role"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
-                        required>
-                        <option disabled selected>Pilih Role</option>
-                        @foreach (\App\Models\Role::cases() as $role)
-                            @if ($role->value == 'admin' || $role->value == 'librarian')
-                                <option value="{{ $role->value }}" disabled>
-                                    {{ $role->label() }} (Khusus Petugas)
-                                </option>
-                            @else
-                                <option value="{{ $role->value }}"
-                                    {{ old('role') == $role->value ? 'selected' : '' }}>
-                                    {{ ucfirst($role->label()) }}
-                                </option>
-                            @endif
-                        @endforeach
-                    </select>
                 </div>
 
                 <div>
@@ -164,13 +157,6 @@
                     <input type="email" name="email" id="email" required
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
                         placeholder="Contoh: email@gmail.com" value="{{ old('email') }}">
-                </div>
-
-                <div>
-                    <label for="profile_picture" class="block text-sm font-medium text-gray-700 mb-1">Foto Profil
-                        <span class="text-xs text-neutral-400">(Opsional)</span> </label>
-                    <input type="file" name="profile_picture" id="profile_picture"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm">
                 </div>
 
                 <div>
@@ -189,7 +175,7 @@
                         placeholder="Konfirmasi password">
                 </div>
 
-                <input type="hidden" value="4" name="role_id">
+                <input type="hidden" value="member" name="role">
 
                 <div class="col-span-2 w-2xl mx-auto flex flex-col items-center justify-around">
                     <div>

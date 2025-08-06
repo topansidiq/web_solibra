@@ -2,6 +2,6 @@
 
 @section('content')
     <div class="profile">
-        @include('profile')
+
     </div>
 @endsection

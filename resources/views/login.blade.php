@@ -69,7 +69,7 @@
 
             <div class="mt-6 text-center text-sm text-gray-600">
                 Belum memiliki akun?
-                <a href="#" class="text-sky-600 hover:underline">Daftar</a>
+                <a href="{{ route('register') }}" class="text-sky-600 hover:underline">Daftar</a>
             </div>
 
 

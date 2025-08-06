@@ -18,30 +18,30 @@ class UserSeeder extends Seeder
 
         User::factory()->count(100)->create();
 
-        User::create([
-            'name' => 'Salsabila Agustin Putri Yendi',
-            'role' => 'member',
-            'phone_number' => '082388407308',
-            'gender' => 'female',
-            'birth_date' => '2004-08-03',
-            'age' => 23,
-            'id_type' => 'KTP',
-            'id_number' => 1305072807020001,
-            'address' => 'Jl. Contoh No. 123, Padang',
-            'regency' => 'Padang',
-            'province' => 'Sumatera Barat',
-            'member_status' => 'aktif',
-            'jobs' => 'Mahasiswa',
-            'education' => 'S1',
-            'class_department' => 'Ilmu Perpustakaan',
-            'email' => 'salsabilaagustinnpy@gmail.com',
-            'password' => Hash::make('Salsabila2311'),
-            'remember_token' => 'topan12345',
-            'status_account' => 'active',
-            'expired_date' => now()->addYear(),
-            'profile_picture' => null,
-            'email_verified_at' => now()
-        ]);
+        // User::create([
+        //     'name' => 'Salsabila Agustin Putri Yendi',
+        //     'role' => 'member',
+        //     'phone_number' => '082388407308',
+        //     'gender' => 'female',
+        //     'birth_date' => '2004-08-03',
+        //     'age' => 23,
+        //     'id_type' => 'KTP',
+        //     'id_number' => 1305072807020001,
+        //     'address' => 'Jl. Contoh No. 123, Padang',
+        //     'regency' => 'Padang',
+        //     'province' => 'Sumatera Barat',
+        //     'member_status' => 'aktif',
+        //     'jobs' => 'Mahasiswa',
+        //     'education' => 'S1',
+        //     'class_department' => 'Ilmu Perpustakaan',
+        //     'email' => 'salsabilaagustinnpy@gmail.com',
+        //     'password' => Hash::make('Salsabila2311'),
+        //     'remember_token' => 'topan12345',
+        //     'status_account' => 'active',
+        //     'expired_date' => now()->addYear(),
+        //     'profile_picture' => null,
+        //     'email_verified_at' => now()
+        // ]);
 
         User::create([
             'name' => 'Topan Sidiq',
