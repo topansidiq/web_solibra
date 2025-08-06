@@ -31,6 +31,13 @@ class MemberController extends Controller
         return view('member.profile.index', compact('user'));
     }
 
+    public function notification()
+    {
+        $user = Auth::user();
+        $notifications = Notification::where('user_id', $user->id)->get();
+        return view('member.notification.index', compact('user', 'notifications'));
+    }
+
     public function account()
     {
         $user = Auth::user();

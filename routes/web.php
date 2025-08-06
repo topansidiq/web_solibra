@@ -51,6 +51,7 @@ Route::group([
 
         Route::get('/member/collection', [MemberController::class, 'collection'])->name('member.collection');
         Route::get('/member/profile', [MemberController::class, 'profile'])->name('member.profile');
+        Route::get('/member/notification', [MemberController::class, 'notification'])->name('member.notification');
         Route::get('/member/account', [MemberController::class, 'account'])->name('member.account');
 
         // Borrow Menu
