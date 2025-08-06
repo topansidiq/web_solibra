@@ -17,16 +17,18 @@
             @php
 
                 $home = __('member_header.home');
+                $profile = __('member_header.profile');
                 $collection = __('member_header.collection');
                 $borrowing = __('member_header.borrowing');
-                $profile = __('member_header.profile');
+                $notification = __('member_header.notification');
                 $account = __('member_header.account');
 
                 $menu = [
                     ['label' => $home, 'name' => 'member.index', 'icon' => 'home'],
+                    ['label' => $profile, 'name' => 'member.profile', 'icon' => 'building'],
                     ['label' => $collection, 'name' => 'member.collection', 'icon' => 'book-open'],
                     ['label' => $borrowing, 'name' => 'member.borrow', 'icon' => 'book'],
-                    ['label' => $profile, 'name' => 'member.profile', 'icon' => 'building'],
+                    ['label' => $notification, 'name' => 'member.notification', 'icon' => 'user'],
                     ['label' => $account, 'name' => 'member.account', 'icon' => 'user'],
 
                     // ['label' => 'Peminjaman', 'name' => 'borrows.index', 'icon' => 'list'],
@@ -97,9 +99,11 @@
         @php
             $menu = [
                 ['label' => 'Beranda', 'name' => 'member.index', 'icon' => 'home'],
+                ['label' => 'Profil', 'name' => 'profile', 'icon' => 'building'],
                 ['label' => 'Daftar Koleksi', 'name' => 'member.collection', 'icon' => 'book-open'],
                 ['label' => 'Peminjaman', 'name' => 'member.borrow', 'icon' => 'book'],
-                ['label' => 'Profil', 'name' => 'profile', 'icon' => 'building'],
+                ['label' => 'Peminjaman', 'name' => 'member.borrow', 'icon' => 'book'],
+
 
                 // ['label' => 'Peminjaman', 'name' => 'borrows.index', 'icon' => 'list'],
                 // ['label' => 'Pengguna', 'name' => 'users.index', 'icon' => 'user'],
