@@ -19,7 +19,8 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('location')->nullable();
             $table->enum('status', ['upcoming', 'ongoing', 'completed', 'cancelled'])->default('upcoming');
-            $table->string('poster');
+            $table->string('poster')->nullable();
+            $table->string('link')->nullable();
             $table->timestamps();
         });
     }

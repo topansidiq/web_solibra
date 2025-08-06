@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('return_date')->nullable();
             $table->date('due_date');
             $table->enum('status', ['unconfirmed', 'confirmed', 'returned', 'overdue', 'archive', 'extend'])->default('unconfirmed')->comment('confirmed, returned, overdue, archive, extend');
+            $table->unsignedInteger('extend')->default(0);
             $table->timestamps();
         });
     }

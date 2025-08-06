@@ -267,9 +267,15 @@
                                         <button class="flex items-center justify-between px-2" type="submit"
                                             title="Konfirmasi Perpanjangan">
                                             <i data-lucide="repeat" class="w-5 h-5 text-blue-500"></i>
-                                            <span class="block px-2">
-                                                Perpanjangan
-                                            </span>
+                                            @if ($borrow->extend === 3)
+                                                <span class="block px-2 text-red-500">
+                                                    Perpanjangan {{ $borrow->extend }} dari 3
+                                                </span>
+                                            @else
+                                                <span class="block px-2">
+                                                    Perpanjangan {{ $borrow->extend }} dari 3
+                                                </span>
+                                            @endif
                                         </button>
                                     </form>
                                 @endif

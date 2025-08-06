@@ -16,6 +16,7 @@ class BorrowController extends Controller
 {
     protected $borrows = [
         'max' => 3,
+        'extend' => 3,
     ];
 
     public function index(Request $request)
@@ -106,46 +107,34 @@ class BorrowController extends Controller
         return back()->with('success', 'Peminjaman berhasil diarsipkan.');
     }
 
-    public function extend(Request $request)
+    public function extend(Borrow $borrow)
     {
-        $validated = $request->validate([
-            'book_id' => 'required|exists:books,id',
-            'user_id' => 'required|exists:users,id',
-            'borrowed_at' => 'required|date',
-        ]);
-        $book = Book::findOrFail($validated['book_id']);
-        $borrow = Borrow::findOrFail($validated['user_id']);
-        $userId = $validated['user_id'];
+        $book = $borrow->book;
 
-        $activeBorrows = Borrow::where('user_id', $userId)
-            ->whereNull('return_date')
-            ->get();
-
-        $hasExpired = $activeBorrows->contains(function ($b) {
-            return now()->gt(Carbon::parse($b->due_date));
-        });
-
-        if ($hasExpired) {
-            return redirect()->back()->with('error', 'Ada buku yang belum dikembalikan. Tidak dapat melakukan perpanjangan.');
+        if ($borrow->extend >= 3) {
+            return back()->with('error', 'Telah mencapai batas maksimal (3) kali perpanjangan buku.');
         }
 
-        // Lanjutkan membuat peminjaman
-        $borrowedAt = Carbon::parse($validated['borrowed_at']);
-        $dueDate = $borrowedAt->copy()->addDays(14);
+        $borrowsOverdue = Borrow::where('user_id', $borrow->user_id)->where('due_date', '<', now())->whereIn('status', ['confirmed', 'overdue'])->whereRaw('due_date > DATE_ADD(borrowed_at, INTERVAL 42 DAY)')->exists();
 
+        if ($borrowsOverdue) {
+            return redirect()->back()->with('error', 'Ada buku yang belum dikembalikan dan sudah jatuh tempo.');
+        }
+
+        $borrow->increment('extend');
         $borrow->update([
-            'borrowed_at' => $borrowedAt,
-            'due_date' => $dueDate,
             'status' => 'extend',
+            'borrowed_at' => $borrow->borrowed_at,
+            'due_date' => now()->copy()->addDays(14),
         ]);
 
         Notification::create([
-            'user_id' => $userId,
+            'user_id' => $borrow->user_id,
             'type' => 'extend_confirmed',
-            'message' => "Perpanjangan buku {$book->title} telah konfirmasi dan jatuh tempo pada {$dueDate->format('d M Y')}.",
+            'message' => "Perpanjangan peminjaman untuk buku yang berjudul '{$book->title}' pada {$borrow->borrowed_at} telah di konfirmasi oleh admin. Tanggal jatuh tempo atau pengembalian adalah pada {$borrow->due_date}.",
         ]);
 
-        return back()->with('success', 'Peminjaman berhasil diperpanjang.');
+        return back()->with('success', 'Perpanjangan peminjaman berhasil dikonfirmasi.');
     }
 
     public function store(Request $request)
