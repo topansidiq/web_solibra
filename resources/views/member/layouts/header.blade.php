@@ -15,12 +15,19 @@
         <nav class="hidden xl:flex gap-6 text-sm items-center content-between">
 
             @php
+
+                $home = __('member_header.home');
+                $collection = __('member_header.collection');
+                $borrowing = __('member_header.borrowing');
+                $profile = __('member_header.profile');
+                $account = __('member_header.account');
+
                 $menu = [
-                    ['label' => 'Beranda', 'name' => 'member.index', 'icon' => 'home'],
-                    ['label' => 'Daftar Koleksi', 'name' => 'member.collection', 'icon' => 'book-open'],
-                    ['label' => 'Peminjaman', 'name' => 'member.borrow', 'icon' => 'book'],
-                    ['label' => 'Profil', 'name' => 'member.profile', 'icon' => 'building'],
-                    ['label' => 'Akun', 'name' => 'member.account', 'icon' => 'user'],
+                    ['label' => $home, 'name' => 'member.index', 'icon' => 'home'],
+                    ['label' => $collection, 'name' => 'member.collection', 'icon' => 'book-open'],
+                    ['label' => $borrowing, 'name' => 'member.borrow', 'icon' => 'book'],
+                    ['label' => $profile, 'name' => 'member.profile', 'icon' => 'building'],
+                    ['label' => $account, 'name' => 'member.account', 'icon' => 'user'],
 
                     // ['label' => 'Peminjaman', 'name' => 'borrows.index', 'icon' => 'list'],
                     // ['label' => 'Pengguna', 'name' => 'users.index', 'icon' => 'user'],
@@ -52,7 +59,23 @@
             @endforeach
         </nav>
 
+        @php
+            use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+        @endphp
+
         <div class="profile hidden lg:flex gap-3 items-center p-3">
+            <div>
+                <ul>
+                    @foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                        <li>
+                            <a rel="alternate" hreflang="{{ $localeCode }}"
+                                href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">
+                                {{ $properties['native'] }}
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
             <div class="">
                 <div class="name">
                     <p class="text-sm">{{ $user->name }}</p>

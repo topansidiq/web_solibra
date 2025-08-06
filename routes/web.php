@@ -18,43 +18,48 @@ use App\Http\Controllers\{
     WebhookController,
     WhatsAppController
 };
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 // WhatsApp Route
 Route::post('/api/wa/response', [WebhookController::class, 'handleAction']);
 Route::get('/api/wa/user-exists', [WhatsAppController::class, 'checkUserExists']);
 
-// Guest Routes
-Route::get('/', [GuestController::class, 'home'])->name('home');
-Route::get('/collection', [GuestController::class, 'collection'])->name('collection');
-Route::get('/profile', [GuestController::class, 'profile'])->name('profile');
-Route::get('/event', [GuestController::class, 'event'])->name('event');
-Route::get('/information', [GuestController::class, 'information'])->name('information');
+Route::group([
+    'prefix' => LaravelLocalization::setLocale(),
+    'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
+], function () {
+    Route::get('/', [GuestController::class, 'home'])->name('home');
+    Route::get('/collection', [GuestController::class, 'collection'])->name('collection');
+    Route::get('/profile', [GuestController::class, 'profile'])->name('profile');
+    Route::get('/event', [GuestController::class, 'event'])->name('event');
+    Route::get('/information', [GuestController::class, 'information'])->name('information');
 
-// Show
-Route::get('/show/book/{book}', [GuestController::class, 'showBook'])->name('show.book');
-Route::get('/show/event/{event}', [GuestController::class, 'showEvent'])->name('show.event');
+    // Show
+    Route::get('/show/book/{book}', [GuestController::class, 'showBook'])->name('show.book');
+    Route::get('/show/event/{event}', [GuestController::class, 'showEvent'])->name('show.event');
 
-// Auth Routes
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login']);
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
-Route::post('/register', [RegisterController::class, 'register']);
+    // Auth Routes
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [LoginController::class, 'login']);
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
+    Route::post('/register', [RegisterController::class, 'register']);
 
-// Member/User Routes
-Route::middleware(['auth', 'role:member'])->group(function () {
-    Route::get('/member/dashboard', [MemberController::class, 'dashboard'])->name('member.index');
+    // Member/User Routes
+    Route::middleware(['auth', 'role:member'])->group(function () {
+        Route::get('/member/dashboard', [MemberController::class, 'dashboard'])->name('member.index');
 
-    Route::get('/member/collection', [MemberController::class, 'collection'])->name('member.collection');
-    Route::get('/member/profile', [MemberController::class, 'profile'])->name('member.profile');
-    Route::get('/member/account', [MemberController::class, 'account'])->name('member.account');
+        Route::get('/member/collection', [MemberController::class, 'collection'])->name('member.collection');
+        Route::get('/member/profile', [MemberController::class, 'profile'])->name('member.profile');
+        Route::get('/member/account', [MemberController::class, 'account'])->name('member.account');
 
-    // Borrow Menu
-    Route::get('/member/borrow', [MemberController::class, 'borrow'])->name('member.borrow');
-    // Route::patch('/borrows/{borrow}', [BorrowController::class, 'showBorrowForm'])->name('member.borrow');
+        // Borrow Menu
+        Route::get('/member/borrow', [MemberController::class, 'borrow'])->name('member.borrow');
+        // Route::patch('/borrows/{borrow}', [BorrowController::class, 'showBorrowForm'])->name('member.borrow');
 
-    // Phone Number Verification
-    Route::get('/member/verification', [MemberController::class, 'phoneNumberVerification'])->name('member.verification');
+        // Phone Number Verification
+        Route::get('/member/verification', [MemberController::class, 'phoneNumberVerification'])->name('member.verification');
+    });
 });
 
 // Admin or Librarian Routes

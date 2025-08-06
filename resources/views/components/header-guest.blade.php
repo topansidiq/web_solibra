@@ -93,12 +93,21 @@
             @endforeach
         </nav>
 
+        @php
+            use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+        @endphp
 
         <div class="profile hidden lg:flex gap-3 items-center p-3">
-            <div class="text-sm">
-                <a href="{{ url()->current() }}?lang=id">Bahasa Indonesia</a> |
-                <a href="{{ url()->current() }}?lang=en">English</a>
-            </div>
+            <ul>
+                @foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                    <li>
+                        <a rel="alternate" hreflang="{{ $localeCode }}"
+                            href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">
+                            {{ $properties['native'] }}
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
 
             <div class="login flex gap-3">
                 <div class="bg-yellow-500 px-4 py-1 rounded text-sm">
