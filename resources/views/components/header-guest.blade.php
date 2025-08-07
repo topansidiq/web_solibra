@@ -98,16 +98,28 @@
         @endphp
 
         <div class="profile hidden lg:flex gap-3 items-center p-3">
-            <ul>
+            <ul class="flex gap-3">
                 @foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
-                    <li>
-                        <a rel="alternate" hreflang="{{ $localeCode }}"
-                            href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">
-                            {{ $properties['native'] }}
-                        </a>
-                    </li>
+                    @php
+                        $flag = match ($properties['native']) {
+                            'Bahasa Indonesia' => 'indonesia_flag.png',
+                            'English' => 'uk_flag.png',
+                            default => null,
+                        };
+                    @endphp
+
+                    @if ($flag)
+                        <li>
+                            <a rel="alternate" hreflang="{{ $localeCode }}"
+                                href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">
+                                <img src="{{ asset('img/' . $flag) }}" alt="{{ $properties['native'] }} flag"
+                                    class="w-6">
+                            </a>
+                        </li>
+                    @endif
                 @endforeach
             </ul>
+
 
             <div class="login flex gap-3">
                 <div class="bg-yellow-500 px-4 py-1 rounded text-sm">
@@ -165,5 +177,26 @@
             </div>
         </div>
 
+        <ul class="flex gap-3">
+            @foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                @php
+                    $flag = match ($properties['native']) {
+                        'Bahasa Indonesia' => 'indonesia_flag.png',
+                        'English' => 'uk_flag.png',
+                        default => null,
+                    };
+                @endphp
+
+                @if ($flag)
+                    <li>
+                        <a rel="alternate" hreflang="{{ $localeCode }}"
+                            href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">
+                            <img src="{{ asset('img/' . $flag) }}" alt="{{ $properties['native'] }} flag"
+                                class="w-6">
+                        </a>
+                    </li>
+                @endif
+            @endforeach
+        </ul>
     </nav>
 </div>

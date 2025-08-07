@@ -72,15 +72,14 @@ class BookController extends Controller
             'author' => 'required|string',
             'publisher' => 'nullable|string',
             'language' => 'nullable|string',
-            'pages' => 'nullable|integer|min:0',
-            'year' => 'nullable|integer',
-            'isbn' => 'nullable|string|unique:books,isbn',
+            'year' => 'nullable|integer|min:1000|max:' . date('Y'),
+            'isbn' => ['nullable', 'string', 'unique:books,isbn'],
             'categories' => 'nullable|array',
             'categories.*' => 'exists:categories,id',
             'stock' => 'nullable|integer|min:0',
             'description' => 'nullable|string',
             'cover' => 'nullable|image|max:2048',
-            'supply_date' => 'nullable|date',
+            'supply_date' => 'nullable|string',
             'identification_number' => 'nullable|string',
             'material' => 'nullable|string',
             'physical_shape' => 'nullable|string',
@@ -92,14 +91,17 @@ class BookController extends Controller
             'price' => 'nullable|string',
         ]);
 
+        // Simpan cover jika ada
         if ($request->hasFile('cover')) {
             $validated['cover'] = $request->file('cover')->store('covers', 'public');
         }
 
+        // Buat data buku
         $book = Book::create($validated);
 
-        if ($request->has('categories')) {
-            $book->categories()->sync($request->categories);
+        // Relasi kategori (many-to-many)
+        if (!empty($validated['categories'])) {
+            $book->categories()->sync($validated['categories']);
         }
 
         return redirect()->route('books.index')->with('success', 'Buku berhasil ditambahkan.');

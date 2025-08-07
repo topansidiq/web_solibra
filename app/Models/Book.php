@@ -10,6 +10,11 @@ class Book extends Model
     /** @use HasFactory<\Database\Factories\BookFactory> */
     use HasFactory;
 
+    protected $casts = [
+        'year' => 'integer',
+        'stock' => 'integer',
+    ];
+
     protected $fillable = [
         'supply_date',
         'identification_number',

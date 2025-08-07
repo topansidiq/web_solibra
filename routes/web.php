@@ -21,7 +21,7 @@ use App\Http\Controllers\{
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 // WhatsApp Route
-Route::post('/api/wa/response', [WebhookController::class, 'handleAction']);
+Route::post('/api/webhook/whatsapp', [WebhookController::class, 'handleAction']);
 Route::get('/api/wa/user-exists', [WhatsAppController::class, 'checkUserExists']);
 
 Route::group([
@@ -69,18 +69,21 @@ Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
 
     // Resource routes
     // Route::resource('books', BookController::class);
-    Route::resource('categories', CategoryController::class);
-    Route::resource('borrows', BorrowController::class);
-    Route::resource('users', UserController::class);
-    Route::resource('events', EventController::class);
+    Route::prefix('admin')->group(function () {
+        Route::resource('categories', CategoryController::class);
+        Route::resource('borrows', BorrowController::class);
+        Route::resource('users', UserController::class);
+        Route::resource('events', EventController::class);
+        Route::resource('books', BookController::class);
+    });
 
     // Custom book routes
-    Route::get('/admin/books', [BookController::class, 'index'])->name('books.index');
-    Route::get('/admin/books/create', [BookController::class, 'create'])->name('books.create');
-    Route::get('/admin/books/edit', [BookController::class, 'edit'])->name('books.edit');
-    Route::post('/admin/books', [BookController::class, 'store'])->name('books.store');
-    Route::put('/books/{book}', [BookController::class, 'update'])->name('books.update');
-    Route::delete('/books/{book}', [BookController::class, 'destroy'])->name('books.destroy');
+    // Route::get('/admin/books', [BookController::class, 'index'])->name('books.index');
+    // Route::get('/admin/books/create', [BookController::class, 'create'])->name('books.create');
+    // Route::get('/admin/books/edit', [BookController::class, 'edit'])->name('books.edit');
+    // Route::post('/admin/books', [BookController::class, 'store'])->name('books.store');
+    // Route::put('/books/{book}', [BookController::class, 'update'])->name('books.update');
+    // Route::delete('/books/{book}', [BookController::class, 'destroy'])->name('books.destroy');
     Route::get('/books/search', [BookController::class, 'search'])->name('books.search');
 
     // Custom borrow actions
@@ -93,6 +96,8 @@ Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
 
 // All User Route
 Route::middleware(['auth', 'role:admin,librarian,member'])->group(function () {
+    // Users
+
 
     // Notification
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
@@ -101,7 +106,13 @@ Route::middleware(['auth', 'role:admin,librarian,member'])->group(function () {
     // Borrow
     Route::patch('/users/{user}/verified-phone-number', [UserController::class, 'verifiedPhoneNumber'])->name('users.verified-phone-number');
 
+    // OTP
+    Route::resource('otps', OTPController::class);
+
     // WhatsApp Bot
-    Route::post('/otp/send', [OTPController::class, 'sendOtp'])->name('otp.send');
-    Route::post('/otp/verify', [OTPController::class, 'verifyOtp'])->name('otp.verify');
 });
+
+Route::get('/users/getUserByPhone', [MemberController::class, 'getUserByPhone']);
+Route::post('/otp/get', [OTPController::class, 'get'])->name('otp.get')->middleware('bot.auth');
+Route::get('/otp/verify', [OTPController::class, 'verify'])->name('otp.verify');
+Route::post('/otp/verify', [OTPController::class, 'verifyOtp'])->name('otp.verify');

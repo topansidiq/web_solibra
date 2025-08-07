@@ -9,8 +9,11 @@ class OTP extends Model
 {
     use HasFactory;
 
+    protected $table = 'otps';
+
     protected $fillable = [
         'user_id',
+        'phone_number',
         'code',
         'expires_at',
     ];

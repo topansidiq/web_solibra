@@ -90,21 +90,6 @@ class UserController extends Controller
                 'phone_number' => 'required|string|max:255',
                 'email' => 'required|email|unique:users,email',
                 'password' => 'nullable|string|min:8|confirmed',
-
-                // Profile/Biodata
-                'gender' => 'nullable|in:L,P',
-                'birth_date' => 'nullable|date',
-                'age' => 'nullable|integer|min:0|max:150',
-                'id_type' => 'required|string|max:50',
-                'id_number' => 'required|string|max:255',
-                'address' => 'nullable|string|max:255',
-                'regency' => 'nullable|string|max:100',
-                'province' => 'nullable|string|max:100',
-                'jobs' => 'nullable|string|max:100',
-                'education' => 'nullable|string|max:100',
-                'class_department' => 'nullable|string|max:100',
-                'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-
             ]);
 
             $user = User::create([
@@ -113,29 +98,14 @@ class UserController extends Controller
                 'phone_number' => $request->phone_number,
                 'email' => $request->email,
                 'password' => $request->password ? bcrypt($request->password) : null,
-                'gender' => $request->gender,
-                'birth_date' => $request->birth_date,
-                'age' => $request->age,
-                'id_type' => $request->id_type,
-                'id_number' => $request->id_number,
-                'address' => $request->address,
-                'regency' => $request->regency,
-                'province' => $request->province,
-                'jobs' => $request->jobs,
-                'education' => $request->education,
-                'class_department' => $request->class_department,
             ]);
-
-            if ($request->hasFile('profile_picture')) {
-                $path = $request->file($request->id_number)->store('profile_pictures', 'public');
-                $user->profile_picture = $path;
-                $user->save();
-            }
 
             Notification::create([
                 'user_id' => $user->id,
                 'type' => 'new_member',
-                'message' => "Selamat datang {$user->name}, anda telah berhasil membuat akun. Verifikasi nomor WhatsApp anda untuk dapat mengakses fitur lainnya.",
+                'message' => "Selamat datang {$user->name} di Perpustakaan Umum Kota Solok. Status keanggotaan anda saat ini adalah <b>new</b>. Lengkapi data anda dan lakukan verifikasi nomor WhatsApp untuk mengaktikan status keanggotaan!<br>
+                <a href='" . route('member.verification') . "'>Verifikasi Nomor WhatsApp</a> |
+                <a href='" . route('member.account.edit') . "'>Lengkapi Profil</a>"
             ]);
 
             Notification::create([

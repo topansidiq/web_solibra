@@ -44,15 +44,35 @@ class MemberController extends Controller
         return view('member.account.index', compact('user'));
     }
 
-    public function phoneNumberVerification(User $user)
+    public function account_edit($id)
+    {
+        $user = User::findOrFail($id);
+        return view('member.account.edit', compact("user"));
+    }
+
+    public function phoneNumberVerification()
     {
         try {
-            /** @var User $user */
             $user = Auth::user();
             return view('member.account.phoneNumberVerification', compact('user'));
         } catch (Exception $e) {
             return error('Error' . $e);
         }
+    }
+
+    public function getUserByPhone(Request $request)
+    {
+        $request->validate([
+            'phone_number' => 'required|string|exists:users,phone_number',
+        ]);
+
+        $user = User::where('phone_number', $request->phone_number)->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'User tidak ditemukan']);
+        }
+
+        return response()->json(['user_id' => $user->id, 'name' => $user->name, 'phone_number' => $user->phone_number]);
     }
 
     public function collection(Request $request)

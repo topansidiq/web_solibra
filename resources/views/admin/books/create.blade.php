@@ -2,6 +2,20 @@
 
 @section('content')
     <div class="w-full">
+        <div x-data="{ showError: {{ session('error') ? 'true' : 'false' }} }" x-show="show" x-init="setTimeout(() => showError = false, 6000)" class="transition-all ease-in-out" x-transition
+            x-cloak>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <strong class="font-bold bg-red-300 px-2 py-1 rounded-sm">Gagal</strong>
+                <span class="block sm:inline">{{ session('error') }}</span>
+            </div>
+        </div>
+        <div x-data="{ showSuccess: {{ session('success') ? 'true' : 'false' }} }" x-show="show" x-init="setTimeout(() => showSuccess = false, 6000)" class="transition-all ease-in-out" x-transition
+            x-cloak>
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <strong class="font-bold bg-green-300 px-2 py-1 rounded-sm">Berhasil</strong>
+                <span class="block sm:inline">{{ session('success') }}</span>
+            </div>
+        </div>
         <div class="flex flex-row gap-2 p-4">
             {{-- Back to Book Menu --}}
             <div class="flex items-center w-fit">
@@ -149,13 +163,13 @@
                     </div>
                 </div>
 
-                <div class="col-span-2  pb-3">
+                <div class="col-span-2 pb-3">
                     <div>
                         <p class="text-xs text-neutral-500">
                             Informasi Lainnya
                         </p>
                     </div>
-                    <div class="flex justify-between gap-4">
+                    <div class="grid col-span-5 justify-between gap-4">
                         <div class="w-full">
                             <label for="price" class="block font-semibold text-sm pt-2 pb-1">Harga</label>
                             <input type="text" name="price" id="price"
@@ -212,6 +226,12 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="w-full">
+                            <label for="stock" class="block font-semibold text-sm pt-2 pb-1">Stok/Eksemplar</label>
+                            <input type="number" name="stock" id="stock"
+                                class="form-input w-full border border-neutral-400 rounded-md focus: outline-0 p-2 placeholder: text-xs"
+                                placeholder="Contoh: 23">
                         </div>
                         <div x-data="{ fileName: '' }" class="w-full">
                             <label for="cover-upload" class="block font-semibold text-sm pt-2 pb-1">Cover

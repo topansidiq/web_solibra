@@ -1,6 +1,6 @@
 @extends('member.layouts.app')
 
-@section('title', 'Accout | Perpustakaan Umum Kota Solok')
+@section('Edit Profil | Perpustakaan Umum Kota Solok')
 
 @section('content')
     <div class="bg-gray-50 text-gray-900 font-sans antialiased min-h-screen p-6">
@@ -28,7 +28,7 @@
                         <span class="font-bold">Status: </span>
                         <span class="cursor-pointer">
                             @if ($user->member_status == 'new')
-                                <a href="{{ route('member.verification', $user->id) }}">
+                                <a href="{{ route('member.verification') }}">
                                     Baru <button
                                         class="text-xs border bg-neutral-500 text-neutral-50 rounded-lg px-2 hover:bg-neutral-700">Belum
                                         Terverifikasi</button>
