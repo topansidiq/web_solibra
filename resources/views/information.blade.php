@@ -1,32 +1,109 @@
 @extends('layouts.app')
 
-@section('title', 'Informasi | Perpustakaan Umum Kota Solok')
-
 @section('content')
-    <div>
-        <div class="xl:w-[1680px] md:w-auto mx-auto">
-            <div class="flex bg-gray-50 gap-4 p-4 mx-auto items-center justify-between">
-                <div>
-                    <p class="font-bold text-lg text-slate-800">Pojok Informasi</p>
-                    <p class="text-xs text-neutral-500">Halaman ini memuat berbagai informasi seputar Perpustakaan Umum Kota
-                        Solok</p>
+<main>
+    <!-- Carousel -->
+    <div class="w-full relative mx-auto overflow-hidden rounded-lg shadow-lg mb-8" x-data="carousel()" x-init="start()">
+        <div class="relative h-96">
+            <template x-for="(slide, index) in slides" :key="index">
+                <div x-show="active === index"
+                    class="absolute inset-0 transition-opacity duration-700 ease-in-out"
+                    x-transition:enter="opacity-0" x-transition:enter-end="opacity-100"
+                    x-transition:leave="opacity-100" x-transition:leave-end="opacity-0">
+                    <img :src="slide.image" class="w-full h-full object-cover"
+                        :alt="'Slide ' + (index + 1)">
                 </div>
-                {{-- Filter Event --}}
-                <div class="block gap-6 text-sm items-center content-between" x-data="{ openNav: false }">
-                    <div @mouseenter="openNav=true" @mouseleave="openNav=false"
-                        class="w-40 cursor-pointer bg-sky-50 border border-sky-200 rounded-md">
-                        <span class="p-2 block text-center">Filter Kegiatan</span>
-                        <div x-show="openNav" x-transition class="border-t border-neutral-600 bg-sky-50 fixed w-40">
+            </template>
+        </div>
+
+        <div class="absolute inset-0 flex justify-between items-center px-4">
+            <button @click="prev()" class="bg-black/30 hover:bg-black/50 text-white px-2 py-1 rounded-full">&larr;</button>
+            <button @click="next()" class="bg-black/30 hover:bg-black/50 text-white px-2 py-1 rounded-full">&rarr;</button>
+        </div>
+
+        <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2">
+            <template x-for="(slide, index) in slides" :key="index">
+                <button @click="active = index" :class="active === index ? 'bg-white' : 'bg-white/50'"
+                    class="w-2 h-2 rounded-full"></button>
+            </template>
+        </div>
+    </div>
+
+    <!-- Informasi Terbaru -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold mb-6 text-sky-800">Informasi Terbaru</h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            @foreach ($informations as $index => $info)
+                <div class="info-card {{ $index >= 5 ? 'hidden' : '' }}">
+                    <div class="relative bg-white shadow-md rounded-lg overflow-hidden group h-[200px] md:h-[300px] lg:h-[400px]">
+                        <img src="{{ asset('storage/' . $info->images) }}"
+                            alt="Gambar Informasi"
+                            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+
+                        <div class="absolute inset-0 bg-gradient-to-t from-sky-800 via-transparent to-transparent opacity-60"></div>
+
+                        <div class="absolute bottom-0 p-4 text-white">
+                            <h3 class="text-xl font-bold text-shadow-lg">{{ $info->title }}</h3>
+                            <p class="mt-3 text-sm text-gray-200 mb-3">
+                                {{ \Illuminate\Support\Str::limit(strip_tags($info->description), 80) }}
+                            </p>
+                            <a href="{{ route('member.information.show', $info->id) }}"
+                            class="inline-block bg-gray-300 text-sky-800 text-sm font-semibold px-3 py-1 rounded hover:bg-gray-400 transition">
+                                Lihat Selengkapnya
+                            </a>
 
                         </div>
                     </div>
                 </div>
-            </div>
+            @endforeach
         </div>
-        <div class="xl:w-[1680px] md:w-auto mx-auto">
-            <div class="gap-4 p-4 mx-auto content-around">
 
-            </div>
+        <!-- Tombol Lihat Lebih Banyak / Sedikit -->
+        <div class="w-full flex justify-center mt-8 space-x-4">
+            <button id="load-more" class="bg-sky-700 text-white px-4 py-2 rounded hover:bg-sky-800">
+                Lihat Lebih Banyak
+            </button>
+            <button id="load-less" class="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400 hidden">
+                Lihat Lebih Sedikit
+            </button>
         </div>
     </div>
+</main>
+
+<script src="{{ asset('js/guest/profile.js') }}"></script>
+
+<!-- Script JS: Load More / Load Less -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const cards = document.querySelectorAll(".info-card");
+        const loadMore = document.getElementById("load-more");
+        const loadLess = document.getElementById("load-less");
+
+        let visible = 5;
+
+        loadMore.addEventListener("click", () => {
+            visible += 5;
+            cards.forEach((card, i) => {
+                if (i < visible) card.classList.remove("hidden");
+            });
+
+            if (visible >= cards.length) {
+                loadMore.classList.add("hidden");
+            }
+
+            loadLess.classList.remove("hidden");
+        });
+
+        loadLess.addEventListener("click", () => {
+            visible = 5;
+            cards.forEach((card, i) => {
+                if (i >= visible) card.classList.add("hidden");
+            });
+
+            loadMore.classList.remove("hidden");
+            loadLess.classList.add("hidden");
+        });
+    });
+</script>
 @endsection

@@ -16,7 +16,8 @@ use App\Http\Controllers\{
     MemberController,
     UserController,
     WebhookController,
-    WhatsAppController
+    WhatsAppController,
+    InformationController
 };
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -51,6 +52,8 @@ Route::group([
 
         Route::get('/member/collection', [MemberController::class, 'collection'])->name('member.collection');
         Route::get('/member/profile', [MemberController::class, 'profile'])->name('member.profile');
+        Route::get('/member/information', [MemberController::class, 'information'])->name('member.information');
+        Route::get('/member/information/{information}', [MemberController::class, 'show'])->name('member.information.show');
         Route::get('/member/notification', [MemberController::class, 'notification'])->name('member.notification');
         Route::get('/member/account', [MemberController::class, 'account'])->name('member.account');
 
@@ -69,13 +72,11 @@ Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
 
     // Resource routes
     // Route::resource('books', BookController::class);
-    Route::prefix('admin')->group(function () {
-        Route::resource('categories', CategoryController::class);
-        Route::resource('borrows', BorrowController::class);
-        Route::resource('users', UserController::class);
-        Route::resource('events', EventController::class);
-        Route::resource('books', BookController::class);
-    });
+    Route::resource('categories', CategoryController::class);
+    Route::resource('borrows', BorrowController::class);
+    Route::resource('users', UserController::class);
+    Route::resource('events', EventController::class);
+    Route::resource('informations', InformationController::class);
 
     // Custom book routes
     // Route::get('/admin/books', [BookController::class, 'index'])->name('books.index');
