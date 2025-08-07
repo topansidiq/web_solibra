@@ -1,7 +1,8 @@
 @extends('member.layouts.app')
 
 @section('content')
-    <div class="profile">
-        @include('profile')
+    <div class="information">
+        @include('information')
+
     </div>
 @endsection

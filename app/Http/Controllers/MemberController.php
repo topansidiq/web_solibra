@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Borrow;
 use App\Models\Category;
+use App\Models\Information;
 use App\Models\Notification;
 use App\Models\OTP;
 use App\Models\Role;
@@ -84,6 +85,21 @@ class MemberController extends Controller
 
         $borrows = $user->borrows();
         return view('member.borrow.index', compact('borrows', 'user'));
+    }
+
+    public function information(Request $request)
+    {
+        $user = Auth::user();
+
+        $informations = Information::orderBy('created_at', 'desc')->get();
+
+        return view('member.information.index', compact('informations', 'user'));
+    }
+
+    public function show(Information $information)
+    {
+        $user = Auth::user();
+        return view('member.information.show', compact('information', 'user'));
     }
 
     public function storeBorrow(Request $request, Book $book)

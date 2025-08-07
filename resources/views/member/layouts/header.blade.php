@@ -20,16 +20,18 @@
                 $profile = __('member_header.profile');
                 $collection = __('member_header.collection');
                 $borrowing = __('member_header.borrowing');
+                $information = __('member_header.information');
                 $notification = __('member_header.notification');
                 $account = __('member_header.account');
 
                 $menu = [
-                    ['label' => $home, 'name' => 'member.index', 'icon' => 'home'],
-                    ['label' => $profile, 'name' => 'member.profile', 'icon' => 'building'],
-                    ['label' => $collection, 'name' => 'member.collection', 'icon' => 'book-open'],
-                    ['label' => $borrowing, 'name' => 'member.borrow', 'icon' => 'book'],
-                    ['label' => $notification, 'name' => 'member.notification', 'icon' => 'user'],
-                    ['label' => $account, 'name' => 'member.account', 'icon' => 'user'],
+                    ['label' => $home, 'name' => 'member.index'],
+                    ['label' => $profile, 'name' => 'member.profile'],
+                    ['label' => $collection, 'name' => 'member.collection'],
+                    ['label' => $borrowing, 'name' => 'member.borrow'],
+                    ['label' => $information, 'name' => 'member.information'],
+                    ['label' => $notification, 'name' => 'member.notification'],
+                    ['label' => $account, 'name' => 'member.account'],
 
                     // ['label' => 'Peminjaman', 'name' => 'borrows.index', 'icon' => 'list'],
                     // ['label' => 'Pengguna', 'name' => 'users.index', 'icon' => 'user'],
@@ -43,7 +45,7 @@
                             class="flex items-center gap-2 py-2 hover:text-yellow-500 hover:border-b-yellow-500 hover:border-b transition-all text-xs"
                             :class="active === '{{ $item['name'] }}' ? 'border-b border-b-gray-50' : ''">
 
-                            <i data-lucide="{{ $item['icon'] }}" class="w-4 h-4"></i>
+
                             <span>{{ $item['label'] }}</span>
                         </a>
                     </div>
@@ -54,7 +56,7 @@
                         class="flex items-center gap-2 py-2 hover:text-yellow-500 hover:border-b-yellow-500 hover:border-b transition-all text-xs"
                         :class="active === '{{ $item['name'] }}' ? 'border-b border-b-gray-50' : ''">
 
-                        <i data-lucide="{{ $item['icon'] }}" class="w-4 h-4"></i>
+
                         <span>{{ $item['label'] }}</span>
                     </a>
                 </div>
@@ -117,7 +119,6 @@
                         class="flex items-center gap-2 py-3 hover:text-neutral-50 px-3 hover:bg-amber-500 transition-all text-xs"
                         :class="active === '{{ $item['name'] }}' ? 'text-amber-500' : ''">
 
-                        <i data-lucide="{{ $item['icon'] }}" class="w-4 h-4"></i>
                         <span>{{ $item['label'] }}</span>
                     </a>
                 </div>
