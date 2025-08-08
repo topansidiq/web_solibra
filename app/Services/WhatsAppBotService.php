@@ -6,14 +6,21 @@ use Illuminate\Support\Facades\Http;
 
 class WhatsAppBotService
 {
-    public function sendMessage(string $number, string $message): bool
-    {
-        $response = Http::withToken(env('WHATSAPP_BOT_TOKEN'))
-            ->post(env('WHATSAPP_BOT_URL'), [
-                'number' => $number,
-                'message' => $message,
-            ]);
 
-        return $response->successful();
+    protected $baseUrl;
+    protected $token;
+
+    public function __construct()
+    {
+        $this->baseUrl = config('services.whatsapp_bot.base_url');
+        $this->token = config('services.whatsapp_bot.token');
+    }
+
+    public function sendMessage($phone_number, $message)
+    {
+        return Http::withToken($this->token)->post('${this->baseUrl}/bot/send-message', [
+            'phone_number' => $phone_number,
+            'message' => $message,
+        ]);
     }
 }

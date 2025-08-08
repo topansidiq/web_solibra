@@ -17,11 +17,11 @@ use function PHPSTORM_META\type;
 
 class OTPController extends Controller
 {
-    protected $whatsapp;
+    protected $bot;
 
-    public function __construct(WhatsAppBotService $whatsapp)
+    public function __construct(WhatsAppBotService $bot)
     {
-        $this->whatsapp = $whatsapp;
+        $this->bot = $bot;
     }
     public function get(Request $request)
     {
@@ -32,16 +32,12 @@ class OTPController extends Controller
                 'phone_number' => 'required|numeric'
             ]);
         } catch (ValidationException $e) {
-            // Debug detail error validasi
             Log::error('VALIDATION ERROR:', $e->errors());
             return response()->json([
                 'status' => 'VALIDATION_ERROR',
                 'errors' => $e->errors()
             ], 422);
         }
-
-        // DEBUG log
-        Log::info('REQUEST LARAVEL MASUK:', $request->all());
 
         $otp = rand(100000, 999999);
         $expiresAt = now()->addMinutes(5);
@@ -58,6 +54,8 @@ class OTPController extends Controller
         );
 
         $message = "Kode OTP kamu adalah *$otp*. Berlaku selama 5 menit.";
+        $link = "http://localhost:8000/member/verification/" . $request->user_id;
+        $this->bot->sendMessage($request->phone_number, $message);
 
         Notification::create([
             'user_id' => $request->user_id,
@@ -66,41 +64,8 @@ class OTPController extends Controller
             'is_read' => false
         ]);
 
-        return response()->json(['otp' => $otp, 'message' => $message]);
-        //     $request->validate([
-        //         'user_id' => 'required|exists:users,id',
-        //         'phone_number' => 'required|numeric'
-        //     ]);
-
-        //     $otp = rand(100000, 999999);
-        //     $expiresAt = now()->addMinutes(5);
-
-        //     OTP::updateOrCreate(
-        //         [
-        //             'user_id' => $request->user_id,
-        //             'phone_number' => $request->phone_number,
-        //         ],
-        //         [
-        //             'code' => $otp,
-        //             'expires_at' => $expiresAt,
-        //         ]
-        //     );
-
-        //     $message = "Kode OTP kamu adalah *$otp*. Berlaku selama 5 menit.";
-
-        //     Notification::create([
-        //         'user_id' => $request->user_id,
-        //         'message' => $message,
-        //         'type' => 'whatsapp_verification',
-        //         'is_read' => false
-        //     ]);
-
-        //     Log::info('Request OTP masuk:', $request->all());
-
-        //     return response()->json(['otp' => $otp, 'message' => $message]);
+        return response()->json(['otp' => $otp, 'message' => $message, 'link' => $link]);
     }
-
-
 
     public function verifyOtp()
     {
@@ -139,4 +104,20 @@ class OTPController extends Controller
             ->with('success', true)
             ->with('message', 'Verifikasi berhasil.');
     }
+
+
+
+    public function OTP_get_user(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|numeric|exists:users,id',
+            'phone_number' => 'required|string|exists:users,phone_number',
+        ]);
+
+        $user = User::where('phone_number', $request->phone_number)->first();
+
+        return response()->json(['user_id' => $user->id, 'phone_number' => $user->phone_number]);
+    }
+
+    // public function OTP_bot_generate()
 }

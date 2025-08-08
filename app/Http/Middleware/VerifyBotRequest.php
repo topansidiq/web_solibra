@@ -7,15 +7,12 @@ use Illuminate\Http\Request;
 
 class VerifyBotRequest
 {
-    protected $except = [
-        'otp/get'
-    ];
+
     public function handle(Request $request, Closure $next)
     {
-        // Validasi berdasarkan header rahasia (misal dari WhatsApp bot)
-        $secret = $request->header('X-BOT-KEY');
+        $token = $request->bearerToken();
 
-        if ($secret !== env('WHATSAPP_BOT_TOKEN')) {
+        if ($token !== env('API_KEY')) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 

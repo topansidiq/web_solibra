@@ -14,7 +14,8 @@ return [
     |
     */
     'whatsapp_bot' => [
-        'base_url' => env('WHATSAPP_BOT_URL')
+        'base_url' => env('WHATSAPP_BOT_URL'),
+        'token' => env('WHATSAPP_BOT_TOKEN')
     ],
 
     'postmark' => [

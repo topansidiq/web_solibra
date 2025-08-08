@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\{
     NotificationController,
     OTPController,
@@ -10,7 +11,6 @@ use App\Http\Controllers\{
     BookController,
     BorrowController,
     CategoryController,
-    CollectionController,
     DashboardController,
     EventController,
     MemberController,
@@ -19,7 +19,6 @@ use App\Http\Controllers\{
     WhatsAppController,
     InformationController
 };
-use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 // WhatsApp Route
 Route::post('/api/webhook/whatsapp', [WebhookController::class, 'handleAction']);
@@ -71,7 +70,7 @@ Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
     // Resource routes
-    // Route::resource('books', BookController::class);
+    Route::resource('books', BookController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('borrows', BorrowController::class);
     Route::resource('users', UserController::class);
@@ -79,12 +78,6 @@ Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
     Route::resource('informations', InformationController::class);
 
     // Custom book routes
-    // Route::get('/admin/books', [BookController::class, 'index'])->name('books.index');
-    // Route::get('/admin/books/create', [BookController::class, 'create'])->name('books.create');
-    // Route::get('/admin/books/edit', [BookController::class, 'edit'])->name('books.edit');
-    // Route::post('/admin/books', [BookController::class, 'store'])->name('books.store');
-    // Route::put('/books/{book}', [BookController::class, 'update'])->name('books.update');
-    // Route::delete('/books/{book}', [BookController::class, 'destroy'])->name('books.destroy');
     Route::get('/books/search', [BookController::class, 'search'])->name('books.search');
 
     // Custom borrow actions
