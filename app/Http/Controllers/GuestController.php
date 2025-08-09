@@ -6,6 +6,7 @@ use App\Models\Book;
 use App\Models\Category;
 use App\Models\Event;
 use App\Models\Gallery;
+use App\Models\Information;
 use Illuminate\Http\Request;
 
 class GuestController extends Controller
@@ -46,8 +47,14 @@ class GuestController extends Controller
     }
     public function information()
     {
+        $informations = Information::orderBy('created_at', 'desc')->get();
+        return view('information', compact('informations'));
+    }
 
-        return view('information');
+    public function showInformation($id)
+    {
+        $information = Information::findOrFail($id);
+        return view('show.information', compact('information'));
     }
 
     public function showEvent($id)

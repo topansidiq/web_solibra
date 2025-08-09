@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Information;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class InformationController extends Controller
 {
@@ -72,17 +73,43 @@ class InformationController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Information $information)
+    public function edit($id)
     {
-        //
+        $information = Information::findOrFail($id);
+        return view('admin.informations.update', compact('information'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Information $information)
+    public function update(Request $request, $id)
     {
-        //
+        $information = Information::findOrFail($id);
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'images' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        $information->title = $request->title;
+        $information->description = $request->description;
+        $information->author = $request->author;
+
+        if ($request->hasFile('images')) {
+            // Hapus gambar lama jika ada
+            if ($information->images && Storage::exists($information->images)) {
+                Storage::delete($information->images);
+            }
+
+            $imagePath = $request->file('images')->store('informations', 'public');
+            $information->images = $imagePath;
+        }
+
+        $information->save();
+
+        return redirect()->route('informations.index')
+            ->with('success', 'Informasi berhasil diperbarui.');
     }
 
     /**
@@ -90,6 +117,8 @@ class InformationController extends Controller
      */
     public function destroy(Information $information)
     {
-        //
+        $information->delete();
+        return redirect()->route('informations.index')->with('success', 'Peminjaman berhasil dihapus.');
+
     }
 }

@@ -38,6 +38,7 @@ Route::group([
     // Show
     Route::get('/show/book/{book}', [GuestController::class, 'showBook'])->name('show.book');
     Route::get('/show/event/{event}', [GuestController::class, 'showEvent'])->name('show.event');
+    Route::get('/show/information/{info}', [GuestController::class, 'showInformation'])->name('show.information');
 
     // Auth Routes
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -71,7 +72,7 @@ Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
     // Resource routes
-    // Route::resource('books', BookController::class);
+    Route::resource('books', BookController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('borrows', BorrowController::class);
     Route::resource('users', UserController::class);
@@ -93,6 +94,10 @@ Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
     Route::patch('/borrows/{borrow}/overdue', [BorrowController::class, 'overdue'])->name('borrows.overdue');
     Route::post('/borrows/{borrow}/extend', [BorrowController::class, 'extend'])->name('borrows.extend');
     Route::patch('/borrows/{borrow}/archive', [BorrowController::class, 'archive'])->name('borrows.archive');
+
+    //informations
+    Route::put('/informations/{id}', [InformationController::class, 'update'])->name('informations.update');
+    Route::get('/informations/{id}/edit', [InformationController::class, 'edit'])->name('informations.edit');
 });
 
 // All User Route
