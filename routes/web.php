@@ -105,8 +105,3 @@ Route::middleware(['auth', 'role:admin,librarian,member'])->group(function () {
 
     // WhatsApp Bot
 });
-
-Route::get('/users/getUserByPhone', [MemberController::class, 'getUserByPhone']);
-Route::post('/otp/get', [OTPController::class, 'get'])->name('otp.get')->middleware('bot.auth');
-Route::get('/otp/verify', [OTPController::class, 'verify'])->name('otp.verify');
-Route::post('/otp/verify', [OTPController::class, 'verifyOtp'])->name('otp.verify');

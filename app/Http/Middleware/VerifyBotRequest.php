@@ -12,7 +12,7 @@ class VerifyBotRequest
     {
         $token = $request->bearerToken();
 
-        if ($token !== env('API_KEY')) {
+        if ($token !== env('WHATSAPP_BOT_TOKEN')) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 

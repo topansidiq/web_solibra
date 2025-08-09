@@ -53,9 +53,8 @@ class OTPController extends Controller
             ]
         );
 
-        $message = "Kode OTP kamu adalah *$otp*. Berlaku selama 5 menit.";
+        $message = "Kode OTP kamu adalah *$otp*. Berlaku selama 15 menit.";
         $link = "http://localhost:8000/member/verification/" . $request->user_id;
-        $this->bot->sendMessage($request->phone_number, $message);
 
         Notification::create([
             'user_id' => $request->user_id,

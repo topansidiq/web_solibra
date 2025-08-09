@@ -10,49 +10,54 @@ use App\Models\WhatsApp;
 use App\Services\WhatsAppBotService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class WhatsAppController extends Controller
 {
 
-    public function sendOTP(Request $request, WhatsAppBotService $bot, OTP $otp)
+    public function sendMessage(Request $request)
     {
-        try {
-            $request->validate([
-                'user_id' => 'required|exists:users,id',
-                'phone_number' => 'required|exists:users,phone_number',
-                'message' => 'required|string|max:255',
-                'direction' => 'required|string|in:send,received',
-                'processed' => 'sometimes|bolean'
+        $request->validate([
+            'phone_number' => 'required',
+            'message' => 'required'
+        ]);
+
+        $response = Http::withToken(env('WHATSAPP_BOT_TOKEN'))
+            ->post('http://localhost:3000/api/send-message', [
+                'phone_number' => $request->phone_number,
+                'message' => "Kode OTP Anda adalah: {23764897293}"
             ]);
 
-            $phoneNumber = $request->phone_number;
-            $formattedPhoneNumber = preg_replace('/^0/', '62', $phoneNumber) . '@c.us';
+        return response()->json([
+            'status' => 'success',
+            'result' => $response
+        ]);
+    }
 
-            $whatsapp = WhatsApp::create([
-                'user_id' => $request->user_id,
+    public function sendOTP(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required',
+            'phone_number' => 'required',
+        ]);
+
+        $notification = Notification::where('user_id', $request->user_id)
+            ->where('type', 'whatsapp_verification')
+            ->latest()
+            ->first();
+
+        $formattedPhoneNumber = preg_replace('/^0/', '62', $request->phone_number) . '@c.us';
+
+        $response = Http::withToken(env('WHATSAPP_BOT_TOKEN'))
+            ->post('http://localhost:3000/api/send-message', [
                 'phone_number' => $formattedPhoneNumber,
-                'message' => $request->message,
-                'direction' => 'send',
-                'processed' => 'false'
+                'message' => $notification->message
             ]);
 
-            $bot->sendMessage($whatsapp->phone_number, $whatsapp->message);
-            Notification::create([
-                'user_id' => $whatsapp->user_id,
-                'type' => 'otp_send',
-                'message' => $whatsapp->message
-            ]);
-
-            $user = Auth::user();
-
-            if ($user->role == Role::Admin->value || $user->role == Role::Admin->value) {
-                return redirect()->route('users.index')->with('success', 'OTP telah dikirim!');
-            } else {
-                return redirect()->route('member.account')->with('success', 'OTP telah dikirimkan melalui WhatsApp anda, harap segera verifikasi sebelum 10 menit, dan jangan bagikan kode OTP ke siapapun!');
-            }
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
+        return response()->json([
+            'status' => 'success',
+            'result' => $notification
+        ]);
     }
 
     public function checkUserExists(Request $request)

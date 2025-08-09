@@ -18,7 +18,10 @@ class WhatsAppBotService
 
     public function sendMessage($phone_number, $message)
     {
-        return Http::withToken($this->token)->post('${this->baseUrl}/bot/send-message', [
+
+        $phone_number = preg_replace('/^0/', '62', $phone_number);
+
+        return Http::withToken($this->token)->post($this->baseUrl . '/api/send-message', [
             'phone_number' => $phone_number,
             'message' => $message,
         ]);
