@@ -27,10 +27,36 @@ class OTPController extends Controller
     {
 
         try {
-            $validated = $request->validate([
-                'user_id' => 'required|exists:users,id',
-                'phone_number' => 'required|numeric'
+            $request->validate([
+                'user_id' => 'required',
+                'phone_number' => 'required'
             ]);
+
+            $otp = rand(100000, 999999);
+            $expiresAt = now()->addMinutes(15);
+
+            OTP::updateOrCreate(
+                [
+                    'user_id' => $request->user_id,
+                    'phone_number' => $request->phone_number,
+                ],
+                [
+                    'code' => $otp,
+                    'expires_at' => $expiresAt,
+                ]
+            );
+
+            $message = "Kode OTP kamu adalah *$otp*. Berlaku selama 15 menit.";
+            $link = "http://localhost:8000/member/verification/" . $request->user_id;
+
+            Notification::create([
+                'user_id' => $request->user_id,
+                'message' => $message,
+                'type' => 'whatsapp_verification',
+                'is_read' => false
+            ]);
+
+            return response()->json(['otp' => $otp, 'message' => $message, 'link' => $link]);
         } catch (ValidationException $e) {
             Log::error('VALIDATION ERROR:', $e->errors());
             return response()->json([
@@ -38,38 +64,13 @@ class OTPController extends Controller
                 'errors' => $e->errors()
             ], 422);
         }
-
-        $otp = rand(100000, 999999);
-        $expiresAt = now()->addMinutes(5);
-
-        OTP::updateOrCreate(
-            [
-                'user_id' => $request->user_id,
-                'phone_number' => $request->phone_number,
-            ],
-            [
-                'code' => $otp,
-                'expires_at' => $expiresAt,
-            ]
-        );
-
-        $message = "Kode OTP kamu adalah *$otp*. Berlaku selama 15 menit.";
-        $link = "http://localhost:8000/member/verification/" . $request->user_id;
-
-        Notification::create([
-            'user_id' => $request->user_id,
-            'message' => $message,
-            'type' => 'whatsapp_verification',
-            'is_read' => false
-        ]);
-
-        return response()->json(['otp' => $otp, 'message' => $message, 'link' => $link]);
     }
 
     public function verifyOtp()
     {
         return view('member.account.verifyOTP');
     }
+
     public function verify(Request $request)
     {
         $request->validate([
@@ -103,20 +104,4 @@ class OTPController extends Controller
             ->with('success', true)
             ->with('message', 'Verifikasi berhasil.');
     }
-
-
-
-    public function OTP_get_user(Request $request)
-    {
-        $request->validate([
-            'user_id' => 'required|numeric|exists:users,id',
-            'phone_number' => 'required|string|exists:users,phone_number',
-        ]);
-
-        $user = User::where('phone_number', $request->phone_number)->first();
-
-        return response()->json(['user_id' => $user->id, 'phone_number' => $user->phone_number]);
-    }
-
-    // public function OTP_bot_generate()
 }

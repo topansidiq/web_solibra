@@ -63,17 +63,29 @@ class MemberController extends Controller
 
     public function getUserByPhone(Request $request)
     {
-        $user = User::where('phone_number', $request->phone_number)->first();
+        // contoh
+        $user = User::with(['borrows.book'])
+            ->where('phone_number', $request->phone_number)
+            ->first();
+
 
         if (!$user) {
             return response()->json(['message' => 'User tidak ditemukan']);
         }
 
+        $borrows = Borrow::with('book')
+            ->where('user_id', $user->id)
+            ->orderBy('borrowed_at', 'asc')
+            ->get();
+
         return response()->json(
             [
                 'user_id' => $user->id,
                 'name' => $user->name,
-                'phone_number' => $user->phone_number
+                'phone_number' => $user->phone_number,
+                'member_status' => $user->member_status,
+                'is_phone_verified' => $user->is_phone_verified,
+                'borrows' => $borrows,
             ]
         );
     }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BorrowController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\OTPController;
 use App\Http\Controllers\WhatsAppController;
@@ -15,4 +16,5 @@ Route::group([
     Route::post('/otp/verify', [OTPController::class, 'verifyOtp'])->name('otp.verify');
     Route::post('/wa/send-message', [WhatsAppController::class, 'sendMessage']);
     Route::post('/wa/send-otp', [WhatsAppController::class, 'sendOTP']);
+    Route::post('/borrows/{borrow}/extend', [WhatsAppController::class, 'extend'])->name('borrows.extend');
 });

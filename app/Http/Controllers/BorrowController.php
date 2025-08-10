@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Date;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class BorrowController extends Controller
 {
@@ -128,13 +129,21 @@ class BorrowController extends Controller
             'due_date' => now()->copy()->addDays(14),
         ]);
 
+        $message = "Perpanjangan peminjaman untuk buku yang berjudul '{$book->title}' pada {$borrow->borrowed_at} telah di konfirmasi oleh admin. Tanggal jatuh tempo atau pengembalian adalah pada {$borrow->due_date}.";
+
         Notification::create([
             'user_id' => $borrow->user_id,
             'type' => 'extend_confirmed',
-            'message' => "Perpanjangan peminjaman untuk buku yang berjudul '{$book->title}' pada {$borrow->borrowed_at} telah di konfirmasi oleh admin. Tanggal jatuh tempo atau pengembalian adalah pada {$borrow->due_date}.",
+            'message' => $message,
         ]);
 
-        return back()->with('success', 'Perpanjangan peminjaman berhasil dikonfirmasi.');
+        $response = Http::withToken(env('WHATSAPP_BOT_TOKEN'))
+            ->post('http://localhost:3000/api/send-message', [
+                'phone_number' => $borrow->user->phone_number,
+                'message' => $message
+            ]);
+
+        return back()->with('success', 'Perpanjangan peminjaman berhasil dikonfirmasi.')->with('response', $response->json());
     }
 
     public function store(Request $request)
