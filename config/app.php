@@ -86,7 +86,8 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Jakarta',
+    'schedule_timezone' => 'America/Chicago',
 
     /*
     |--------------------------------------------------------------------------

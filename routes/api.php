@@ -17,4 +17,8 @@ Route::group([
     Route::post('/wa/send-message', [WhatsAppController::class, 'sendMessage']);
     Route::post('/wa/send-otp', [WhatsAppController::class, 'sendOTP']);
     Route::post('/borrows/{borrow}/extend', [WhatsAppController::class, 'extend'])->name('borrows.extend');
+
+    // Notification
+    Route::post('/send-notification-to-admin', [WhatsAppController::class, 'sendNotification']);
+    Route::get('/get-admin', [WhatsAppController::class, 'getAdmin']);
 });

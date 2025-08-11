@@ -32,7 +32,7 @@ class OTPController extends Controller
                 'phone_number' => 'required'
             ]);
 
-            $otp = rand(100000, 999999);
+            $otp = generateNumericOTP(6);
             $expiresAt = now()->addMinutes(15);
 
             OTP::updateOrCreate(

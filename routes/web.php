@@ -15,14 +15,8 @@ use App\Http\Controllers\{
     EventController,
     MemberController,
     UserController,
-    WebhookController,
-    WhatsAppController,
     InformationController
 };
-
-// WhatsApp Route
-Route::post('/api/webhook/whatsapp', [WebhookController::class, 'handleAction']);
-Route::get('/api/wa/user-exists', [WhatsAppController::class, 'checkUserExists']);
 
 Route::group([
     'prefix' => LaravelLocalization::setLocale(),
