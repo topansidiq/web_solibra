@@ -118,7 +118,7 @@ class InformationController extends Controller
     public function destroy(Information $information)
     {
         $information->delete();
-        return redirect()->route('informations.index')->with('success', 'Peminjaman berhasil dihapus.');
+        return redirect()->route('informations.index')->with('success', 'Informasi berhasil dihapus.');
 
     }
 }

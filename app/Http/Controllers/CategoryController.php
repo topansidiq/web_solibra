@@ -66,4 +66,11 @@ class CategoryController extends Controller
                 ->withInput();
         }
     }
+
+    public function destroy(Category $category)
+    {
+        $category->delete();
+        return redirect()->route('categories.index')->with('success', 'Kategori berhasil dihapus.');
+
+    }
 }
