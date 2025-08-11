@@ -31,7 +31,11 @@
 
     <!-- Informasi Terbaru -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl font-bold mb-6 text-sky-800">Informasi Terbaru</h2>
+        <div class="flex flex-col items-center text-center mb-10">
+            <h2 class="text-3xl font-extrabold text-sky-800">Informasi Kegiatan</h2>
+            <p class="text-gray-500 mt-2">Kegiatan terbaru dari Perpustakaan Umum Kota Solok</p>
+            <div class="w-20 border-b-4 border-sky-600 mt-3"></div>
+        </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             @foreach ($informations as $index => $info)
@@ -46,9 +50,9 @@
                         <div class="absolute bottom-0 p-4 text-white">
                             <h3 class="text-xl font-bold text-shadow-lg">{{ $info->title }}</h3>
                             <p class="mt-3 text-sm text-gray-200 mb-3">
-                                {{ \Illuminate\Support\Str::limit(strip_tags($info->description), 80) }}
+                                {{ \Illuminate\Support\Str::limit(strip_tags($info->description), 50) }}
                             </p>
-                            <a href="{{ route('member.information.show', $info->id) }}"
+                            <a href="{{ route('show.information', $info->id) }}"
                             class="inline-block bg-gray-300 text-sky-800 text-sm font-semibold px-3 py-1 rounded hover:bg-gray-400 transition">
                                 Lihat Selengkapnya
                             </a>

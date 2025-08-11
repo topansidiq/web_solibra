@@ -40,6 +40,7 @@
                         <th class="p-4">Judul</th>
                         <th class="p-4">Penulis</th>
                         <th class="p-4">Tanggal Buat</th>
+                        <th class="p-4">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="text-xs">
@@ -58,14 +59,6 @@
                                         {{ $information->title }}
                                     </p>
                                     </a>
-                                    <form action="{{ route('informations.destroy', $information->id) }}" method="POST"
-                                        onsubmit="return confirm('Yakin ingin menghapus informasi ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-500 hover:underline text-xs">
-                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                        </button>
-                                    </form>
                                 </div>
                             </td>
                             <td class="px-4 py-1 border border-slate-300">
@@ -73,6 +66,35 @@
                             </td>
                             <td class="px-4 py-1 border border-slate-300 text-center">
                                 {{ \Carbon\Carbon::parse($information->created_at)->format('d-m-Y') }}
+                            </td>
+
+                            <td class="px-4 py-1 border border-slate-300 text-center w-32">
+                                <div class="flex items-center justify-center gap-1">
+                                    {{-- Tombol Detail --}}
+                                    <a href="{{ route('informations.show', $information->id) }}"
+                                    class="bg-green-500 hover:bg-green-600 text-white text-xs px-3 py-1 rounded">
+                                        Detail
+                                    </a>
+
+                                    {{-- Tombol Edit --}}
+                                    <a href="{{ route('informations.edit', $information->id) }}"
+                                    class="bg-sky-800 hover:bg-sky-700 text-white text-xs px-3 py-1 rounded">
+                                        Edit
+                                    </a>
+
+                                    {{-- Tombol Hapus --}}
+                                    <form action="{{ route('informations.destroy', $information) }}" method="POST"
+                                        onsubmit="return confirm('Yakin ingin menghapus informasi ini?')"
+                                        class="inline-block">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded flex items-center justify-center h-[25px]">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
+
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @endforeach

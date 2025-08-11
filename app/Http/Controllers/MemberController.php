@@ -130,7 +130,7 @@ class MemberController extends Controller
         return view('member.information.index', compact('informations', 'user'));
     }
 
-    public function show(Information $information)
+     public function show(Information $information)
     {
         $user = Auth::user();
         return view('member.information.show', compact('information', 'user'));
