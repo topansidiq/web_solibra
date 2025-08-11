@@ -40,6 +40,10 @@ class GuestController extends Controller
     {
         return view('profile');
     }
+    public function service()
+    {
+        return view('service');
+    }
     public function event()
     {
         $events = Event::all()->groupBy('status');

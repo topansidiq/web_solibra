@@ -20,6 +20,7 @@
                 $profile = __('member_header.profile');
                 $collection = __('member_header.collection');
                 $borrowing = __('member_header.borrowing');
+                $service = __('member_header.service');
                 $information = __('member_header.information');
                 $notification = __('member_header.notification');
                 $account = __('member_header.account');
@@ -29,6 +30,7 @@
                     ['label' => $profile, 'name' => 'member.profile'],
                     ['label' => $collection, 'name' => 'member.collection'],
                     ['label' => $borrowing, 'name' => 'member.borrow'],
+                    ['label' => $service, 'name' => 'member.service'],
                     ['label' => $information, 'name' => 'member.information'],
                     ['label' => $notification, 'name' => 'member.notification'],
                     ['label' => $account, 'name' => 'member.account'],

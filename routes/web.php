@@ -25,6 +25,7 @@ Route::group([
     Route::get('/', [GuestController::class, 'home'])->name('home');
     Route::get('/collection', [GuestController::class, 'collection'])->name('collection');
     Route::get('/profile', [GuestController::class, 'profile'])->name('profile');
+    Route::get('/service', [GuestController::class, 'service'])->name('service');
     Route::get('/event', [GuestController::class, 'event'])->name('event');
     Route::get('/information', [GuestController::class, 'information'])->name('information');
 
@@ -44,8 +45,11 @@ Route::group([
     Route::middleware(['auth', 'role:member'])->group(function () {
         Route::get('/member/dashboard', [MemberController::class, 'dashboard'])->name('member.index');
 
+        Route::get('/member/account/edit', [MemberController::class, 'edit'])->name('member.account.edit');
+
         Route::get('/member/collection', [MemberController::class, 'collection'])->name('member.collection');
         Route::get('/member/profile', [MemberController::class, 'profile'])->name('member.profile');
+        Route::get('/member/service', [MemberController::class, 'service'])->name('member.service');
         Route::get('/member/information', [MemberController::class, 'information'])->name('member.information');
         Route::get('/member/information/{information}', [MemberController::class, 'show'])->name('member.information.show');
         Route::get('/member/notification', [MemberController::class, 'notification'])->name('member.notification');
