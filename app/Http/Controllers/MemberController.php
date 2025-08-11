@@ -32,6 +32,12 @@ class MemberController extends Controller
         return view('member.profile.index', compact('user'));
     }
 
+    public function service()
+    {
+        $user = Auth::user();
+        return view('member.service.index', compact('user'));
+    }
+
     public function notification()
     {
         $user = Auth::user();
