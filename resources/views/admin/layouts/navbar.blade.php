@@ -24,6 +24,7 @@
             ['label' => 'Peminjaman', 'name' => 'borrows.index', 'icon' => 'list'],
             ['label' => 'Pengguna', 'name' => 'users.index', 'icon' => 'user'],
             ['label' => 'Informasi', 'name' => 'informations.index', 'icon' => 'circle'],
+            ['label' => 'Acara', 'name' => 'events.index', 'icon' => 'calendar-days'],
             ['label' => 'Notifikasi', 'name' => 'notifications.index', 'icon' => 'bell'],
         ];
     @endphp

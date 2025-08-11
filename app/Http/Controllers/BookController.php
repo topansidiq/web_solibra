@@ -61,50 +61,59 @@ class BookController extends Controller
 
     public function create()
     {
-        $categories = Category::all();
+        $categories = Category::withCount('books')->get();
         return view('admin.books.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string',
-            'author' => 'required|string',
-            'publisher' => 'nullable|string',
-            'language' => 'nullable|string',
-            'year' => 'nullable|integer|min:1000|max:' . date('Y'),
-            'isbn' => ['nullable', 'string', 'unique:books,isbn'],
-            'categories' => 'nullable|array',
-            'categories.*' => 'exists:categories,id',
-            'stock' => 'nullable|integer|min:0',
-            'description' => 'nullable|string',
-            'cover' => 'nullable|image|max:2048',
-            'supply_date' => 'nullable|string',
-            'identification_number' => 'nullable|string',
-            'material' => 'nullable|string',
-            'physical_shape' => 'nullable|string',
-            'edition' => 'nullable|string',
-            'publication_place' => 'nullable|string',
-            'physical_description' => 'nullable|string',
-            'acquisition_source' => 'nullable|string',
-            'acquisition_name' => 'nullable|string',
-            'price' => 'nullable|string',
-        ]);
+        try {
+            $validated = $request->validate([
+                'title' => 'required|string',
+                'author' => 'required|string',
+                'publisher' => 'nullable|string',
+                'language' => 'nullable|string',
+                'year' => 'nullable|integer|min:1000|max:' . date('Y'),
+                'isbn' => ['nullable', 'string', 'unique:books,isbn'],
+                'categories' => 'nullable|array',
+                'categories.*' => 'exists:categories,id',
+                'stock' => 'nullable|integer|min:0',
+                'description' => 'nullable|string',
+                'cover' => 'nullable|image|max:2048',
+                'supply_date' => 'nullable|string',
+                'identification_number' => 'nullable|string',
+                'material' => 'nullable|string',
+                'physical_shape' => 'nullable|string',
+                'edition' => 'nullable|string',
+                'publication_place' => 'nullable|string',
+                'physical_description' => 'nullable|string',
+                'acquisition_source' => 'nullable|string',
+                'acquisition_name' => 'nullable|string',
+                'price' => 'nullable|string',
+            ]);
 
-        // Simpan cover jika ada
-        if ($request->hasFile('cover')) {
-            $validated['cover'] = $request->file('cover')->store('covers', 'public');
+            if ($request->hasFile('cover')) {
+                $validated['cover'] = $request->file('cover')->store('covers', 'public');
+            }
+
+            $book = Book::create($validated);
+
+            if (!empty($validated['categories'])) {
+                $book->categories()->sync($validated['categories']);
+            }
+
+            return redirect()->route('books.index')->with('success', 'Buku berhasil ditambahkan.');
+        } catch (Throwable $e) {
+            Log::error('Gagal membuat buku', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'message' => 'Terjadi kesalahan saat menambahkan buku.',
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        // Buat data buku
-        $book = Book::create($validated);
-
-        // Relasi kategori (many-to-many)
-        if (!empty($validated['categories'])) {
-            $book->categories()->sync($validated['categories']);
-        }
-
-        return redirect()->route('books.index')->with('success', 'Buku berhasil ditambahkan.');
     }
 
     public function update(Request $request, Book $book)
@@ -135,15 +144,12 @@ class BookController extends Controller
                 'price' => 'nullable|string',
             ]);
 
-            // Update buku
             $book->update($validated);
 
-            // Sync kategori
             $book->categories()->sync($request->categories ?? []);
 
             return redirect()->route('books.index')->with('success', 'Buku berhasil diperbarui.');
         } catch (Throwable $e) {
-            // Log error untuk debugging
             Log::error('Gagal update buku', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
@@ -151,7 +157,7 @@ class BookController extends Controller
 
             return response()->json([
                 'message' => 'Terjadi kesalahan saat memperbarui buku.',
-                'error' => $e->getMessage(), // Bisa dihapus di production
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

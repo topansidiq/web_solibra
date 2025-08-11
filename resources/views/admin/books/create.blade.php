@@ -2,6 +2,7 @@
 
 @section('content')
     <div class="w-full">
+        <script src="{{ asset('js/admin/dashboard.js') }}"></script>
         <div x-data="{ showError: {{ session('error') ? 'true' : 'false' }} }" x-show="show" x-init="setTimeout(() => showError = false, 6000)" class="transition-all ease-in-out" x-transition
             x-cloak>
             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
@@ -31,10 +32,10 @@
         </div>
         <div class="mx-4 mb-4 p-4 rounded-sm bg-neutral-50 relative">
             <form action="{{ route('books.store') }}" method="POST" enctype="multipart/form-data"
-                class="grid grid-cols-2 gap-7">
+                class="grid grid-cols-2 gap-5">
                 @csrf
 
-                <div class="col-span-2  pb-3">
+                <div class="col-span-2 pb-3">
                     <div>
                         <h3 class="text-md font-semibold"></h3>
                         <p class="text-xs text-neutral-500">
@@ -169,7 +170,7 @@
                             Informasi Lainnya
                         </p>
                     </div>
-                    <div class="grid col-span-5 justify-between gap-4">
+                    <div class="flex justify-between items-s gap-4">
                         <div class="w-full">
                             <label for="price" class="block font-semibold text-sm pt-2 pb-1">Harga</label>
                             <input type="text" name="price" id="price"
@@ -197,17 +198,17 @@
                                         class="absolute w-full bg-white shadow border mt-1 rounded z-50 max-h-60 overflow-y-auto max-w-60">
                                         <template x-for="(cat, index) in filtered" :key="cat.id">
                                             <div @click="select(cat)"
-                                                class="px-4 py-2 text-sm hover:bg-teal-100 cursor-pointer"
-                                                :class="index === 0 ? 'bg-teal-50' :
+                                                class="px-4 py-2 text-sm hover:bg-sky-100 cursor-pointer"
+                                                :class="index === 0 ? 'bg-sky-50' :
                                                     ''">
                                                 <span x-text="cat.name"></span>
-                                                <span class="text-xs text-gray-400"
+                                                <span class="text-xs text-neutral-400"
                                                     x-text="'(' + cat.books_count + ' buku)'"></span>
                                             </div>
                                         </template>
 
                                         <template x-if="filtered.length === 0">
-                                            <div class="px-4 py-2 text-sm text-gray-400">Tidak ditemukan</div>
+                                            <div class="px-4 py-2 text-sm text-neutral-400">Tidak ditemukan</div>
                                         </template>
                                     </div>
 
@@ -215,7 +216,7 @@
                                     <div class="mt-2 flex flex-wrap gap-1" id="categories">
                                         <template x-for="(cat, i) in selected" :key="cat.id">
                                             <div
-                                                class="bg-teal-100 text-teal-800 px-2 py-1 rounded text-sm flex items-center">
+                                                class="bg-sky-100 text-sky-800 px-2 py-1 rounded text-sm flex items-center">
                                                 <span x-text="cat.name"></span>
                                                 <button type="button" class="ml-2" @click="remove(cat.id)">
                                                     x
@@ -226,12 +227,9 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="w-full">
-                            <label for="stock" class="block font-semibold text-sm pt-2 pb-1">Stok/Eksemplar</label>
-                            <input type="number" name="stock" id="stock"
-                                class="form-input w-full border border-neutral-400 rounded-md focus: outline-0 p-2 placeholder: text-xs"
-                                placeholder="Contoh: 23">
+
+                            <a class="block text-xs rounded-sm px-2 py-1 bg-sky-700 text-neutral-50 w-fit"
+                                href="{{ route('categories.index') }}">Buat Ketegori Baru</a>
                         </div>
                         <div x-data="{ fileName: '' }" class="w-full">
                             <label for="cover-upload" class="block font-semibold text-sm pt-2 pb-1">Cover

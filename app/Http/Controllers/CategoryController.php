@@ -32,19 +32,37 @@ class CategoryController extends Controller
             $category = Category::create($validated);
             return redirect()->route('categories.index')->with('succes', 'Kategori "' . $category->name . '" berhasil ditambahkan.');
         } catch (ValidationException $e) {
-
-            // Tangani error validasi
             Log::error('Validation Error when storing category: ' . $e->getMessage(), ['errors' => $e->errors()]);
             return redirect()->back()
                 ->withErrors($e->errors())
-                ->withInput(); // Keep old input in the form
+                ->withInput();
+        }
+    }
 
-        } catch (\Exception $e) {
+    public function storeOnBooks(Request $request)
+    {
+        try {
+            $request->validate([
+                'categories' => 'required|string',
+            ]);
 
-            // Tangani error umum lainnya
-            Log::error('Error storing category: ' . $e->getMessage());
+            $categoriesString = $request->input('categories');
+
+            $categoriesArray = collect(explode(',', $categoriesString))
+                ->map(fn($cat) => trim($cat))
+                ->filter(fn($cat) => !empty($cat))
+                ->unique();
+
+            foreach ($categoriesArray as $categoryName) {
+                Category::firstOrCreate([
+                    'name' => $categoryName,
+                ]);
+            }
+            return redirect()->back()->with('success', 'Kategori berhasil dibuat!');
+        } catch (ValidationException $e) {
+            Log::error('Validation Error when storing category: ' . $e->getMessage(), ['errors' => $e->errors()]);
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan saat menambahkan kategori. Silakan coba lagi.')
+                ->withErrors($e->errors())
                 ->withInput();
         }
     }

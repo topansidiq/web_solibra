@@ -173,10 +173,12 @@
                                 {{ \Carbon\Carbon::parse($borrow->borrowed_at)->format('d-m-Y') }}
                             </td>
                             <td class="px-4 py-1 border border-slate-300 text-center">
-                                @if ($borrow->status === 'unconfirmed')
+                                @if ($borrow->status === 'unconfirmed' || $borrow->status === 'archived')
                                     <span>-</span>
-                                @else
-                                    {{ $borrow->return_date ? \Carbon\Carbon::parse($borrow->return_date)->format('d-m-Y') : 'AKTIF' }}
+                                @elseif ($borrow->status === 'confirmed' || $borrow->status === 'extend')
+                                    <span>Aktif</span>
+                                @elseif ($borrow->status === 'returned')
+                                    {{ Carbon\Carbon::parse($borrow->return_date)->format('d-m-Y') }}
                                 @endif
                             </td>
 
@@ -228,11 +230,10 @@
                                     </form>
                                 @elseif ($borrow->status === 'overdue')
                                     <form action="{{ route('borrows.overdue', $borrow->id) }}" method="POST"
-                                        onsubmit="return confirm('Kirim pemberitahuan keterlambatan?')">
+                                        onsubmit="return confirm('Konfirmasi pengembalian?')">
                                         @csrf
                                         @method('PATCH')
-                                        <button class="flex items-center justify-between px-2" type="submit"
-                                            title="Kirim Pemberitahuan Keterlambatan">
+                                        <button class="flex items-center justify-between px-2" type="submit">
                                             <i data-lucide="bell" class="w-5 h-5 text-yellow-500"></i>
                                             <span class="block px-2">
                                                 Jatuh Tempo

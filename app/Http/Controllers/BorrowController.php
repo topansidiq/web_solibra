@@ -98,8 +98,11 @@ class BorrowController extends Controller
 
     public function overdue(Borrow $borrow)
     {
-        $borrow->update(['status' => 'returned']);
-        return back()->with('success', 'Peminjaman melewati batas pengembalian.');
+        $borrow->update([
+            'status' => 'returned',
+            'return_date' => now()
+        ]);
+        return back()->with('success', 'Berhasil konfirmasi pengembalian.');
     }
 
     public function archive(Borrow $borrow)

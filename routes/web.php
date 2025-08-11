@@ -75,6 +75,9 @@ Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
     // Custom book routes
     Route::get('/books/search', [BookController::class, 'search'])->name('books.search');
 
+    // Costum categories route
+    Route::post('/categories/storeOnBook', [CategoryController::class, 'storeOnBook'])->name('categories.store-on-book');
+
     // Custom borrow actions
     Route::patch('/borrows/{borrow}/confirm', [BorrowController::class, 'confirm'])->name('borrows.confirm');
     Route::patch('/borrows/{borrow}/return', [BorrowController::class, 'return'])->name('borrows.return');
