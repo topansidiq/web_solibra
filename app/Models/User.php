@@ -46,7 +46,8 @@ class User extends Authenticatable
 
 
     protected $casts = [
-        'role' => Role::class
+        'role' => Role::class,
+        'expired_date' => 'date'
     ];
 
     public function isAdmin(): bool

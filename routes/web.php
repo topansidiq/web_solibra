@@ -44,6 +44,8 @@ Route::group([
     Route::middleware(['auth', 'role:member'])->group(function () {
         Route::get('/member/dashboard', [MemberController::class, 'dashboard'])->name('member.index');
 
+        Route::get('/member/account/edit', [MemberController::class, 'edit'])->name('member.account.edit');
+
         Route::get('/member/collection', [MemberController::class, 'collection'])->name('member.collection');
         Route::get('/member/profile', [MemberController::class, 'profile'])->name('member.profile');
         Route::get('/member/information', [MemberController::class, 'information'])->name('member.information');
