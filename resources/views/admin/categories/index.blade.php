@@ -8,7 +8,7 @@
                 {{-- Go to Dashboard --}}
                 <div class="flex items-center w-fit">
                     <a href="{{ route('dashboard.index') }}" class="text-teal-950 font-bold">
-                        <i data-lucide="circle" class="w-8 h-8 inline"></i>
+                        <i data-lucide="layers" class="w-8 h-8 inline"></i>
                         <i data-lucide="chevron-left" class="w-10 h-10 inline"></i>
                     </a>
                 </div>
