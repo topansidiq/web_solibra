@@ -7,6 +7,7 @@ use App\Models\Borrow;
 use App\Models\Category;
 use App\Models\Notification;
 use App\Models\User;
+use App\Services\WhatsAppBotService;
 use Carbon\Carbon;
 use Date;
 use Illuminate\Http\Request;
@@ -111,12 +112,18 @@ class BorrowController extends Controller
         return back()->with('success', 'Peminjaman berhasil diarsipkan.');
     }
 
-    public function extend(Borrow $borrow)
+    public function extend(Borrow $borrow, WhatsAppBotService $bot)
     {
         $book = $borrow->book;
 
         if ($borrow->extend >= 3) {
-            return back()->with('error', 'Telah mencapai batas maksimal (3) kali perpanjangan buku.');
+           $message = 'Telah mencapai batas maksimal (3) kali perpanjangan buku.';
+           $response = Http::withToken(env('WHATSAPP_BOT_TOKEN'))
+            ->post('http://localhost:3000/api/send-message', [
+                'phone_number' => $borrow->user->phone_number,
+                'message' => $message
+            ]);
+            return back()->with('error', $message);
         }
 
         $borrowsOverdue = Borrow::where('user_id', $borrow->user_id)->where('due_date', '<', now())->whereIn('status', ['confirmed', 'overdue'])->whereRaw('due_date > DATE_ADD(borrowed_at, INTERVAL 42 DAY)')->exists();

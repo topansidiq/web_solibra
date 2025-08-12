@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
 
-        User::factory()->count(100)->create();
+        // User::factory()->count(10)->create();
 
         // User::create([
         //     'name' => 'Salsabila Agustin Putri Yendi',
@@ -44,9 +44,9 @@ class UserSeeder extends Seeder
         // ]);
 
         User::create([
-            'name' => 'Topan Sidiq',
+            'name' => 'Salsabila Agustin PY',
             'role' => 'admin',
-            'phone_number' => '082288407308',
+            'phone_number' => '089626861033',
             'gender' => 'male',
             'birth_date' => '2002-07-28',
             'age' => 23,
@@ -59,9 +59,9 @@ class UserSeeder extends Seeder
             'jobs' => 'Mahasiswa',
             'education' => 'S1',
             'class_department' => 'Ilmu Perpustakaan',
-            'email' => 'topansidiq28@gmail.com',
-            'password' => Hash::make('Salsabila2311'),
-            'remember_token' => 'topan12345',
+            'email' => 'fahri@gmail.com',
+            'password' => Hash::make('12345678'),
+            'remember_token' => '123456789098',
             'status_account' => 'active',
             'expired_date' => now()->addYear(),
             'profile_picture' => null,

@@ -31,7 +31,7 @@ class SendDueDateReminder extends Command
                 ->get();
 
             foreach ($borrows as $borrow) {
-                $message = "> Layanan Chatbot Perpustakaan Umum Kota Solok\n> 🔔 Pengingat Peminjaman Otomatis\n\n{$greeting[$days]} {$borrow->user->name}, peminjaman anda untuk {$borrow->book->physical_shape} {$borrow->book->clean_title} akan jatuh tempo pada {$days} hari lagi. Perhatikan tanggal jatuh tempo dan segera melakukan pengembalian. Terima kasih";
+                $message = "> Layanan Chatbot Perpustakaan Umum Kota Solok\n> 🔔 Pengingat Peminjaman Otomatis\n\n{$greeting[$days]} {$borrow->user->name}, peminjaman anda untuk {$borrow->book->physical_shape} {$borrow->book->clean_title} akan jatuh tempo pada {$days} hari lagi. Perhatikan tanggal jatuh tempo dan segera melakukan pengembalian. Untuk melakukan perpanjangan silahkan jalankan perintah *'Extend'*. Terima kasih";
                 $wa->sendMessage(formattedPhoneNumberToUs62($borrow->user->phone_number), $message);
                 $this->info("Reminder dikirim ke {$borrow->user->phone_number} ({$days} hari lagi)");
 

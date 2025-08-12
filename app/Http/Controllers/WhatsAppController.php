@@ -52,6 +52,8 @@ class WhatsAppController extends Controller
     {
         $book = $borrow->book;
         if ($borrow->extend >= 3) {
+           $message = 'Telah mencapai batas maksimal (3) kali perpanjangan buku.';
+           $this->bot->sendMessage(formattedPhoneNumberToUs62($borrow->user->phone_number), $message);
             return back()->with('error', 'Telah mencapai batas maksimal (3) kali perpanjangan buku.');
         }
         $borrowsOverdue = Borrow::where('user_id', $borrow->user_id)->where('due_date', '<', now())->whereIn('status', ['confirmed', 'overdue'])->whereRaw('due_date > DATE_ADD(borrowed_at, INTERVAL 42 DAY)')->exists();

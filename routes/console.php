@@ -8,6 +8,11 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::command('reminder:due-books')->weekdays()->dailyAt("07:30");
-Schedule::command('reminder:due-date-book')->weekdays()->dailyAt("07:35");
+// Udah jatuh tempo
+Schedule::command('reminder:due-books')->dailyAt("07:30");
+
+// Mau jatuh tempo
+Schedule::command('reminder:due-date-book')->dailyAt("07:35");
+
+// Merubah status peminjaman
 Schedule::job('app:mark-overdue-borrow')->daily();

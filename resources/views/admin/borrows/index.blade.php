@@ -26,7 +26,7 @@
                 <!-- Tombol Buka Modal -->
                 <div>
                     <button @click="openAddborrowModal = true"
-                        class="bg-teal-800 text-white px-2 py-1 rounded hover:bg-teal-700 transition duration-200 flex gap-2">
+                        class="bg-sky-800 text-white px-2 py-1 rounded hover:bg-sky-700 transition duration-200 flex gap-2">
                         <i data-lucide="plus" class="w-4 h-4"></i>
                         <span class="block text-xs">Buat Peminjaman Baru</span>
                     </button>
@@ -36,7 +36,7 @@
                 <div id="modalAddBorrow" x-show="openAddborrowModal" x-transition x-cloak
                     class="modal-add bg-white shadow-2xl rounded-lg fixed top-32 left-52 w-1/2 z-50">
 
-                    <div class="bg-teal-950 w-full p-4 rounded-t-lg cursor-move modal-add-header">
+                    <div class="bg-sky-800 w-full p-4 rounded-t-lg cursor-move modal-add-header">
                         <h2 class="text-xl font-bold flex items-center justify-between text-white">
                             <span>Buat Peminjaman Baru</span>
                             <button @click="openAddborrowModal = false">
@@ -123,7 +123,7 @@
         {{-- Tabel Scrollable --}}
         <div class="mx-4">
             <table class="table font-sans w-full">
-                <thead class="bg-teal-800 text-white text-sm sticky top-0 z-10">
+                <thead class="bg-sky-800 text-white text-sm sticky top-0 z-10">
                     <tr>
                         <th class="p-4 text-center">No.</th>
                         <th class="p-4">Judul Buku</th>
