@@ -18,17 +18,27 @@
         </div>
         <div class="title p-4 flex flex-row items-center justify-between">
             {{-- Header/Page Title/Page Description --}}
-            <div>
-                <h3 class="text-xl font-bold">Daftar Peminjaman</h3>
-                <p class="text-sm">Ini adalah daftar peminjaman buku di perpustakaan</p>
+            <div class="flex flex-row gap-2">
+                {{-- Go to Dashboard --}}
+                <div class="flex items-center w-fit">
+                    <a href="{{ route('dashboard.index') }}" class="text-teal-950 font-bold">
+                        <i data-lucide="list" class="w-8 h-8 inline"></i>
+                        <i data-lucide="chevron-left" class="w-10 h-10 inline"></i>
+                    </a>
+                </div>
+
+                <div class="">
+                    <h3 class="text-xl text-neutral-700 font-bold">Daftar Peminjaman</h3>
+                    <p class="text-xs text-neutral-500">Menu ini menampilkan daftar peminjaman yang tersedia</p>
+                </div>
             </div>
             <div x-data="{ openAddborrowModal: false }">
                 <!-- Tombol Buka Modal -->
                 <div>
                     <button @click="openAddborrowModal = true"
-                        class="bg-sky-800 text-white px-2 py-1 rounded hover:bg-sky-700 transition duration-200 flex gap-2">
-                        <i data-lucide="plus" class="w-4 h-4"></i>
-                        <span class="block text-xs">Buat Peminjaman Baru</span>
+                        class="flex flex-row bg-sky-800 text-white px-2 py-1 rounded-md hover:bg-sky-700 transition duration-200 gap-2">
+                        <i data-lucide="plus" class="w-5 h-5"></i>
+                        <span class="text-sm">Buat Peminjaman Baru</span>
                     </button>
                 </div>
 
@@ -111,7 +121,7 @@
                                 Batal
                             </button>
                             <button type="submit"
-                                class="bg-emerald-700 px-3 py-1 rounded-sm font-bold text-white block w-28 hover:scale-105 transition-all">
+                                class="bg-sky-800 px-3 py-1 rounded-sm font-bold text-white block w-28 hover:scale-105 transition-all">
                                 Simpan
                             </button>
                         </div>
