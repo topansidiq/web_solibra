@@ -4,6 +4,20 @@
 
 @section('content')
     <div class="bg-gray-50 text-gray-900 font-sans antialiased min-h-screen p-6">
+        <div x-data="{ show: {{ session('error') ? 'true' : 'false' }} }" x-show="show" x-init="setTimeout(() => show = false, 6000)" class="transition-all ease-in-out" x-transition
+            x-cloak>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <strong class="font-bold bg-red-300 px-2 py-1 rounded-sm">Gagal</strong>
+                <span class="block sm:inline">{{ session('error') }}</span>
+            </div>
+        </div>
+        <div x-data="{ show: {{ session('success') ? 'true' : 'false' }} }" x-show="show" x-init="setTimeout(() => show = false, 6000)" class="transition-all ease-in-out" x-transition
+            x-cloak>
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <strong class="font-bold bg-green-300 px-2 py-1 rounded-sm">Berhasil</strong>
+                <span class="block sm:inline">{{ session('success') }}</span>
+            </div>
+        </div>
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
             <!-- Left profile panel -->
             <section class="col-span-1 flex flex-col items-center md:items-start">
@@ -33,6 +47,11 @@
                                         class="text-xs border bg-neutral-500 text-neutral-50 rounded-lg px-2 hover:bg-neutral-700">Belum
                                         Terverifikasi</button>
                                 </a>
+                            @elseif ($user->member_status == 'active')
+                                <span
+                                    class="text-xs border bg-sky-500 text-neutral-50 rounded-lg px-2 hover:bg-neutral-700">
+                                    Terverifikasi
+                                </span>
                             @endif
                         </span>
                     </p>

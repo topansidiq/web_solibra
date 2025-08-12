@@ -9,8 +9,8 @@
     ];
 @endphp
 
-<div class="w-full grid items-center xl:flex sticky top-0 z-50 bg-sky-800 text-slate-50"
-    x-data="{ active: '{{ Route::currentRouteName() }}' }" x-transition>
+<div class="w-full grid items-center xl:flex sticky top-0 z-50 bg-sky-800 text-slate-50" x-data="{ active: '{{ Route::currentRouteName() }}' }"
+    x-transition>
 
     <div class="xl:p-4 flex justify-between gap-5 w-full">
         <div class="p-3 flex gap-2 items-center pb-2">
@@ -24,8 +24,7 @@
         </div>
 
         {{-- Desktop --}}
-        <nav class="hidden xl:flex gap-6 text-sm items-center content-between"
-            x-data="{ openDropDown: false, active: '{{ request()->route()->getName() }}' }">
+        <nav class="hidden xl:flex gap-6 text-sm items-center content-between" x-data="{ openDropDown: false, active: '{{ request()->route()->getName() }}' }">
 
             @foreach ($menu as $item)
                 <div @mouseenter="openDropDown = '{{ $item['name'] }}'" @mouseleave="openDropDown = false" x-transition
@@ -50,7 +49,8 @@
                         <div class="absolute top-full left-0 mt-2 bg-neutral-50 text-neutral-700 shadow-lg w-48 z-50 border border-neutral-500 rounded-md text-sm"
                             x-show="openDropDown === 'event'" x-transition x-cloak>
                             @foreach ($options as $opt)
-                                <a href="{{ route('event') }}" class="block px-4 py-2 hover:bg-yellow-500 hover:text-white">
+                                <a href="{{ route('event') }}"
+                                    class="block px-4 py-2 hover:bg-yellow-500 hover:text-white">
                                     {{ $opt['status'] }}
                                 </a>
                             @endforeach
@@ -61,10 +61,12 @@
                         <div class="absolute top-full left-0 mt-2 bg-neutral-50 text-neutral-700 shadow-lg w-48 z-50 border border-neutral-500 rounded-md text-sm"
                             x-show="openDropDown === 'collection'" x-transition x-cloak>
                             @foreach ($categories ?? [] as $category)
-                                <a href="{{ route('collection', ['category' => $category->slug ?? $category->id]) }}"
-                                    class="block px-4 py-2 hover:bg-yellow-500 hover:text-white">
-                                    {{ $category->name }}
-                                </a>
+                                @if (is_object($category))
+                                    <a href="{{ route('collection', ['category' => $category->slug ?? $category->id]) }}"
+                                        class="block px-4 py-2 hover:bg-yellow-500 hover:text-white">
+                                        {{ $category->name }}
+                                    </a>
+                                @endif
                             @endforeach
                         </div>
                     @endif
@@ -90,7 +92,8 @@
                         <li>
                             <a rel="alternate" hreflang="{{ $localeCode }}"
                                 href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">
-                                <img src="{{ asset('img/' . $flag) }}" alt="{{ $properties['native'] }} flag" class="w-6">
+                                <img src="{{ asset('img/' . $flag) }}" alt="{{ $properties['native'] }} flag"
+                                    class="w-6">
                             </a>
                         </li>
                     @endif
@@ -150,7 +153,8 @@
                     <li>
                         <a rel="alternate" hreflang="{{ $localeCode }}"
                             href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">
-                            <img src="{{ asset('img/' . $flag) }}" alt="{{ $properties['native'] }} flag" class="w-6">
+                            <img src="{{ asset('img/' . $flag) }}" alt="{{ $properties['native'] }} flag"
+                                class="w-6">
                         </a>
                     </li>
                 @endif

@@ -6,8 +6,6 @@ use App\Http\Controllers\{
     NotificationController,
     OTPController,
     GuestController,
-    RegisterController,
-    LoginController,
     BookController,
     BorrowController,
     CategoryController,
@@ -17,6 +15,9 @@ use App\Http\Controllers\{
     UserController,
     InformationController
 };
+use App\Http\Controllers\Auth\PasswordController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 
 Route::group([
     'prefix' => LaravelLocalization::setLocale(),
@@ -40,6 +41,11 @@ Route::group([
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [RegisterController::class, 'register']);
+    Route::get('/forgot-password', [PasswordController::class, 'showForgotPasswordForm'])->name('password.forgot');
+    Route::post('/forgot-password', [PasswordController::class, 'sendResetPasswordLink'])->name('password.link');
+    Route::get('/reset-password/{token}', [PasswordController::class, 'showResetPasswordForm'])->name('password.reset');
+
+
 
     // Member/User Routes
     Route::middleware(['auth', 'role:member'])->group(function () {
@@ -57,10 +63,11 @@ Route::group([
 
         // Borrow Menu
         Route::get('/member/borrow', [MemberController::class, 'borrow'])->name('member.borrow');
-        // Route::patch('/borrows/{borrow}', [BorrowController::class, 'showBorrowForm'])->name('member.borrow');
 
         // Phone Number Verification
         Route::get('/member/verification', [MemberController::class, 'phoneNumberVerification'])->name('member.verification');
+        Route::post('/member/verification', [OTPController::class, 'verify'])->name('member.verifing');
+        Route::get('/member/verification/otp', [OTPController::class, 'verifyOtp'])->name('member.verification.otp');
     });
 });
 

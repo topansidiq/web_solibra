@@ -2,48 +2,44 @@
 
 @section('content')
     <div class="content flex flex-col flex-auto bg-gray-50 w-full">
-        <div class="title p-4 flex item-center justify-between">
+
+        <div>
+            <div x-data="{ show: {{ session('error') ? 'true' : 'false' }} }" x-show="show" x-init="setTimeout(() => show = false, 6000)" class="transition-all ease-in-out" x-transition
+                x-cloak>
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                    <strong class="font-bold bg-red-300 px-2 py-1 rounded-sm">Gagal</strong>
+                    <span class="block sm:inline">{{ session('error') }}</span>
+                </div>
+            </div>
+            <div x-data="{ show: {{ session('success') ? 'true' : 'false' }} }" x-show="show" x-init="setTimeout(() => show = false, 6000)" class="transition-all ease-in-out"
+                x-transition x-cloak>
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4"
+                    role="alert">
+                    <strong class="font-bold bg-green-300 px-2 py-1 rounded-sm">Berhasil</strong>
+                    <span class="block sm:inline">{{ session('success') }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid gap-4 p-4 items-center justify-between w-full">
             <div>
                 <h3 class="text-xl font-bold">Daftar Kategori</h3>
                 <p class="text-sm">Ini adalah daftar kategori buku yang tersedia di perpustakaan</p>
             </div>
 
-            <div x-data="{ open: false }">
-                <div @click="open = true"
-                    class="flex flex-row items-center justify-around cursor-pointer rounded-md px-2 py-1 bg-teal-950 text-slate-200">
-                    <i data-lucide="plus" class="block w-5 h-5"></i>
-                    <p class="text-sm">Tambah Kategori</p>
-                </div>
-
-                <div x-cloak x-transition class="modal-add bg-white shadow-2xl rounded-lg fixed top-32 left-52 w-fit"
-                    x-show="open">
-                    <div class="bg-teal-950 w-full p-4 rounded-t-lg cursor-move modal-add-header">
-                        <h2 class="text-xl font-bold flex align-middle justify-between">
-                            <span class="block text-white">Tambah Kategori Baru</span>
-                            <button @click="open=false"><i class="block w-6 h-6 text-white text-sm cursor-pointer"
-                                    data-lucide="x"></i></button>
-                        </h2>
-                    </div>
-
-                    <form action="{{ route('categories.store') }}" method="POST" enctype="multipart/form-data"
-                        class="grid grid-cols-2 gap-4 p-5 w-full">
+            <div x-data="{ createCategory: false }">
+                <button @click="createCategory=true" class="px-2 py-1 bg-sky-700 text-neutral-50 rounded-sm text-sm">Buat
+                    Kategori
+                    Baru</button>
+                <div x-show="createCategory">
+                    <form action="{{ route('categories.store') }}" method="POST">
                         @csrf
+                        <input type="text"
+                            class="w-lg px-2 py-1 rounded-md my-2 border border-neutral-400 focus:outline-none placeholder:text-xs text-sm"
+                            placeholder="Masukkan kategori baru..." name="categories" id="categories">
 
-                        <div>
-                            <label for="name" class="block font-semibold">Kategori</label>
-                            <input type="text" name="name" id="name"
-                                class="form-input w-96 border-b border-slate-400 focus:outline-0 p-2 placeholder: text-sm"
-                                placeholder="Contoh: Pemrograman Web" required>
-                        </div>
-
-                        <div class="col-span-2 pt-4 flex flex-row content-end gap-4 justify-end-safe">
-                            <button @click="open = false"
-                                class="block rounded-sm font-bold bg-red-500 px-3 py-1 w-28 text-white hover:scale-105 transition-all">Batal</button>
-                            <button type="submit"
-                                class="bg-emerald-700 px-3 py-1 rounded-sm font-bold text-white block w-28 hover:scale-105 transition-all">
-                                Simpan
-                            </button>
-                        </div>
+                        <button type="submit"
+                            class="px-4 py-2 bg-green-700 rounded-sm text-xs text-neutral-50">Simpan</button>
                     </form>
                 </div>
             </div>
@@ -52,7 +48,7 @@
         {{-- Tabel Scrollable --}}
         <div class="mx-4">
             <table class="table font-sans w-1/2">
-                <thead class="bg-teal-800 text-white text-sm sticky top-0 z-10">
+                <thead class="bg-sky-800 text-neutral-50 text-sm sticky top-0 z-10">
                     <tr>
                         <th class="p-4 text-center w-5">No.</th>
                         <th class="p-4">Kategori</th>
@@ -68,7 +64,12 @@
                             </td>
                             <td class="px-4 py-1 border border-slate-300 text-left">{{ $category->name }}</td>
                             <td class="px-4 py-1 border border-slate-300 text-center">{{ $category->created_at }}</td>
-                            <td class="px-4 py-1 border border-slate-300 text-center">{{ $category->books_count }}
+                            <td class="px-4 py-1 border border-slate-300 text-center">
+                                @if ($category->books_count === 0)
+                                    <span>Tidak ada</span>
+                                @else
+                                    {{ $category->books_count }}
+                                @endif
                             </td>
                         </tr>
                     @endforeach

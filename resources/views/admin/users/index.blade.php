@@ -46,7 +46,7 @@
                 <tbody class="text-xs">
                     @php
                         $number = 1;
-                        @endphp
+                    @endphp
                     @foreach ($users as $user)
                         <tr>
                             <td class="px-4 py-2 border border-slate-300 text-center">
@@ -57,9 +57,10 @@
                             </td>
                             <td class="px-4 py-1 border border-slate-300 text-center">{{ $user->id_number }}</td>
                             <td class="px-4 py-1 border border-slate-300 text-center">{{ $user->role->label() }}</td>
-                            <td class="px-4 py-1 border border-slate-300 text-center">{{ $user->created_at->format('m-d-Y') }}</td>
                             <td class="px-4 py-1 border border-slate-300 text-center">
-                                @if ($user->phone_number_verified === 'unverified')
+                                {{ $user->created_at->format('m-d-Y') }}</td>
+                            <td class="px-4 py-1 border border-slate-300 text-center">
+                                @if ($user->is_phone_verified === 0)
                                     <form action="{{ route('users.verified-phone-number', $user->id) }}" method="POST"
                                         onsubmit="return confirm('Verifikasi nomor telephone?')">
                                         @csrf
@@ -71,7 +72,7 @@
                                             <span class=" unverified">unverified</span>
                                         </button>
                                     </form>
-                                @elseif ($user->phone_number_verified === 'verified')
+                                @elseif ($user->is_phone_verified === 1)
                                     {{ $user->phone_number }} <span
                                         class="bg-teal-400 px-2 border border-slate-500 rounded-2xl hover:cursor-pointer verified">Terverifikasi</span>
                                 @endif

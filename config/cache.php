@@ -3,6 +3,15 @@
 use Illuminate\Support\Str;
 
 return [
+    'passwords' => [
+        'users' => [
+            'driver' => 'cache',
+            'provider' => 'users',
+            'store' => 'passwords', // Optional...
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -103,6 +112,6 @@ return [
     |
     */
 
-    'prefix' => env('CACHE_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')).'-cache-'),
+    'prefix' => env('CACHE_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')) . '-cache-'),
 
 ];

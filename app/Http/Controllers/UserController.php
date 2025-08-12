@@ -85,88 +85,89 @@ class UserController extends Controller
         }
     }
 
-   public function store(Request $request)
-{
-    try {
-        // Validasi input
-        $request->validate([
-            'name'                  => 'required|string|max:255',
-            'role'                  => ['required', new Enum(Role::class)],
-            'phone_number'          => 'required|string|max:255',
-            'email'                 => 'required|email|unique:users,email',
-            'password'              => 'required|string|min:8|confirmed',
-            'password_confirmation' => 'required|string|min:8',
+    public function store(Request $request)
+    {
+        try {
+            // Validasi input
+            $request->validate([
+                'name'                  => 'required|string|max:255',
+                'role'                  => ['required', new Enum(Role::class)],
+                'phone_number'          => 'required|string|max:255',
+                'email'                 => 'required|email|unique:users,email',
+                'password'              => 'required|string|min:8|confirmed',
+                'password_confirmation' => 'required|string|min:8',
 
-        ]);
+            ]);
 
-        // Pastikan password dan konfirmasi cocok
-        if ($request->password !== $request->password_confirmation) {
-            return back()->with('error', 'Konfirmasi password salah. Mohon periksa kembali');
-        }
+            // Pastikan password dan konfirmasi cocok
+            if ($request->password !== $request->password_confirmation) {
+                return back()->with('error', 'Konfirmasi password salah. Mohon periksa kembali');
+            }
 
-        // Gabung tempat & tanggal lahir
-        $birth = null;
-        if ($request->filled('birth_place') || $request->filled('birth_date')) {
-            $birth = trim(($request->birth_place ?? '') . ', ' . ($request->birth_date ?? ''), ', ');
-        }
+            // Gabung tempat & tanggal lahir
+            $birth = null;
+            if ($request->filled('birth_place') || $request->filled('birth_date')) {
+                $birth = trim(($request->birth_place ?? '') . ', ' . ($request->birth_date ?? ''), ', ');
+            }
 
-           // Upload foto profil jika ada
-        if ($request->hasFile('profile_picture')) {
-            $path = $request->file('profile_picture')->store('profile_pictures', 'public');
-        }
+            $path = null;
+            // Upload foto profil jika ada
+            if ($request->hasFile('profile_picture')) {
+                $path = $request->file('profile_picture')->store('profile_pictures', 'public');
+            }
 
-        // Simpan user
-        $user = User::create([
-            'name'            => $request->name,
-            'role'            => Role::from($request->role), // Hati-hati kalau request.role tidak cocok enum
-            'phone_number'    => $request->phone_number,
-            'email'           => $request->email,
-            'password'        => $request->password ? bcrypt($request->password) : null,
+            // Simpan user
+            $user = User::create([
+                'name'            => $request->name,
+                'role'            => Role::from($request->role), // Hati-hati kalau request.role tidak cocok enum
+                'phone_number'    => $request->phone_number,
+                'email'           => $request->email,
+                'password'        => $request->password ? bcrypt($request->password) : null,
 
-            'expired_date'    => $request->expired_date,
-            'birth_date'      => $birth,
-            'age'             => $request->age,
-            'id_type'         => $request->id_type,
-            'member_status'   => $request->member_status,
-            'status_account'  => $request->status_account ?? 'active',
-            'id_number'       => $request->id_number,
-            'gender'          => $request->gender,
-            'address'         => $request->address,
-            'regency'         => $request->regency,
-            'province'        => $request->province,
-            'jobs'            => $request->jobs,
-            'education'       => $request->education,
-            'class_department'=> $request->class_department,
-            'profile_picture'=> $path,
-        ]);
+                'expired_date'    => $request->expired_date,
+                'birth_date'      => $birth,
+                'age'             => $request->age,
+                'id_type'         => $request->id_type,
+                'member_status'   => $request->member_status,
+                'status_account'  => $request->status_account ?? 'active',
+                'id_number'       => $request->id_number,
+                'gender'          => $request->gender,
+                'address'         => $request->address,
+                'regency'         => $request->regency,
+                'province'        => $request->province,
+                'jobs'            => $request->jobs,
+                'education'       => $request->education,
+                'class_department' => $request->class_department,
+                'profile_picture' => $path,
+            ]);
 
-        // Notifikasi ke user
-        Notification::create([
-            'user_id' => $user->id,
-            'type'    => 'new_member',
-            'message' => "Selamat datang {$user->name} di Perpustakaan Umum Kota Solok. Status keanggotaan anda saat ini adalah <b>new</b>. Lengkapi data anda dan lakukan verifikasi nomor WhatsApp untuk mengaktikan status keanggotaan!<br>
+            // Notifikasi ke user
+            Notification::create([
+                'user_id' => $user->id,
+                'type'    => 'new_member',
+                'message' => "Selamat datang {$user->name} di Perpustakaan Umum Kota Solok. Status keanggotaan anda saat ini adalah <b>new</b>. Lengkapi data anda dan lakukan verifikasi nomor WhatsApp untuk mengaktikan status keanggotaan!<br>
                 <a href='" . route('member.verification') . "'>Verifikasi Nomor WhatsApp</a> |
                 <a href='" . route('member.account.edit') . "'>Lengkapi Profil</a>"
-        ]);
+            ]);
 
-        // Notifikasi tambahan
-        Notification::create([
-            'user_id' => $user->id,
-            'type'    => 'new_member',
-            'message' => "Lengkapi data diri anda dan lakukan validasi di Perpustakaam Umum Kota Solok",
-        ]);
+            // Notifikasi tambahan
+            Notification::create([
+                'user_id' => $user->id,
+                'type'    => 'new_member',
+                'message' => "Lengkapi data diri anda dan lakukan validasi di Perpustakaam Umum Kota Solok",
+            ]);
 
-        return redirect()->route('users.index')->with('success', 'Akun berhasil dibuat.');
-    } catch (QueryException $e) {
-        // Error database (misal constraint, kolom salah, dll)
-        Log::error("QueryException: " . $e->getMessage());
-        return back()->with('error', 'Terjadi kesalahan pada database: ' . $e->getMessage());
-    } catch (\Exception $e) {
-        // Error umum
-        Log::error('General error: ' . $e->getMessage() . ' in ' . $e->getFile() . ' line ' . $e->getLine());
-        return back()->with('error', $e->getMessage());
+            return redirect()->route('users.index')->with('success', 'Akun berhasil dibuat.');
+        } catch (QueryException $e) {
+            // Error database (misal constraint, kolom salah, dll)
+            Log::error("QueryException: " . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan pada database: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            // Error umum
+            Log::error('General error: ' . $e->getMessage() . ' in ' . $e->getFile() . ' line ' . $e->getLine());
+            return back()->with('error', $e->getMessage());
+        }
     }
-}
 
 
     public function verifiedPhoneNumber(User $user)
@@ -189,9 +190,9 @@ class UserController extends Controller
     }
 
     public function show(User $user)
-{
-    return view('admin.users.show', compact('user'));
-}
+    {
+        return view('admin.users.show', compact('user'));
+    }
 
 
     public function destroy(User $user)

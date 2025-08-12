@@ -24,24 +24,6 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         try {
-            $validated = $request->validate(
-                [
-                    'name' => "string|required|max:100|unique:categories,name"
-                ]
-            );
-            $category = Category::create($validated);
-            return redirect()->route('categories.index')->with('succes', 'Kategori "' . $category->name . '" berhasil ditambahkan.');
-        } catch (ValidationException $e) {
-            Log::error('Validation Error when storing category: ' . $e->getMessage(), ['errors' => $e->errors()]);
-            return redirect()->back()
-                ->withErrors($e->errors())
-                ->withInput();
-        }
-    }
-
-    public function storeOnBooks(Request $request)
-    {
-        try {
             $request->validate([
                 'categories' => 'required|string',
             ]);

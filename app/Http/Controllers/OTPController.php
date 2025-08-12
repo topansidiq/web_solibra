@@ -9,6 +9,7 @@ use App\Models\WhatsApp;
 use App\Services\WhatsAppBotService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
@@ -68,40 +69,37 @@ class OTPController extends Controller
 
     public function verifyOtp()
     {
-        return view('member.account.verifyOTP');
+        $user = Auth::user();
+        return view('member.account.verifyOTP', compact('user'));
     }
 
     public function verify(Request $request)
     {
         $request->validate([
-            'phone_number' => 'required|numeric',
+            'phone_number' => 'required|exists:users,phone_number',
             'code' => 'required|digits:6'
         ]);
 
-        $otp = OTP::where('code', $request->code)
+        $otp = OTP::where('phone_number', $request->phone_number)
             ->where('expires_at', '>', now())
             ->first();
 
         if (!$otp) {
-            return response()->json(['message' => 'OTP tidak valid atau kadaluarsa'], 422);
+            return back()->with('error', 'OTP tidak valid atau sudah kadaluarsa.');
         }
 
-        $otp->update(['verified' => true]);
+        // Update OTP
+        $otp->verified = true;
+        $otp->expires_at = now();
 
-        User::where('phone_number', $request->phone_number)
-            ->update(['is_phone_verified' => true]);
+        // Update User
+        $user = User::where('phone_number', $request->phone_number)->firstOrFail();
+        $user->is_phone_verified = true;
+        $user->member_status = 'active';
+        $user->save();
 
-        if (!$otp) {
-            return redirect()->back()
-                ->with('otp_sent', true)
-                ->with('phone_number', $request->phone_number)
-                ->with('success', false)
-                ->with('message', 'OTP tidak valid atau sudah kadaluarsa.');
-        }
-
-        // Jika berhasil
-        return redirect()->route('dashboard')
-            ->with('success', true)
-            ->with('message', 'Verifikasi berhasil.');
+        return redirect()
+            ->route('member.account')
+            ->with('success', 'Nomor anda berhasil diverifikasi. Status keanggotaan anda adalah aktif.');
     }
 }

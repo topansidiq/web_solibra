@@ -1,3 +1,24 @@
+@php
+
+    $home = __('member_header.home');
+    $profile = __('member_header.profile');
+    $collection = __('member_header.collection');
+    $borrowing = __('member_header.borrowing');
+    $service = __('member_header.service');
+    $information = __('member_header.information');
+    $notification = __('member_header.notification');
+    $account = __('member_header.account');
+
+    $menu = [
+        ['label' => $home, 'name' => 'member.index'],
+        ['label' => $profile, 'name' => 'member.profile'],
+        ['label' => $collection, 'name' => 'member.collection'],
+        ['label' => $borrowing, 'name' => 'member.borrow'],
+        ['label' => $service, 'name' => 'member.service'],
+        ['label' => $information, 'name' => 'member.information'],
+        ['label' => $notification, 'name' => 'member.notification'],
+    ];
+@endphp
 <div class="w-full grid items-center xl:flex sticky top-0 z-50 bg-sky-800 text-slate-50" x-data="{ active: '{{ Route::currentRouteName() }}' }"
     x-transition>
     <div class="xl:p-4 flex justify-between gap-5 w-full">
@@ -13,33 +34,6 @@
 
         {{-- Desktop --}}
         <nav class="hidden xl:flex gap-6 text-sm items-center content-between">
-
-            @php
-
-                $home = __('member_header.home');
-                $profile = __('member_header.profile');
-                $collection = __('member_header.collection');
-                $borrowing = __('member_header.borrowing');
-                $service = __('member_header.service');
-                $information = __('member_header.information');
-                $notification = __('member_header.notification');
-                $account = __('member_header.account');
-
-                $menu = [
-                    ['label' => $home, 'name' => 'member.index'],
-                    ['label' => $profile, 'name' => 'member.profile'],
-                    ['label' => $collection, 'name' => 'member.collection'],
-                    ['label' => $borrowing, 'name' => 'member.borrow'],
-                    ['label' => $service, 'name' => 'member.service'],
-                    ['label' => $information, 'name' => 'member.information'],
-                    ['label' => $notification, 'name' => 'member.notification'],
-                    ['label' => $account, 'name' => 'member.account'],
-
-                    // ['label' => 'Peminjaman', 'name' => 'borrows.index', 'icon' => 'list'],
-                    // ['label' => 'Pengguna', 'name' => 'users.index', 'icon' => 'user'],
-                ];
-            @endphp
-
             @foreach ($menu as $item)
                 @if ($item['name'] == 'member.profile')
                     <div>
@@ -69,16 +63,27 @@
             use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
         @endphp
 
-        <div class="profile hidden lg:flex gap-3 items-center p-3">
+        <div class="profile hidden lg:flex gap-3 items-center p-3" x-data="{ sidebar: false }">
             <div>
-                <ul>
+                <ul class="flex gap-3">
                     @foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
-                        <li>
-                            <a rel="alternate" hreflang="{{ $localeCode }}"
-                                href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">
-                                {{ $properties['native'] }}
-                            </a>
-                        </li>
+                        @php
+                            $flag = match ($properties['native']) {
+                                'Bahasa Indonesia' => 'indonesia_flag.png',
+                                'English' => 'uk_flag.png',
+                                default => null,
+                            };
+                        @endphp
+
+                        @if ($flag)
+                            <li>
+                                <a rel="alternate" hreflang="{{ $localeCode }}"
+                                    href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">
+                                    <img src="{{ asset('img/' . $flag) }}" alt="{{ $properties['native'] }} flag"
+                                        class="w-6">
+                                </a>
+                            </li>
+                        @endif
                     @endforeach
                 </ul>
             </div>
@@ -87,32 +92,40 @@
                     <p class="text-sm">{{ $user->name }}</p>
                 </div>
             </div>
-            <div class="profile-picture">
-                <div class="w-10 h-10 bg-yellow-500 rounded-full block" src="#" alt=""></div>
+            <div @mouseleave="sidebar=false">
+                <div class="profile-picture" @click="sidebar=true">
+                    @if ($user->profile_picture === null)
+                        <div class="w-10 h-10 bg-yellow-500 rounded-full block" src="#" alt=""></div>
+                    @else
+                        <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="">
+                    @endif
+                </div>
+
+                {{-- Profile Sidebar --}}
+                <div class="fixed z-40 right-0 top-0 transition-all text-sm text-neutral-300 bg-neutral-700 p-4 w-sm h-screen"
+                    style="background-color: rgba(64,64,64,0.90);" x-show="sidebar">
+                    <ul class="space-y-1">
+                        <li>Lorem, ipsum dolor.</li>
+                        <li>Lorem, ipsum dolor.</li>
+                        <li>Lorem, ipsum dolor.</li>
+                        <li>Lorem, ipsum dolor.</li>
+                        <li>Lorem, ipsum dolor.</li>
+                        <li>Lorem, ipsum dolor.</li>
+                        <li>Lorem, ipsum dolor.</li>
+                        <li>Lorem, ipsum dolor.</li>
+                        <li>Lorem, ipsum dolor.</li>
+                    </ul>
+                </div>
+
             </div>
         </div>
     </div>
-
-
 
     {{-- Mobile --}}
     <nav class="block xl:hidden gap-6 text-sm items-center content-between" x-data="{ openNav: false }">
         <button @click="openNav=!openNav" class="p-3">
             <i data-lucide="menu" class="w-5 h-5"></i>
         </button>
-        @php
-            $menu = [
-                ['label' => 'Beranda', 'name' => 'member.index', 'icon' => 'home'],
-                ['label' => 'Profil', 'name' => 'profile', 'icon' => 'building'],
-                ['label' => 'Daftar Koleksi', 'name' => 'member.collection', 'icon' => 'book-open'],
-                ['label' => 'Peminjaman', 'name' => 'member.borrow', 'icon' => 'book'],
-                ['label' => 'Peminjaman', 'name' => 'member.borrow', 'icon' => 'book'],
-
-
-                // ['label' => 'Peminjaman', 'name' => 'borrows.index', 'icon' => 'list'],
-                // ['label' => 'Pengguna', 'name' => 'users.index', 'icon' => 'user'],
-            ];
-        @endphp
 
         <div x-show="openNav" x-transition class="border-t border-neutral-600">
             @foreach ($menu as $item)

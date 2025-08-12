@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\BorrowController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\OTPController;
 use App\Http\Controllers\WhatsAppController;
@@ -21,4 +23,8 @@ Route::group([
     // Notification
     Route::post('/send-notification-to-admin', [WhatsAppController::class, 'sendNotification']);
     Route::get('/get-admin', [WhatsAppController::class, 'getAdmin']);
+
+    // Test Rouute
+    Route::resource('categories', CategoryController::class);
+    Route::post('/forgot-password', [PasswordController::class, 'sendResetPasswordLink'])->name('password.link');
 });
