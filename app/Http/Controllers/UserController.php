@@ -16,7 +16,6 @@ use Throwable;
 
 class UserController extends Controller
 {
-
     protected $whatsapp;
 
     public function __construct(WhatsAppBotService $whatsapp)
@@ -110,7 +109,6 @@ class UserController extends Controller
                 $birth = trim(($request->birth_place ?? '') . ', ' . ($request->birth_date ?? ''), ', ');
             }
 
-            $path = null;
             // Upload foto profil jika ada
             if ($request->hasFile('profile_picture')) {
                 $path = $request->file('profile_picture')->store('profile_pictures', 'public');
@@ -169,7 +167,6 @@ class UserController extends Controller
         }
     }
 
-
     public function verifiedPhoneNumber(User $user)
     {
         $user->update([
@@ -194,13 +191,12 @@ class UserController extends Controller
         return view('admin.users.show', compact('user'));
     }
 
-
     public function destroy(User $user)
     {
 
         // Hapus buku
         $user->delete();
 
-        return redirect()->route('users.index')->with('success', 'Buku berhasil dihapus.');
+        return redirect()->route('users.index')->with('success', 'Pengguna berhasil dihapus.');
     }
 }

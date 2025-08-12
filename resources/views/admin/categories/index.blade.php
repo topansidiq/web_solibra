@@ -54,6 +54,7 @@
                         <th class="p-4">Kategori</th>
                         <th class="p-4">Tanggal</th>
                         <th class="p-4">Total Buku</th>
+                        <th class="p-4">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="text-xs">
@@ -70,6 +71,21 @@
                                 @else
                                     {{ $category->books_count }}
                                 @endif
+                            </td>
+                            <td class="px-4 py-1 border border-slate-300 text-center w-32">
+                                <div class="flex items-center justify-center gap-1">
+                                    {{-- Tombol Hapus --}}
+                                    <form action="{{ route('categories.destroy', $category) }}" method="POST"
+                                        onsubmit="return confirm('Yakin ingin menghapus Kategori ini?')"
+                                        class="inline-block">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded flex items-center justify-center h-[25px]">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @endforeach

@@ -3,10 +3,10 @@
 @section('title', 'Layanan | Perpustakaan Umum Kota Solok')
 
 @section('content')
-<section class="py-12 bg-neutral-100">
+<section class="bg-white py-12">
     <div class="max-w-7xl mx-auto px-4">
         <div class="flex flex-col items-center text-center mb-14">
-            <h2 class="text-4xl font-extrabold text-sky-800">Layanan Kami</h2>
+            <h2 class="text-3xl font-extrabold text-sky-800">Layanan Kami</h2>
             <p class="text-gray-500 mt-2">Menyediakam berbagai layanan untuk mendukung literasi masyarakat</p>
             <div class="w-20 border-b-4 border-sky-600 mt-3"></div>
         </div>
@@ -121,7 +121,7 @@
 
             <!-- Sabtu - Minggu -->
             <div class="bg-sky-800 text-white rounded-lg p-6 text-center shadow">
-                <h3 class="text-lg font-semibold">Sabtu - Minggu & Tanggal Merah</h3>
+                <h3 class="text-lg font-semibold">Sabtu, Minggu & Tanggal Merah</h3>
                 <p class="mt-2 text-sm">Tutup</p>
             </div>
         </div>
