@@ -12,8 +12,8 @@
 <body>
     <div class="flex flex-col items-center justify-between h-screen">
         <header class="bg-sky-800 text-neutral-50 items-center content-center border-b border-gray-50 p-4 w-full">
-            <h1 class="text-center text-lg font-bold text-neutral-200 mx-auto">Perpustakaan Umum Kota Solok</h1>
-            <p class="text-center mx-auto text-xs text-neutral-300">Sumber Literasi Terkini</p>
+            <h1 class="text-center text-lg font-bold text-neutral-200 mx-auto">{{ __('main.puks') }}</h1>
+            <p class="text-center mx-auto text-xs text-neutral-300">{{ __('main.slogan') }}</p>
         </header>
         <main class="lg:w-xl w-96 border border-sky-100 rounded-sm shadow-md mt-20 p-6 bg-sky-50">
 
@@ -29,10 +29,10 @@
                 @csrf
 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Email/Nomor Telepon</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
                     <input type="text" name="email" required autofocus
                         class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
-                        placeholder="Masukkan email atau nomor telepon" value="{{ old('email') }}"
+                        placeholder="{{ __("auth.enter_email") }}" value="{{ old('email') }}"
                         autocomplete="email">
                     @error('email')
                         <span class="text-sm text-red-500 mt-1">{{ $message }}</span>
@@ -41,11 +41,11 @@
 
                 <div class="mb-6" x-data="{ show: false }">
                     <label class="block text-sm font-medium
-                    text-gray-700 mb-2">Password</label>
+                    text-gray-700 mb-2">{{ __('auth.password') }}</label>
                     <div class="relative">
                         <input :type="show ? 'text' : 'password'" id="password" name="password" required
                             class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm pr-10"
-                            placeholder="Masukkan password/kata sandi anda" autocomplete="current-password">
+                            placeholder="{{ __('auth.enter_password') }}" autocomplete="current-password">
 
                         <!-- Tombol toggle -->
                         <button type="button" @click="show = !show"
@@ -66,10 +66,9 @@
                 <div class="flex items-center justify-between mb-4">
                     <label class="inline-flex items-center">
                         <input type="checkbox" name="remember" class="form-checkbox text-teal-600">
-                        <span class="ml-2 text-sm text-gray-600">Ingat saya</span>
+                        <span class="ml-2 text-sm text-gray-600">{{ __('auth.remember_me') }}</span>
                     </label>
-                    <a href="{{ route('password.forgot') }}" class="text-sm text-sky-600 hover:underline">Lupa
-                        Password?</a>
+                    <a href="{{ route('password.forgot') }}" class="text-sm text-sky-600 hover:underline">{{ __('auth.forgot_password') }}</a>
                 </div>
 
                 <input type="hidden" name="role_id">
@@ -77,14 +76,14 @@
                 <div>
                     <button type="submit"
                         class="w-full bg-sky-600 text-white py-2 px-4 rounded-lg hover:bg-sky-800 transition duration-200">
-                        Masuk
+                        {{ __('auth.enter') }}
                     </button>
                 </div>
             </form>
 
             <div class="mt-6 text-center text-sm text-gray-600">
-                Belum memiliki akun?
-                <a href="{{ route('register') }}" class="text-sky-600 hover:underline">Daftar</a>
+                {{ __('auth.dont_have_account') }}
+                <a href="{{ route('register') }}" class="text-sky-600 hover:underline">{{ __('auth.register') }}</a>
             </div>
 
 
