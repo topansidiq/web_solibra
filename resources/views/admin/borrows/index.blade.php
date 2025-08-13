@@ -2,15 +2,15 @@
 
 @section('content')
     <div class="content flex flex-col flex-auto bg-gray-50 w-full" x-data="{ openAddborrowModal: false }" x-cloak>
-        <div x-data="{ show: {{ session('error') ? 'true' : 'false' }} }" x-show="show"
-            x-init="setTimeout(() => show = false, 6000)" class="transition-all ease-in-out" x-transition x-cloak>
+        <div x-data="{ show: {{ session('error') ? 'true' : 'false' }} }" x-show="show" x-init="setTimeout(() => show = false, 6000)" class="transition-all ease-in-out" x-transition
+            x-cloak>
             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
                 <strong class="font-bold bg-red-300 px-2 py-1 rounded-sm">Gagal</strong>
                 <span class="block sm:inline">{{ session('error') }}</span>
             </div>
         </div>
-        <div x-data="{ show: {{ session('success') ? 'true' : 'false' }} }" x-show="show"
-            x-init="setTimeout(() => show = false, 6000)" class="transition-all ease-in-out" x-transition x-cloak>
+        <div x-data="{ show: {{ session('success') ? 'true' : 'false' }} }" x-show="show" x-init="setTimeout(() => show = false, 6000)" class="transition-all ease-in-out" x-transition
+            x-cloak>
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
                 <strong class="font-bold bg-green-300 px-2 py-1 rounded-sm">Berhasil</strong>
                 <span class="block sm:inline">{{ session('success') }}</span>
@@ -59,8 +59,7 @@
                         @csrf
 
                         {{-- Select Book --}}
-                        <div x-data="bookSearch({{ $books->sortByDesc('stock')->values()->toJson() }})"
-                            x-init="window.bookSearchInstance = $data" class="relative">
+                        <div x-data="bookSearch({{ $books->sortByDesc('stock')->values()->toJson() }})" x-init="window.bookSearchInstance = $data" class="relative">
                             <label for keyword class="block font-semibold">Pilih Buku</label>
                             <input type="text" x-model="search" @focus="show = true" @keydown.tab.prevent="selectFirst()"
                                 @keydown.enter.prevent="selectFirst()" @click.outside="show = false" id="keyword"
@@ -82,8 +81,7 @@
                         </div>
 
                         {{-- Select User --}}
-                        <div x-data="userSearch({{ $users->values()->toJson() }})"
-                            x-init="window.userSearchInstance = $data" class="relative">
+                        <div x-data="userSearch({{ $users->values()->toJson() }})" x-init="window.userSearchInstance = $data" class="relative">
                             <label for keyword class="block font-semibold">Pilih Pengguna</label>
                             <input type="text" x-model="search" @focus="show = true" @keydown.tab.prevent="selectFirst()"
                                 @keydown.enter.prevent="selectFirst()" @click.outside="show = false" id="keyword"
@@ -162,7 +160,9 @@
                             <td class="px-4 py-1 border border-slate-300">
                                 <div class="flex items-center justify-between">
                                     <p class="outline-0">
-                                        {{ Str::limit($borrow->book->clean_title, 35) ?? '-' }}
+                                        <a href="{{ route('borrows.show', $borrow->id) }}">
+                                            {{ Str::limit($borrow->book->clean_title, 35) ?? '-' }}
+                                        </a>
                                     </p>
                                     <form action="{{ route('borrows.destroy', $borrow->id) }}" method="POST"
                                         onsubmit="return confirm('Yakin ingin menghapus peminjaman ini?')">
@@ -200,11 +200,13 @@
 
                                         <input type="hidden" name="user_id" value="{{ $borrow->user->id }}">
                                         @if (!($borrow->user->member_status === 'new' && $borrow->user->member_status === 'active'))
-                                            <button type="submit" class="px-2 py-1 rounded-sm  bg-red-500 text-neutral-50 ">
+                                            <button type="submit"
+                                                class="px-2 py-1 rounded-sm  bg-red-500 text-neutral-50 ">
                                                 Belum Valid
                                             </button>
                                         @elseif ($borrow->user->member_status === 'validated')
-                                            <button type="submit" class="px-2 py-1 rounded-sm bg-green-500 text-neutral-50">
+                                            <button type="submit"
+                                                class="px-2 py-1 rounded-sm bg-green-500 text-neutral-50">
                                                 Valid
                                             </button>
                                         @endif
@@ -277,7 +279,6 @@
                                             </button>
                                         </form>
                                     @endif
-
                                 @endif
                                 {{-- Tombol Konfirmasi Peminjaman --}}
 
