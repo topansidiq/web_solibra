@@ -26,22 +26,22 @@
     </div>
     <div class="flex flex-col items-center justify-between h-screen">
         <header class="bg-sky-800 text-neutral-50 items-center content-center border-b border-gray-50 p-4 w-full">
-            <h1 class="text-center text-lg font-bold text-neutral-200 mx-auto">Perpustakaan Umum Kota Solok</h1>
-            <p class="text-center mx-auto text-xs text-neutral-300">Sumber Literasi Terkini</p>
+            <h1 class="text-center text-lg font-bold text-neutral-200 mx-auto">{{ __('main.puks') }}</h1>
+            <p class="text-center mx-auto text-xs text-neutral-300">{{ __('main.slogan') }}</p>
         </header>
         <main class="lg:w-xl w-96 border border-sky-100 rounded-sm shadow-md mt-20 p-6 bg-sky-50">
 
 
-            <h1 class="text-center mb-5 text-lg font-bold text-neutral-700">Lupa Password</h1>
+            <h1 class="text-center mb-5 text-lg font-bold text-neutral-700">{{ __('auth.forget') }}</h1>
 
             <form method="POST" action="{{ route('password.link') }}" class="mx-auto">
                 @csrf
 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Email/Nomor Telepon</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('auth.whatsapp') }}</label>
                     <input type="text" name="phone_number" required autofocus
                         class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
-                        placeholder="Masukkan email atau nomor telepon">
+                        placeholder="{{ __('auth.enter_whatsapp_number') }}">
                     @error('email')
                         <span class="text-sm text-red-500 mt-1">{{ $message }}</span>
                     @enderror
@@ -52,7 +52,7 @@
                 <div>
                     <button type="submit"
                         class="w-full bg-sky-600 text-white py-2 px-4 rounded-lg hover:bg-sky-800 transition duration-200">
-                        Kirim Reset Link
+                        {{ __('auth.reset_link') }}
                     </button>
                 </div>
             </form>
