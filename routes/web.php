@@ -54,6 +54,7 @@ Route::group([
         Route::get('/member/account/edit', [MemberController::class, 'edit'])->name('member.account.edit');
 
         Route::get('/member/collection', [MemberController::class, 'collection'])->name('member.collection');
+        Route::get('/member/collection/{book}', [MemberController::class, 'showCollection'])->name('member.collection.show');
         Route::get('/member/profile', [MemberController::class, 'profile'])->name('member.profile');
         Route::get('/member/service', [MemberController::class, 'service'])->name('member.service');
         Route::get('/member/information', [MemberController::class, 'information'])->name('member.information');
@@ -63,6 +64,8 @@ Route::group([
 
         // Borrow Menu
         Route::get('/member/borrow', [MemberController::class, 'borrow'])->name('member.borrow');
+        Route::post('/member/borrow', [MemberController::class, 'storeBorrow'])->name('member.borrow.store');
+        Route::get('/member/borrow/search', [MemberController::class, 'searchBooks']);
 
         // Phone Number Verification
         Route::get('/member/verification', [MemberController::class, 'phoneNumberVerification'])->name('member.verification');
@@ -88,6 +91,9 @@ Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
 
     // Costum categories route
     Route::post('/categories/storeOnBook', [CategoryController::class, 'storeOnBook'])->name('categories.store-on-book');
+
+    // Custom users routes
+    Route::post('/users/validation', [UserController::class, 'userValidation'])->name('users.validation');
 
     // Custom borrow actions
     Route::patch('/borrows/{borrow}/confirm', [BorrowController::class, 'confirm'])->name('borrows.confirm');

@@ -101,30 +101,97 @@ class MemberController extends Controller
 
         /** @var User $user */
         $user = Auth::user();
-        $books = Book::all();
-        $latestBook = Book::latest()->take(6)->get();
+
+        // Ambil kategori yang punya buku
         $categories = Category::whereHas('books')->take(5)->get();
-        $collections = $user->borrows()
-            ->where('status', 'confirmed')
-            ->with('book')
-            ->get();
+
+        // Filter kategori (kalau ada)
         $selectedCategory = $request->query('category');
+
         $books = Book::when($selectedCategory, function ($query, $categoryId) {
             $query->whereHas('categories', function ($q) use ($categoryId) {
                 $q->where('categories.id', $categoryId);
             });
-        })->latest()->take(6)->get();
+        })
+            ->latest()
+            ->take(10)
+            ->get();
 
-        return view('member.collection.index', compact('latestBook', 'books', 'categories', 'selectedCategory', 'collections', 'user'));
+        // Ambil daftar pinjaman (status masih dipinjam)
+        $collections = $user->borrows()
+            ->whereIn('status', ['confirmed', 'overdue']) // hanya buku aktif dipinjam
+            ->with('book.categories')
+            ->get()
+            ->pluck('book'); // langsung koleksi Book
+
+        return view('member.collection.index', [
+            'books' => $books,
+            'categories' => $categories,
+            'selectedCategory' => $selectedCategory,
+            'collections' => $collections,
+            'user' => $user,
+        ]);
+    }
+
+    public function showCollection($id)
+    {
+        $user = Auth::user();
+        $book = Book::where('id', $id)->with('categories')->first();
+        $categoryIds = $book->categories->pluck('id');
+
+        // Buku terkait
+        $relatedBooks = Book::whereHas('categories', function ($query) use ($categoryIds) {
+            $query->whereIn('categories.id', $categoryIds);
+        })
+            ->where('id', '!=', $book->id)
+            ->with('categories')
+            ->latest()
+            ->take(6)
+            ->get();
+
+        // Cek overdue
+        $isOverdue = Borrow::where('user_id', $user->id)
+            ->where('status', 'overdue')
+            ->exists();
+
+        // Cek maksimal peminjaman
+        $maxBorrow = 3;
+        $currentBorrowCount = Borrow::where('user_id', $user->id)
+            ->whereIn('status', ['borrowed', 'pending'])
+            ->count();
+
+        $isMax = $currentBorrowCount >= $maxBorrow;
+
+        return view('member.collection.show', compact('book', 'relatedBooks', 'user', 'isOverdue', 'isMax'));
     }
 
     public function borrow()
     {
         /** @var User $user */
         $user = Auth::user();
+        $borrows = $user->borrows;
 
-        $borrows = $user->borrows();
-        return view('member.borrow.index', compact('borrows', 'user'));
+        $collections = $user->borrows()
+            ->whereIn('status', ['confirmed', 'overdue']) // hanya buku aktif dipinjam
+            ->with('book.categories')
+            ->get()
+            ->pluck('book'); // langsung koleksi Book
+
+        return view('member.borrow.index', compact('borrows', 'user', 'collections'));
+    }
+
+    // Endpoint untuk API pencarian buku
+    public function searchBooks(Request $request)
+    {
+        $q = $request->get('q');
+
+        $books = Book::with('categories')
+            ->where('title', 'like', "%{$q}%")
+            ->orWhere('author', 'like', "%{$q}%")
+            ->limit(20)
+            ->get();
+
+        return response()->json($books);
     }
 
     public function information(Request $request)
@@ -136,67 +203,78 @@ class MemberController extends Controller
         return view('member.information.index', compact('informations', 'user'));
     }
 
-    public function show(Information $information)
+    public function show($id)
     {
         $user = Auth::user();
+        $information = Information::findOrFail($id);
         return view('member.information.show', compact('information', 'user'));
     }
 
-    public function storeBorrow(Request $request, Book $book)
+    public function storeBorrow(Request $request, WhatsAppBotService $bot)
     {
-
-        /** @var User $user */
-        $user = Auth::user();
-
+        // Validasi input form
         $request->validate([
             'book_id' => 'required|exists:books,id',
-            'user_id' => 'required|exists:users,id',
-            'due_date' => 'required|date|after:today',
         ]);
 
+        $user = Auth::user();
+        $isOverdue = Borrow::where('user_id', $user->id)
+            ->where('status', 'overdue')
+            ->exists();
+
+        if ($isOverdue) {
+            return redirect()->back()->with('error', 'Tidak bisa meminjam karena anda memiliki peminjaman yang sudah jatuh tempo.');
+        }
+
+        // Cek maksimal peminjaman
+        $maxBorrow = 3;
+        $currentBorrowCount = Borrow::where('user_id', $user->id)
+            ->whereIn('status', ['borrowed', 'pending'])
+            ->count();
+
+        $isMax = $currentBorrowCount >= $maxBorrow;
+
+        if ($isMax) {
+            return redirect()->back()->with('error', 'Tidak bisa meminjam karena anda sudah mencapai batas maksimal (3) peminjaman.');
+        }
+
+        $due_date = now()->addDays(14);
+
+        // Buat peminjaman
         $borrow = Borrow::create([
             'user_id' => $user->id,
-            'book_id' => $book->id,
+            'book_id' => $request->book_id,
             'borrowed_at' => now(),
-            'due_date' => $request->due_date,
-            'status' => 'unconfirmed',
+            'due_date' => $due_date,
         ]);
 
+        // Notifikasi admin
         $recipients = User::whereIn('role', [
             Role::Admin->value,
             Role::Librarian->value
         ])->get();
 
-
         foreach ($recipients as $recipient) {
             Notification::create([
                 'user_id' => $recipient->id,
                 'type' => 'loan_request',
-                'message' => "📥 Pengajuan peminjaman buku '{$book->title}' oleh {$user->name} pada '{$borrow->borrowed_at}'.",
+                'message' => "Pengajuan peminjaman buku '{$borrow->book->title}' oleh {$borrow->user->name} pada '{$borrow->borrowed_at}'.",
+                'is_read' => false,
             ]);
         }
+
+        // Notifikasi user
+        $message = "> Layanan Chatbot Perpustakaan Umum Kota Solok\n\nHai {$borrow->user->name},pengajuan peminjaman buku *{$borrow->book->clean_title}* kamu telah dikirim ke petugas perpustakaan. Mohon tunggu konfirmasi selanjutnya. Terima kasih";
 
         Notification::create([
             'user_id' => $user->id,
             'type' => 'loan_request',
-            'message' => "Anda telah mengajukan peminjaman buku '{$book->title}' pada '{$borrow->borrowed_at}'.",
-        ]);
-
-        $message = "📚 Hai {$user->name},\n\n" .
-            "Pengajuan peminjaman buku *{$book->title}* kamu telah dikirim ke petugas perpustakaan. " .
-            "Mohon tunggu konfirmasi selanjutnya.\n\n" .
-            "📅 Jatuh tempo: " . \Carbon\Carbon::parse($request->due_date)->format('d M Y') . "\n\n" .
-            "Terima kasih 🙏";
-
-        app(WhatsAppBotService::class)->sendMessage($user->phone_number, $message);
-        WhatsApp::create([
-            'user_id' => $user->id,
-            'phone_number' => $user->phone_number,
             'message' => $message,
-            'direction' => 'sent',
-            'processed' => false
+            'is_read' => false
         ]);
 
-        return redirect()->route('member.borrow')->with('success', 'Pengajuan peminjaman berhasil dikirim.');
+        $bot->sendMessage(formattedPhoneNumberToUs62($user->phone_number), $message);
+
+        return redirect()->back()->with('success', 'Pengajuan peminjaman berhasil dikirim.');
     }
 }

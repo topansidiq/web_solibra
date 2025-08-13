@@ -199,4 +199,30 @@ class UserController extends Controller
 
         return redirect()->route('users.index')->with('success', 'Pengguna berhasil dihapus.');
     }
+
+    public function userValidation(Request $request, WhatsAppBotService $bot) {
+        $request->validate(['user_id' => 'required|exists:users,id']);
+
+        $user = User::findOrFail($request->user_id);
+
+        if ($user->member_status == 'new' && $user->member_status == 'active') {
+            return redirect()->back()->with('error', 'Anggota ini belum menverifikasi data dan nomor HP');
+        }
+
+        $user->update(['member_status' => 'validated']);
+        $user->save();
+
+        $message = "Selamat, status keanggotaan anda sekarang sudah tervalidasi. Anda dapat menikmati layanan peminjaman dan lainnya. Terima kasih";
+
+        Notification::create([
+            'user_id' => $user->id,
+            'type' => 'member_validation',
+            'message' => $message,
+            'is_read' => false
+        ]);
+
+        $bot->sendMessage(formattedPhoneNumberToUs62($user->phone_number), "> Layanan Chatbot Perpustakaan Umum Kota Solok\n\n{$message}");
+
+        return redirect()->back()->with('success', 'Anggota telah berhasil divalidasi!');
+    }
 }

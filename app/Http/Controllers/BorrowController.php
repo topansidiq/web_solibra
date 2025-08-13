@@ -56,6 +56,10 @@ class BorrowController extends Controller
 
         $book = $borrow->book;
 
+        if($borrow->user->member_status != 'validated'){
+            return redirect()->back()->with('error', 'Anggota ini belum melakukan verifikasi data secara fisik ke Perpustakaan Umum Kota Solok.');
+        }
+
         if ($book->stock <= 0) {
             return back()->with('error', 'Stok buku sudah habis. Tidak bisa dikonfirmasi.');
         }

@@ -22,9 +22,7 @@
 
     @include('member.layouts.header')
     @yield('content')
-    <div class="static bottom-0">
-        @include('components.footer-guest')
-    </div>
+    @include('components.footer-guest')
 </body>
 
 </html>

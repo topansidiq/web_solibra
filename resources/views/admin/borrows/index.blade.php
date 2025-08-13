@@ -2,15 +2,15 @@
 
 @section('content')
     <div class="content flex flex-col flex-auto bg-gray-50 w-full" x-data="{ openAddborrowModal: false }" x-cloak>
-        <div x-data="{ show: {{ session('error') ? 'true' : 'false' }} }" x-show="show" x-init="setTimeout(() => show = false, 6000)" class="transition-all ease-in-out" x-transition
-            x-cloak>
+        <div x-data="{ show: {{ session('error') ? 'true' : 'false' }} }" x-show="show"
+            x-init="setTimeout(() => show = false, 6000)" class="transition-all ease-in-out" x-transition x-cloak>
             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
                 <strong class="font-bold bg-red-300 px-2 py-1 rounded-sm">Gagal</strong>
                 <span class="block sm:inline">{{ session('error') }}</span>
             </div>
         </div>
-        <div x-data="{ show: {{ session('success') ? 'true' : 'false' }} }" x-show="show" x-init="setTimeout(() => show = false, 6000)" class="transition-all ease-in-out" x-transition
-            x-cloak>
+        <div x-data="{ show: {{ session('success') ? 'true' : 'false' }} }" x-show="show"
+            x-init="setTimeout(() => show = false, 6000)" class="transition-all ease-in-out" x-transition x-cloak>
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
                 <strong class="font-bold bg-green-300 px-2 py-1 rounded-sm">Berhasil</strong>
                 <span class="block sm:inline">{{ session('success') }}</span>
@@ -59,7 +59,8 @@
                         @csrf
 
                         {{-- Select Book --}}
-                        <div x-data="bookSearch({{ $books->sortByDesc('stock')->values()->toJson() }})" x-init="window.bookSearchInstance = $data" class="relative">
+                        <div x-data="bookSearch({{ $books->sortByDesc('stock')->values()->toJson() }})"
+                            x-init="window.bookSearchInstance = $data" class="relative">
                             <label for keyword class="block font-semibold">Pilih Buku</label>
                             <input type="text" x-model="search" @focus="show = true" @keydown.tab.prevent="selectFirst()"
                                 @keydown.enter.prevent="selectFirst()" @click.outside="show = false" id="keyword"
@@ -81,7 +82,8 @@
                         </div>
 
                         {{-- Select User --}}
-                        <div x-data="userSearch({{ $users->values()->toJson() }})" x-init="window.userSearchInstance = $data" class="relative">
+                        <div x-data="userSearch({{ $users->values()->toJson() }})"
+                            x-init="window.userSearchInstance = $data" class="relative">
                             <label for keyword class="block font-semibold">Pilih Pengguna</label>
                             <input type="text" x-model="search" @focus="show = true" @keydown.tab.prevent="selectFirst()"
                                 @keydown.enter.prevent="selectFirst()" @click.outside="show = false" id="keyword"
@@ -141,8 +143,7 @@
                         <th class="p-4">Nomor WhatsApp</th>
                         <th class="p-4 text-center">Tanggal Peminjaman</th>
                         <th class="p-4 text-center">Tanggal Pengembalian</th>
-                        <th class="p-4 text-center">Jatuh Tempo</th>
-                        <th class="p-4 text-center">Status</th>
+                        <th class="p-4 text-center">Status Peminjaman</th>
                         <th class="p-4 text-center">Perpanjangan</th>
                     </tr>
                 </thead>
@@ -192,78 +193,94 @@
                                 @endif
                             </td>
 
-                            <td class="px-4 py-1 border border-slate-300 text-center">
-                                {{ \Carbon\Carbon::parse($borrow->due_date)->format('d-m-Y') }}
-                            </td>
                             <td class="border border-slate-300 text-center">
-                                {{-- Tombol Konfirmasi Peminjaman --}}
-                                @if ($borrow->status === 'unconfirmed')
-                                    <form action="{{ route('borrows.confirm', $borrow->id) }}" method="POST"
-                                        onsubmit="return confirm('Setujui peminjaman buku ini?')">
+                                @if ($borrow->user->member_status === 'new' || $borrow->user->member_status === 'active')
+                                    <form action="{{ route('users.validation') }}" method="POST">
                                         @csrf
-                                        @method('PATCH')
-                                        <input type="hidden" name="book_id" value="{{ $borrow->book_id }}">
-                                        <input type="hidden" name="user_id" value="{{ $borrow->user_id }}">
-                                        <button class="flex items-center justify-between px-2" type="submit"
-                                            title="Konfirmasi Peminjaman">
-                                            <i data-lucide="check" class="w-5 h-5 text-green-500"></i>
-                                            <span class="block px-2">
-                                                Peminjaman Belum Dikonfirmasi
-                                            </span>
-                                        </button>
+
+                                        <input type="hidden" name="user_id" value="{{ $borrow->user->id }}">
+                                        @if (!($borrow->user->member_status === 'new' && $borrow->user->member_status === 'active'))
+                                            <button type="submit" class="px-2 py-1 rounded-sm  bg-red-500 text-neutral-50 ">
+                                                Belum Valid
+                                            </button>
+                                        @elseif ($borrow->user->member_status === 'validated')
+                                            <button type="submit" class="px-2 py-1 rounded-sm bg-green-500 text-neutral-50">
+                                                Valid
+                                            </button>
+                                        @endif
                                     </form>
-                                @elseif ($borrow->status === 'confirmed')
-                                    <form action="{{ route('borrows.return', $borrow->id) }}" method="POST"
-                                        onsubmit="return confirm('Kembalikan sekarang??')">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button class="flex items-center justify-between px-2" type="submit"
-                                            title="Konfirmasi Pengembalian">
-                                            <i data-lucide="undo-2" class="w-5 h-5 text-blue-500"></i>
-                                            <span class="block px-2">
-                                                Peminjaman Aktif
-                                            </span>
-                                        </button>
-                                    </form>
-                                @elseif ($borrow->status === 'returned')
-                                    <form action="{{ route('borrows.archive', $borrow->id) }}" method="POST"
-                                        onsubmit="return confirm('Arsipkan peminjaman ini?')">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button class="flex items-center justify-between px-2" type="submit"
-                                            title="Arsipkan Peminjaman">
-                                            <i data-lucide="archive" class="w-5 h-5 "></i>
-                                            <span class="block px-2">
-                                                Dikembalikan
-                                            </span>
-                                        </button>
-                                    </form>
-                                @elseif ($borrow->status === 'overdue')
-                                    <form action="{{ route('borrows.overdue', $borrow->id) }}" method="POST"
-                                        onsubmit="return confirm('Konfirmasi pengembalian?')">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button class="flex items-center justify-between px-2" type="submit">
-                                            <i data-lucide="bell" class="w-5 h-5 text-yellow-500"></i>
-                                            <span class="block px-2">
-                                                Jatuh Tempo
-                                            </span>
-                                        </button>
-                                    </form>
-                                @elseif ($borrow->status === 'extend')
-                                    <form action="{{ route('borrows.return', $borrow->id) }}" method="POST"
-                                        onsubmit="return confirm('Kembalikan sekarang??')">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button class="flex items-center justify-between px-2" type="submit"
-                                            title="Konfirmasi Pengembalian">
-                                            <i data-lucide="undo-2" class="w-5 h-5 text-blue-500"></i>
-                                            <span class="block px-2">
-                                                Diperpanjang
-                                            </span>
-                                        </button>
-                                    </form>
+                                @else
+                                    @if ($borrow->status === 'unconfirmed')
+                                        <form action="{{ route('borrows.confirm', $borrow->id) }}" method="POST"
+                                            onsubmit="return confirm('Setujui peminjaman buku ini?')">
+                                            @csrf
+                                            @method('PATCH')
+                                            <input type="hidden" name="book_id" value="{{ $borrow->book_id }}">
+                                            <input type="hidden" name="user_id" value="{{ $borrow->user_id }}">
+                                            <button class="flex items-center justify-between px-2" type="submit"
+                                                title="Konfirmasi Peminjaman">
+                                                <i data-lucide="check" class="w-5 h-5 text-green-500"></i>
+                                                <span class="block px-2">
+                                                    Peminjaman Belum Dikonfirmasi
+                                                </span>
+                                            </button>
+                                        </form>
+                                    @elseif ($borrow->status === 'confirmed')
+                                        <form action="{{ route('borrows.return', $borrow->id) }}" method="POST"
+                                            onsubmit="return confirm('Kembalikan sekarang??')">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button class="flex items-center justify-between px-2" type="submit"
+                                                title="Konfirmasi Pengembalian">
+                                                <i data-lucide="undo-2" class="w-5 h-5 text-blue-500"></i>
+                                                <span class="block px-2">
+                                                    Peminjaman Aktif
+                                                </span>
+                                            </button>
+                                        </form>
+                                    @elseif ($borrow->status === 'returned')
+                                        <form action="{{ route('borrows.archive', $borrow->id) }}" method="POST"
+                                            onsubmit="return confirm('Arsipkan peminjaman ini?')">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button class="flex items-center justify-between px-2" type="submit"
+                                                title="Arsipkan Peminjaman">
+                                                <i data-lucide="archive" class="w-5 h-5 "></i>
+                                                <span class="block px-2">
+                                                    Dikembalikan
+                                                </span>
+                                            </button>
+                                        </form>
+                                    @elseif ($borrow->status === 'overdue')
+                                        <form action="{{ route('borrows.overdue', $borrow->id) }}" method="POST"
+                                            onsubmit="return confirm('Konfirmasi pengembalian?')">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button class="flex items-center justify-between px-2" type="submit">
+                                                <i data-lucide="bell" class="w-5 h-5 text-yellow-500"></i>
+                                                <span class="block px-2">
+                                                    Jatuh Tempo
+                                                </span>
+                                            </button>
+                                        </form>
+                                    @elseif ($borrow->status === 'extend')
+                                        <form action="{{ route('borrows.return', $borrow->id) }}" method="POST"
+                                            onsubmit="return confirm('Kembalikan sekarang??')">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button class="flex items-center justify-between px-2" type="submit"
+                                                title="Konfirmasi Pengembalian">
+                                                <i data-lucide="undo-2" class="w-5 h-5 text-blue-500"></i>
+                                                <span class="block px-2">
+                                                    Diperpanjang
+                                                </span>
+                                            </button>
+                                        </form>
+                                    @endif
+
                                 @endif
+                                {{-- Tombol Konfirmasi Peminjaman --}}
+
                             </td>
                             <td class="border border-slate-300 text-center">
                                 {{-- Tombol Konfirmasi Perpanjangan --}}
