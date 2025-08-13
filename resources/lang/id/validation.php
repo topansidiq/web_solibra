@@ -21,4 +21,6 @@ return [
         'birth_date' => 'tanggal lahir',
         // tambahkan sesuai kebutuhan
     ],
+    'error' => 'Gagal',
+    'success' => 'Berhasil'
 ];

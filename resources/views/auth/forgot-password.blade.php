@@ -13,14 +13,14 @@
     <div x-data="{ show: {{ session('error') ? 'true' : 'false' }} }" x-show="show" x-init="setTimeout(() => show = false, 6000)" class="transition-all ease-in-out" x-transition
         x-cloak>
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-            <strong class="font-bold bg-red-300 px-2 py-1 rounded-sm">Gagal</strong>
+            <strong class="font-bold bg-red-300 px-2 py-1 rounded-sm">{{ __('validation.failed') }}</strong>
             <span class="block sm:inline">{{ session('error') }}</span>
         </div>
     </div>
     <div x-data="{ show: {{ session('success') ? 'true' : 'false' }} }" x-show="show" x-init="setTimeout(() => show = false, 6000)" class="transition-all ease-in-out" x-transition
         x-cloak>
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-            <strong class="font-bold bg-green-300 px-2 py-1 rounded-sm">Berhasil</strong>
+            <strong class="font-bold bg-green-300 px-2 py-1 rounded-sm">{{ __('validation.success') }}</strong>
             <span class="block sm:inline">{{ session('success') }}</span>
         </div>
     </div>
