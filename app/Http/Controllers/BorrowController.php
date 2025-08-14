@@ -151,11 +151,19 @@ class BorrowController extends Controller
             'due_date' => now()->copy()->addDays(14),
         ]);
 
+        $message = "Peminjaman untuk buku yang berjudul {$book->clean_title} pada {$borrow->borrowed_at} telah di konfirmasi oleh admin. Tanggal jatuh tempo atau pengembalian adalah pada {$borrow->due_date->translatedFormat('l, d F Y')}.";
+
         Notification::create([
             'user_id' => $borrow->user_id,
             'type' => 'borrow_confirmed',
-            'message' => "Peminjaman untuk buku yang berjudul {$book->title} pada {$borrow->borrowed_at} telah di konfirmasi oleh admin. Tanggal jatuh tempo atau pengembalian adalah pada {$borrow->due_date}.",
+            'message' => $message,
         ]);
+
+        try {
+            $this->bot->sendMessage(formattedPhoneNumberToUs62($borrow->user->phone_number), "> Layanan Chatbot Perpustakaan Umum Kota Solok\n\n{$message}");
+        } catch (\Throwable $th) {
+            throw $th;
+        }
 
         $book->decrement('stock');
 

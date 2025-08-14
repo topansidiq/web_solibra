@@ -71,13 +71,20 @@ class User extends Authenticatable
         return $this->hasMany(OTP::class);
     }
 
-
-    // @phpstan-ignore-next-line
-    public function notifications()
+    /**
+     * Get the user's favorite books.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Book>
+     */
+    public function favoriteBooks()
     {
-        return $this->hasMany(\App\Models\Notification::class);
+        return $this->belongsToMany(Book::class, 'favorites', 'user_id', 'book_id')->withTimestamps();
     }
 
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.

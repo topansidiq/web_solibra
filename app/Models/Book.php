@@ -84,4 +84,9 @@ class Book extends Model
     {
         return $this->hasMany(Borrow::class);
     }
+
+    public function favoritedBy()
+    {
+        return $this->belongsToMany(User::class, 'favorites', 'book_id', 'user_id')->withTimestamps();
+    }
 }

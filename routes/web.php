@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FavoriteController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\{
@@ -53,8 +54,11 @@ Route::group([
 
         Route::get('/member/account/edit', [MemberController::class, 'edit'])->name('member.account.edit');
 
+        // Custom collectiom routes
         Route::get('/member/collection', [MemberController::class, 'collection'])->name('member.collection');
         Route::get('/member/collection/{book}', [MemberController::class, 'showCollection'])->name('member.collection.show');
+        Route::get('/member/collection/{favorite}', [FavoriteController::class, 'toggleFavorite'])->name('member.collection.favorite');
+
         Route::get('/member/profile', [MemberController::class, 'profile'])->name('member.profile');
         Route::get('/member/service', [MemberController::class, 'service'])->name('member.service');
         Route::get('/member/information', [MemberController::class, 'information'])->name('member.information');

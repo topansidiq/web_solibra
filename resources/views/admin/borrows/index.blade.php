@@ -189,7 +189,7 @@
                                 @elseif ($borrow->status === 'confirmed' || $borrow->status === 'extend')
                                     <span>Aktif</span>
                                 @elseif ($borrow->status === 'returned')
-                                    {{ Carbon\Carbon::parse($borrow->return_date)->format('d-m-Y') }}
+                                    {{ Carbon\Carbon::parse($borrow->return_date)->translatedFormat('l, d-m-Y') }}
                                 @endif
                             </td>
 
@@ -197,19 +197,11 @@
                                 @if ($borrow->user->member_status === 'new' || $borrow->user->member_status === 'active')
                                     <form action="{{ route('users.validation') }}" method="POST">
                                         @csrf
-
                                         <input type="hidden" name="user_id" value="{{ $borrow->user->id }}">
-                                        @if (!($borrow->user->member_status === 'new' && $borrow->user->member_status === 'active'))
-                                            <button type="submit"
-                                                class="px-2 py-1 rounded-sm  bg-red-500 text-neutral-50 ">
-                                                Belum Valid
-                                            </button>
-                                        @elseif ($borrow->user->member_status === 'validated')
-                                            <button type="submit"
-                                                class="px-2 py-1 rounded-sm bg-green-500 text-neutral-50">
-                                                Valid
-                                            </button>
-                                        @endif
+                                        <button type="submit"
+                                            class="px-2 py-1 rounded-sm  bg-red-500 text-neutral-50 hover:bg-red-700 cursor-pointer">
+                                            Belum Valid
+                                        </button>
                                     </form>
                                 @else
                                     @if ($borrow->status === 'unconfirmed')

@@ -64,7 +64,7 @@
         @endphp
 
         <div class="profile hidden lg:flex gap-3 items-center p-3" x-data="{ sidebar: false }">
-            <div>
+            <div class="pr-4">
                 <ul class="flex gap-3">
                     @foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
                         @php
@@ -92,31 +92,14 @@
                     <p class="text-sm">{{ $user->name }}</p>
                 </div>
             </div>
-            <div @mouseleave="sidebar=false">
-                <div class="profile-picture" @click="sidebar=true">
+            <div>
+                <a href="{{ route('member.account') }}" class="profile-picture">
                     @if ($user->profile_picture === null)
-                        <div class="w-10 h-10 bg-yellow-500 rounded-full block" src="#" alt=""></div>
+                        <div class="w-10 h-10 bg-yellow-500 rounded-full block"></div>
                     @else
                         <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="">
                     @endif
-                </div>
-
-                {{-- Profile Sidebar --}}
-                <div class="fixed z-40 right-0 top-0 transition-all text-sm text-neutral-300 bg-neutral-700 p-4 w-sm h-screen"
-                    style="background-color: rgba(64,64,64,0.90);" x-show="sidebar">
-                    <ul class="space-y-1">
-                        <li>Lorem, ipsum dolor.</li>
-                        <li>Lorem, ipsum dolor.</li>
-                        <li>Lorem, ipsum dolor.</li>
-                        <li>Lorem, ipsum dolor.</li>
-                        <li>Lorem, ipsum dolor.</li>
-                        <li>Lorem, ipsum dolor.</li>
-                        <li>Lorem, ipsum dolor.</li>
-                        <li>Lorem, ipsum dolor.</li>
-                        <li>Lorem, ipsum dolor.</li>
-                    </ul>
-                </div>
-
+                </a>
             </div>
         </div>
     </div>
