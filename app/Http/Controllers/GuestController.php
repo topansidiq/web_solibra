@@ -14,10 +14,15 @@ class GuestController extends Controller
     public function home()
     {
         $latestBook = Book::latest()->take(6)->get();
-        $latestMedia = Gallery::all();
+        $latestMedia = Gallery::latest()->take(6)->get();
         $latestEvent = Event::latest()->take(6)->get();
+        $newItem = [
+            'book' => Book::latest()->first(),
+            'event' => Event::latest()->first(),
+            'information' => Information::latest()->first(),
+        ];
 
-        return view('home', compact('latestBook', 'latestMedia', 'latestEvent'));
+        return view('home', compact('latestBook', 'latestMedia', 'latestEvent', 'newItem'));
     }
 
     public function collection(Request $request)
@@ -49,10 +54,17 @@ class GuestController extends Controller
         $events = Event::all()->groupBy('status');
         return view('event', compact('events'));
     }
+
     public function information()
     {
         $informations = Information::orderBy('created_at', 'desc')->get();
         return view('information', compact('informations'));
+    }
+
+    public function gallery()
+    {
+        $galleries = Gallery::orderBy('created_at', 'desc')->get();
+        return view('gallery', compact('galleries'));
     }
 
     public function showInformation($id)

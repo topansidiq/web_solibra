@@ -8,6 +8,7 @@ class Gallery extends Model
 {
     protected $fillable = [
         'file',
-        'type'
+        'type',
+        'description',
     ];
 }

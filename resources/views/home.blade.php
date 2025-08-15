@@ -27,55 +27,103 @@
             </section>
 
             {{-- Beranda --}}
-            <section class="py-10 px-6 mx-auto w-full bg-white">
-                <div
-                    class="flex flex-col xl:flex-row w-full h-auto xl:h-96 max-w-7xl items-center justify-center gap-6 m-auto">
-                    <!-- Kolom kiri -->
-                    <div class="w-full xl:w-3/5 h-64 xl:h-full rounded-3xl p-6 overflow-hidden">
-                        <div class="relative w-full h-full mx-auto overflow-hidden rounded-2xl">
+            <section class="py-10 px-6 w-full bg-white">
 
-                            {{-- Radio dan Media --}}
-                            @foreach ($latestMedia as $index => $media)
-                                <input type="radio" name="carousel" id="carousel-{{ $index }}" class="hidden peer"
-                                    @checked($loop->first)>
+                <div class="grid grid-rows-2 grid-cols-3 max-w-7xl w-5xl max-h-80 mx-auto justify-center gap-4">
 
+                    <div class="col-span-2 row-span-2 rounded-2xl relative overflow-hidden shadow-md border border-neutral-200"
+                        x-data="{
+                            currentIndex: 0,
+                            total: {{ count($latestMedia) }},
+                            interval: null,
+                            startAutoplay() {
+                                this.interval = setInterval(() => {
+                                    this.currentIndex = (this.currentIndex + 1) % this.total;
+                                }, 7000);
+                            },
+                            stopAutoplay() {
+                                clearInterval(this.interval);
+                            }
+                        }" x-init="startAutoplay()" @mouseenter="stopAutoplay"
+                        @mouseleave="startAutoplay">
+                        <!-- Slides -->
+                        <template x-for="(media, index) in {{ json_encode($latestMedia) }}" :key="index">
+                            <div x-show="currentIndex === index" x-transition.opacity.duration.500ms
+                                class="absolute inset-0">
+
+                                <!-- Image -->
+                                <template x-if="media.type === 'image'">
+                                    <img :src="'/storage/' + media.file" class="w-full h-full object-cover rounded-2xl">
+                                </template>
+
+                                <!-- Video -->
+                                <template x-if="media.type === 'video'">
+                                    <video controls class="w-full h-full object-cover rounded-2xl">
+                                        <source :src="'/storage/' + media.file" type="video/mp4">
+                                        Browser tidak mendukung video.
+                                    </video>
+                                </template>
+
+                                <!-- Judul overlay -->
                                 <div
-                                    class="absolute inset-0 transition-opacity duration-700 ease-in-out opacity-0 peer-checked:opacity-100">
-                                    @if ($media->type === 'image')
-                                        <img src="{{ asset('storage/' . $media->file) }}"
-                                            alt="Gallery Image {{ $index }}"
-                                            class="w-full h-full object-cover rounded-2xl">
-                                    @elseif ($media->type === 'video')
-                                        <video controls class="w-full h-full object-cover rounded-2xl">
-                                            <source src="{{ asset('storage/' . $media->file) }}" type="video/mp4">
-                                            Browser tidak mendukung pemutaran video.
-                                        </video>
-                                    @endif
+                                    class="absolute bottom-0 w-full bg-gradient-to-t from-black/80 via-black/50 to-transparent text-white text-sm text-center py-2 rounded-b-2xl z-30">
+                                    <span>Terbaru</span>
                                 </div>
-                            @endforeach
-
-                            {{-- Navigasi --}}
-                            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-                                @foreach ($latestMedia as $index => $media)
-                                    <label for="carousel-{{ $index }}"
-                                        class="w-3 h-3 rounded-full bg-white opacity-70 cursor-pointer ring-1 ring-gray-300 hover:bg-gray-400 transition">
-                                    </label>
-                                @endforeach
                             </div>
+                        </template>
+
+                        <!-- Tombol navigasi -->
+                        <button @click="currentIndex = (currentIndex - 1 + total) % total"
+                            class="absolute left-3 top-1/2 -translate-y-1/2 bg-black bg-opacity-40 text-white rounded-full w-8 h-8 flex items-center justify-center">
+                            ‹
+                        </button>
+                        <button @click="currentIndex = (currentIndex + 1) % total"
+                            class="absolute right-3 top-1/2 -translate-y-1/2 bg-black bg-opacity-40 text-white rounded-full w-8 h-8 flex items-center justify-center">
+                            ›
+                        </button>
+
+                        <!-- Indicator -->
+                        <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+                            <template x-for="(media, index) in {{ json_encode($latestMedia) }}" :key="'dot-' + index">
+                                <div @click="currentIndex = index"
+                                    :class="currentIndex === index ? 'bg-white' : 'bg-gray-400'"
+                                    class="w-3 h-3 rounded-full cursor-pointer ring-1 ring-gray-300 transition"></div>
+                            </template>
                         </div>
                     </div>
 
-
-                    <!-- Kolom kanan -->
-                    <div class="grid w-full xl:w-2/5 h-64 xl:h-full gap-6">
-                        <div class="bg-amber-100 rounded-2xl h-full overflow-hidden">
-                            <img src="{{ asset('img/weekend-sale-banner-template-promotion-vector.jpg') }}" alt=""
+                    <!-- Banner kanan atas -->
+                    <div class="col-auto row-auto relative shadow-md border border-neutral-200 rounded-2xl">
+                        @if ($newItem['book'])
+                            <img src="{{ asset('storage/' . $newItem['book']->cover) }}" alt=""
                                 class="w-full h-full object-cover rounded-2xl">
-                        </div>
-                        <div class="bg-amber-400 rounded-2xl h-full overflow-hidden">
-                            <img src="{{ asset('img/discount-promo-landscape-banner-template-design-b2d961494cf7721d73884d8a307ac771_screen.jpg') }}"
-                                alt="" class="w-full h-full object-cover rounded-2xl">
-                        </div>
+                            <div
+                                class="absolute bottom-0 w-full  bg-gradient-to-t from-black/80 via-black/50 to-transparent text-white text-sm text-center py-1 rounded-b-2xl">
+                                Buku Terbaru
+                            </div>
+                        @else
+                            <div
+                                class="w-full h-full  bg-gradient-to-t from-black/80 via-black/50 to-transparent rounded-2xl flex items-center justify-center">
+                                <span class="text-gray-900 z-50">No Book</span>
+                            </div>
+                        @endif
+                    </div>
+
+                    <!-- Banner kanan bawah -->
+                    <div class="col-auto row-auto relative shadow-md border border-neutral-200 rounded-2xl">
+                        @if ($newItem['event'])
+                            <img src="{{ asset('storage/' . $newItem['event']->poster) }}" alt=""
+                                class="w-full h-full object-cover rounded-2xl">
+                            <div
+                                class="absolute bottom-0 w-full  bg-gradient-to-t from-black/80 via-black/50 to-transparent text-white text-sm text-center py-1 rounded-b-2xl">
+                                Kegiatan Terbaru
+                            </div>
+                        @else
+                            <div
+                                class="w-full h-full  bg-gradient-to-t from-black/80 via-black/50 to-transparent rounded-2xl flex items-center justify-center">
+                                <span class="text-gray-500 z-50">No Event</span>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </section>

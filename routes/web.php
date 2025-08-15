@@ -12,6 +12,7 @@ use App\Http\Controllers\{
     CategoryController,
     DashboardController,
     EventController,
+    GalleryController,
     MemberController,
     UserController,
     InformationController
@@ -30,6 +31,7 @@ Route::group([
     Route::get('/service', [GuestController::class, 'service'])->name('service');
     Route::get('/event', [GuestController::class, 'event'])->name('event');
     Route::get('/information', [GuestController::class, 'information'])->name('information');
+    Route::get('/gallery', [GuestController::class, 'gallery'])->name('gallery');
 
     // Show
     Route::get('/show/book/{book}', [GuestController::class, 'showBook'])->name('show.book');
@@ -89,6 +91,7 @@ Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
     Route::resource('users', UserController::class);
     Route::resource('events', EventController::class);
     Route::resource('informations', InformationController::class);
+    Route::resource('galleries', GalleryController::class);
 
     // Custom book routes
     Route::get('/books/search', [BookController::class, 'search'])->name('books.search');

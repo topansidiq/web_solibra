@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('file');
             $table->enum('type', ['image', 'video'])->default('image');
+            $table->longText('description')->nullable()->default('Tidak ada deskirpsi');
             $table->timestamps();
         });
     }

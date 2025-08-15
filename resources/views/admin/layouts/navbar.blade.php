@@ -27,6 +27,7 @@
             ['label' => 'Informasi', 'name' => 'informations.index', 'icon' => 'circle'],
             ['label' => 'Acara', 'name' => 'events.index', 'icon' => 'calendar-days'],
             ['label' => 'Notifikasi', 'name' => 'notifications.index', 'icon' => 'bell'],
+            ['label' => 'Galeri', 'name' => 'galleries.index', 'icon' => 'gallery-vertical-end'],
         ];
     @endphp
 

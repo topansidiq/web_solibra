@@ -1,11 +1,12 @@
 @php
     $menu = [
         ['label' => 'Beranda', 'name' => 'home'],
-        ['label' => 'Daftar Koleksi', 'name' => 'collection'],
+        ['label' => 'Koleksi', 'name' => 'collection'],
         ['label' => 'Profil', 'name' => 'profile'],
         ['label' => 'Layanan', 'name' => 'service'],
         ['label' => 'Kegiatan', 'name' => 'event'],
         ['label' => 'Informasi', 'name' => 'information'],
+        ['label' => 'Galeri', 'name' => 'gallery'],
     ];
 @endphp
 
