@@ -66,6 +66,7 @@
                             ['key' => 'isbn', 'label' => 'ISBN'],
                             ['key' => null, 'label' => 'Kategori'],
                             ['key' => 'stock', 'label' => 'Stok'],
+                            ['key' => 'aksi', 'label' => 'aksi'],
                         ];
                     @endphp
 
@@ -79,35 +80,20 @@
 
                 </thead>
                 <tbody class="text-xs">
-                    @foreach ($books as $book)
+                    @foreach ($books as $index => $book)
                         <tr>
                             <td class="px-4 py-1 border border-slate-300 text-center">
-                                {{ $book->id }}
+                                {{ $index + 1 }}
                             </td>
 
                             <td class="px-4 py-1 border border-slate-300">
                                 <div class="flex flex-row gap-2 justify-between items-center">
                                     <form class="flex items-center gap-2">
-                                        {{-- Edit Book Button --}}
-                                        <a href="{{ route('books.edit', $book->id) }}" class="block">
-                                            <i data-lucide="edit" class="w-4 h-4 text-blue-500"></i>
-                                        </a>
-
                                         {{-- Book Title --}}
                                         <p class="text-left">{{ Str::limit($book->clean_title, 50) }}</p>
                                     </form>
-
-                                    {{-- Delete Book Button --}}
-                                    <form action="{{ route('books.destroy', $book->id) }}" method="POST" class="ml-2">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="delete-book-btn">
-                                            <i data-lucide="trash-2" class="w-4 h-4 text-red-500"></i>
-                                        </button>
-                                    </form>
                                 </div>
                             </td>
-
                             <td class="px-4 py-1 border border-slate-300">{{ $book->formatted_author }}</td>
                             <td class="px-4 py-1 border border-slate-300">
                                 {{ preg_replace('/[:,]/', '', $book->publisher) }}</td>
@@ -119,8 +105,39 @@
                                     {{ $book->categories->take(3)->pluck('name')->implode(', ') }}
                                 </span>
                             </td>
-
                             <td class="px-4 py-2 border border-slate-300 text-center">{{ $book->stock }}</td>
+                            <td class="px-4 py-1 border border-slate-300 text-center w-32">
+                                <div class="flex items-center justify-center gap-1">
+                                    {{-- <a href="{{ route('books.show', $user->id) }}"
+                                        class="bg-green-500 hover:bg-green-600 text-white text-xs px-3 py-1 rounded">
+                                        Detail
+                                    </a> --}}
+
+                                    <a href="{{ route('books.edit', $book->id) }}"
+                                        class="bg-sky-800 hover:bg-sky-900 text-white text-xs px-3 py-1 rounded">
+                                        Edit
+                                    </a>
+                                    <form action="{{ route('books.destroy', $book->id) }}" method="POST"
+                                        onsubmit="return confirm('Yakin ingin menghapus buku ini?')"
+                                        class="inline-block">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded flex items-center justify-center h-[25px]">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
+                                    </form>
+
+                                    {{-- Delete Book Button --}}
+                                    {{-- <form action="{{ route('books.destroy', $book->id) }}" method="POST" class="ml-2">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="delete-book-btn">
+                                            <i data-lucide="trash-2" class="w-4 h-4 text-red-500"></i>
+                                        </button>
+                                    </form> --}}
+                                </div>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -134,7 +151,7 @@
                     @for ($i = 1; $i <= $totalPages; $i++)
                         <a href="{{ route('books.index', ['page' => $i]) }}"
                             class="px-3 py-1 rounded border
-                {{ $i == $currentPage ? 'bg-sky-700 text-white' : 'bg-white text-gray-800' }}">
+                            {{ $i == $currentPage ? 'bg-sky-700 text-white' : 'bg-white text-gray-800' }}">
                             {{ $i }}
                         </a>
                     @endfor

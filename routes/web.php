@@ -106,6 +106,10 @@ Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
     Route::post('/borrows/{borrow}/extend', [BorrowController::class, 'extend'])->name('borrows.extend');
     Route::patch('/borrows/{borrow}/archive', [BorrowController::class, 'archive'])->name('borrows.archive');
 
+    // Custom return route
+    Route::get('/admin/return', [BorrowController::class, 'returnTable'])->name('return.index');
+    Route::get('/admin/return/{borrow}', [BorrowController::class, 'returnShow'])->name('return.show');
+
     //informations
     Route::put('/informations/{id}', [InformationController::class, 'update'])->name('informations.update');
     Route::get('/informations/{id}/edit', [InformationController::class, 'edit'])->name('informations.edit');

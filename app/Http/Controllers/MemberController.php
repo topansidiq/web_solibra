@@ -217,7 +217,14 @@ class MemberController extends Controller
             'book_id' => 'required|exists:books,id',
         ]);
 
+
         $user = Auth::user();
+        $isBorrow = Borrow::where('user_id', $user->id)->where('status', 'unconfirmed')->exists();
+
+        if ($isBorrow){
+            return back()->with('error', 'Anda telah mengajukan peminjaman untuk buku ini. Silahkan menunggu konfirmasi admin. Anda dapat melihat daftar peminjaman anda di halaman peminjaman!')->with('duration', 10000);
+        }
+
         $isOverdue = Borrow::where('user_id', $user->id)
             ->where('status', 'overdue')
             ->exists();

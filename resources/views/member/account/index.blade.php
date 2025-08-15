@@ -60,7 +60,7 @@
                         Edit Profil
                     </button>
 
-                    <ul class="space-y-3 text-sm text-gray-600 mb-6">
+                    {{-- <ul class="space-y-3 text-sm text-gray-600 mb-6">
                         <li class="flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" fill="none"
                                 stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -112,7 +112,7 @@
                             <a href="https://youtube.com/@topanisme" target="_blank" rel="noopener"
                                 class="hover:text-blue-600">@topanisme</a>
                         </li>
-                    </ul>
+                    </ul> --}}
 
                     <hr class="border-gray-300 w-full mb-6" />
                 </div>

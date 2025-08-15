@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('isbn')->unique()->nullable();
             $table->string('price')->nullable();
             $table->string('language')->nullable();
-            $table->unsignedInteger('stock')->default(0);
+            $table->unsignedInteger('stock')->nullable()->default(0);
             $table->text('description')->nullable();
             $table->string('cover')->nullable();
             $table->timestamps();

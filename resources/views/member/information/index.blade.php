@@ -32,7 +32,7 @@
                                     {{ \Illuminate\Support\Str::limit(strip_tags($info->description), 100) }}
                                 </p>
                                 <div>
-                                    <a href="{{ route('show.information', $info->id) }}"
+                                    <a href="{{ route('member.information.show', $info->id) }}"
                                         class="text-gray-400 text-sm font-semibold hover:underline">
                                         Lihat Selengkapnya →
                                     </a>

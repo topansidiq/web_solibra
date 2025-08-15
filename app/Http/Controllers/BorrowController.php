@@ -50,6 +50,29 @@ class BorrowController extends Controller
         return view("admin.borrows.index", compact("borrows", "sortBy", "sortDir", "categories", "books", "users"));
     }
 
+    public function returnTable()
+    {
+
+        $borrows = Borrow::with(['book', 'user'])->whereIn('status', ['confirmed', 'overdue', 'returned'])
+            ->paginate(20);
+
+        $categories = Category::withCount('books')
+            ->orderBy('name', 'asc')
+            ->get();
+        $books = Book::with(['categories'])
+            ->orderBy('title', 'asc')
+            ->get();
+
+        return view("admin.return.index", compact("borrows", "categories", "books"));
+    }
+
+    public function returnShow(Borrow $borrow)
+    {
+        $user = Auth::user();
+        $borrows = Borrow::where('user_id', $borrow->user_id)->get();
+        return view('admin.return.show', compact('borrow', 'user', 'borrows'));
+    }
+
     public function store(Request $request)
     {
         $request->validate([

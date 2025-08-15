@@ -31,7 +31,7 @@
 
             </div>
             <div>
-                <div x-data="{ show: {{ session('error') ? 'true' : 'false' }} }" x-show="show" x-init="setTimeout(() => show = false, 6000)" class="transition-all ease-in-out"
+                <div x-data="{ show: {{ session('error') ? 'true' : 'false' }} }" x-show="show" x-init="setTimeout(() => show = false, {{ session('duration') ? session('duration') : 6000 }})" class="transition-all ease-in-out"
                     x-transition x-cloak>
                     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
                         role="alert">
@@ -96,7 +96,21 @@
 
             {{-- Button Peminjaman --}}
             <div class="p-4 border-t border-neutral-200 flex justify-end">
-                <form action="{{ route('member.borrow.store') }}" method="POST">
+                @if ($book->stock == 0)
+
+                <button disabled class="px-4 py-2 bg-neutral-400 text-white rounded-md shadow">
+                    Buku tidak tersedia atau stok kosong
+                </button>
+                @else
+                    @if ($user->member_status !== 'validated')
+                <div>
+                        <button disabled class="px-4 py-2 bg-neutral-400 hover:bg-sky-800 text-white rounded-md shadow">
+                            Anda belum bisa melakukan peminjaman. Harap men-validasi data langsung ke Perpustakaan Umum Kota Solok
+                        </button>
+
+                    </div>
+                @else
+                    <form action="{{ route('member.borrow.store') }}" method="POST">
                     @csrf
                     <input type="hidden" name="book_id" value="{{ $book->id }}">
                     <input type="hidden" name="user_id" value="{{ $user->id }}">
@@ -104,6 +118,9 @@
                         Pinjam Buku Ini
                     </button>
                 </form>
+                @endif
+                @endif
+
             </div>
 
 

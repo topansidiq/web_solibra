@@ -47,7 +47,7 @@ class OTPController extends Controller
                 ]
             );
 
-            $message = "Kode OTP kamu adalah *$otp*. Berlaku selama 15 menit.";
+            $message = "Kode OTP kamu adalah *{$otp}*. Berlaku selama 15 menit.";
             $link = "http://localhost:8000/member/verification/" . $request->user_id;
 
             Notification::create([
@@ -89,8 +89,8 @@ class OTPController extends Controller
         }
 
         // Update OTP
-        $otp->verified = true;
-        $otp->expires_at = now();
+        $otp->update(['expires_at' => now(), 'verified' => true]);
+        $otp->save();
 
         // Update User
         $user = User::where('phone_number', $request->phone_number)->firstOrFail();

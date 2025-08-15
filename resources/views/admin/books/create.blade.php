@@ -44,13 +44,13 @@
                     </div>
                     <div class="grid grid-cols-4 justify-between gap-4">
                         <div class="w-full">
-                            <label for="title" class="block font-semibold text-sm pt-2 pb-1">Judul Buku</label>
+                            <label for="title" class="block font-semibold text-sm pt-2 pb-1">Judul Buku <span class="text-red-500">*</span></label>
                             <input type="text" name="title" id="title"
                                 class="form-input w-full border border-neutral-400 rounded-md focus: outline-0 p-2 placeholder: text-xs"
                                 placeholder="Contoh: Pemrograman Web" required>
                         </div>
                         <div class="w-full">
-                            <label for="author" class="block font-semibold text-sm pt-2 pb-1">Penulis</label>
+                            <label for="author" class="block font-semibold text-sm pt-2 pb-1">Penulis <span class="text-red-500">*</span></label>
                             <input type="text" name="author" id="author"
                                 class="form-input w-full border border-neutral-400 rounded-md focus: outline-0 p-2 placeholder: text-xs"
                                 placeholder="Contoh: Sulistio, Bakayoko, Monorero" required>
@@ -59,26 +59,26 @@
                             <label for="publisher" class="block font-semibold text-sm pt-2 pb-1">Penerbit</label>
                             <input type="text" name="publisher" id="publisher"
                                 class="form-input w-full border border-neutral-400 rounded-md focus: outline-0 p-2 placeholder: text-xs"
-                                placeholder="Contoh: Gramedia" required>
+                                placeholder="Contoh: Gramedia">
                         </div>
                         <div class="w-full">
                             <label for="publication_place" class="block font-semibold text-sm pt-2 pb-1">Tempat
                                 Terbit</label>
                             <input type="text" name="publication_place" id="publication_place"
                                 class="form-input w-full border border-neutral-400 rounded-md focus: outline-0 p-2 placeholder: text-xs"
-                                placeholder="Contoh: Jakarta" required>
+                                placeholder="Contoh: Jakarta">
                         </div>
                         <div class="w-full">
                             <label for="year" class="block font-semibold text-sm pt-2 pb-1">Tahun Terbit</label>
                             <input type="text" name="year" id="year"
                                 class="form-input w-full border border-neutral-400 rounded-md focus: outline-0 p-2 placeholder: text-xs"
-                                placeholder="Contoh: 2002" required min="1900" max="{{ date('Y') }}">
+                                placeholder="Contoh: 2002" min="1900" max="{{ date('Y') }}">
                         </div>
                         <div class="w-full">
                             <label for="isbn" class="block font-semibold text-sm pt-2 pb-1">ISBN</label>
                             <input type="text" name="isbn" id="isbn"
                                 class="form-input w-full border border-neutral-400 rounded-md focus: outline-0 p-2 placeholder: text-xs"
-                                placeholder="Contoh: 9789834230190" required>
+                                placeholder="Contoh: 9789834230190">
                         </div>
                         <div class="w-full">
                             <label for="edition" class="block font-semibold text-sm pt-2 pb-1">Edisi</label>
@@ -88,9 +88,14 @@
                         </div>
                         <div class="w-full">
                             <label for="language" class="block font-semibold text-sm pt-2 pb-1">Bahasa</label>
-                            <input type="text" name="language" id="language"
-                                class="form-input w-full border border-neutral-400 rounded-md focus: outline-0 p-2 placeholder: text-xs"
-                                placeholder="Contoh: Indonesia, Inggris, Minang">
+                            <select name="language" id="language"
+                                class="form-input w-full border border-neutral-400 rounded-md focus:outline-0 p-2 text-sm">
+                                <option value="">-- Pilih Bahasa --</option>
+                                <option value="bahasa indonesia">Bahasa Indonesia</option>
+                                <option value="bahasa inggris">Bahasa Inggris</option>
+                                <option value="bahasa minang">Bahasa Minang</option>
+                                <option value="bahasa">Lainnya</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -104,9 +109,12 @@
                     <div class="flex justify-between gap-4">
                         <div class="w-full">
                             <label for="material" class="block font-semibold text-sm pt-2 pb-1">Jenis Bahan</label>
-                            <input type="material" name="material" id="material"
-                                class="form-input w-full border border-neutral-400 rounded-md focus: outline-0 p-2 placeholder: text-xs"
-                                placeholder="Contoh: Monograf">
+                            <select name="material" id="material"
+                                class="form-input w-full border border-neutral-400 rounded-md focus:outline-0 p-2 text-sm">
+                                <option value="">-- Pilih Jenis Bahan --</option>
+                                <option value="monograf">Monograf</option>
+                                <option value="terbitan berseri">Terbitan Berseri</option>
+                            </select>
                         </div>
                         <div class="w-full">
                             <label for="physical_shape" class="block font-semibold text-sm pt-2 pb-1">Bentuk Fisik</label>
@@ -148,11 +156,14 @@
                                 placeholder="Contoh: 136.4/Bp-2024">
                         </div>
                         <div class="w-full">
-                            <label for="acquisition_source" class="block font-semibold text-sm pt-2 pb-1">Sumber
-                                Perolehan</label>
-                            <input type="text" name="acquisition_source" id="acquisition_source"
-                                class="form-input w-full border border-neutral-400 rounded-md focus: outline-0 p-2 placeholder: text-xs"
-                                placeholder="Contoh: Pembelian, Hibah">
+                            <label for="acquisition_source" class="block font-semibold text-sm pt-2 pb-1">Sumber Perolehan</label>
+                            <select name="acquisition_source" id="acquisition_source"
+                                class="form-input w-full border border-neutral-400 rounded-md focus:outline-0 p-2 text-sm required">
+                                <option value="">-- Pilih Sumber Perolehan --</option>
+                                <option value="pembelian">Pembelian</option>
+                                <option value="hadiah/hibah">Hadiah/Hibah</option>
+                                <option value="buku liam">Buku Liam</option>
+                            </select>
                         </div>
                         <div class="w-full">
                             <label for="acquisition_name" class="block font-semibold text-sm pt-2 pb-1">Nama Sumber
@@ -184,7 +195,7 @@
                                 placeholder="Contoh: 23">
                         </div>
                         <div class="w-full">
-                            <label for="categories" class="block font-semibold text-sm pt-2 pb-1">Kategori</label>
+                            <label for="categories" class="block font-semibold text-sm pt-2 pb-1">Kategori <span class="text-red-500">*</span></label>
                             <div id="selectedCategories">
                                 <div x-data="categorySearch({{ $categories->sortByDesc('books_count')->values()->toJson() }})" x-init="window.categorySearchInstance = $data" class="">
                                     <input type="text" x-model="search" @focus="show = true"

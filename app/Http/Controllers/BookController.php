@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Throwable;
 
 class BookController extends Controller
@@ -38,7 +39,7 @@ class BookController extends Controller
             // Ambil data sesuai halaman
             $books = $booksQuery
                 ->skip($offset)
-                ->take($perPage)
+                ->take($perPage)->orderBy('title', 'asc')
                 ->get();
 
             // Ambil semua kategori
@@ -74,10 +75,10 @@ class BookController extends Controller
                 'publisher' => 'nullable|string',
                 'language' => 'nullable|string',
                 'year' => 'nullable|integer|min:1000|max:' . date('Y'),
-                'isbn' => ['nullable', 'string', 'unique:books,isbn'],
-                'categories' => 'nullable|array',
+                'isbn' => 'nullable|string|unique:books,isbn',
+                'categories' => 'nullable|array|min:1',
                 'categories.*' => 'exists:categories,id',
-                'stock' => 'nullable|integer|min:0',
+                'stock' => 'nullable|numeric|min:0',
                 'description' => 'nullable|string',
                 'cover' => 'nullable|image|max:2048',
                 'supply_date' => 'nullable|string',
@@ -126,7 +127,11 @@ class BookController extends Controller
                 'language' => 'nullable|string',
                 'pages' => 'nullable|integer|min:0',
                 'year' => 'nullable|integer',
-                'isbn' => 'nullable|string|unique:books,isbn',
+                'isbn' => [
+                    'nullable',
+                    'string',
+                    Rule::unique('books', 'isbn')->ignore($book->id),
+                ],
                 'categories' => 'nullable|array',
                 'categories.*' => 'exists:categories,id',
                 'stock' => 'nullable|integer|min:0',
@@ -162,12 +167,11 @@ class BookController extends Controller
         }
     }
 
-
     public function edit(Book $book)
     {
         $book = Book::findOrFail($book->id);
         $categories = Category::all();
-        return view('admin.books.edit', compact('book', "categories"));
+        return view('admin.books.update', compact('book', "categories"));
     }
 
     public function destroy(Book $book)

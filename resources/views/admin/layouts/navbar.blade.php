@@ -22,6 +22,7 @@
             ['label' => 'Buku', 'name' => 'books.index', 'icon' => 'book-open'],
             ['label' => 'Kategori', 'name' => 'categories.index', 'icon' => 'layers'],
             ['label' => 'Peminjaman', 'name' => 'borrows.index', 'icon' => 'list'],
+            ['label' => 'Pengembalian', 'name' => 'return.index', 'icon' => 'repeat'],
             ['label' => 'Pengguna', 'name' => 'users.index', 'icon' => 'user'],
             ['label' => 'Informasi', 'name' => 'informations.index', 'icon' => 'circle'],
             ['label' => 'Acara', 'name' => 'events.index', 'icon' => 'calendar-days'],
