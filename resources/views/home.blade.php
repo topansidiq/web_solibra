@@ -6,7 +6,7 @@
     {{-- @if (request()->is('/') || request()->is('home')) --}}
     <main>
         <script src="{{ asset('js/guest/home.js') }}"></script>
-        <div class="grid gap-3">
+        <div class="grid">
             <section
                 class="xl:flex grid w-full overflow-hidden shadow-lg bg-cover bg-no-repeat bg-center items-center justify-between 2xl:px-30 2xl:py-24 text-slate-50 text-shadow-md"
                 style="background-image: url({{ asset('img/Perpustakaan_Umum_Kota_Solok.jpg') }})">
@@ -27,11 +27,11 @@
             </section>
 
             {{-- Beranda --}}
-            <section class="py-10 px-6 w-full bg-white">
+            <section class="py-5 px-6 w-full bg-white">
 
-                <div class="grid grid-rows-2 grid-cols-3 max-w-7xl w-5xl max-h-80 mx-auto justify-center gap-4">
+                <div class="hidden md:grid grid-rows-2 grid-cols-3 md:max-w-7xl max-h-80 mx-auto justify-center gap-4">
 
-                    <div class="col-span-2 row-span-2 rounded-2xl relative overflow-hidden shadow-md border border-neutral-200"
+                    <div class="col-span-2 row-span-2 rounded-2xl md:relative overflow-hidden shadow-md border border-neutral-200"
                         x-data="{
                             currentIndex: 0,
                             total: {{ count($latestMedia) }},
@@ -49,7 +49,7 @@
                         <!-- Slides -->
                         <template x-for="(media, index) in {{ json_encode($latestMedia) }}" :key="index">
                             <div x-show="currentIndex === index" x-transition.opacity.duration.500ms
-                                class="absolute inset-0">
+                                class="md:absolute inset-0">
 
                                 <!-- Image -->
                                 <template x-if="media.type === 'image'">
@@ -65,8 +65,7 @@
                                 </template>
 
                                 <!-- Judul overlay -->
-                                <div
-                                    class="absolute bottom-0 w-full bg-gradient-to-t from-black/80 via-black/50 to-transparent text-white text-sm text-center py-2 rounded-b-2xl z-30">
+                                <div class="w-full text-sm text-center py-2 rounded-b-2xl z-30">
                                     <span>Terbaru</span>
                                 </div>
                             </div>
@@ -74,16 +73,16 @@
 
                         <!-- Tombol navigasi -->
                         <button @click="currentIndex = (currentIndex - 1 + total) % total"
-                            class="absolute left-3 top-1/2 -translate-y-1/2 bg-black bg-opacity-40 text-white rounded-full w-8 h-8 flex items-center justify-center">
+                            class="md:absolute left-3 top-1/2 -translate-y-1/2 bg-black bg-opacity-40 text-white rounded-full w-8 h-8 flex items-center justify-center">
                             ‹
                         </button>
                         <button @click="currentIndex = (currentIndex + 1) % total"
-                            class="absolute right-3 top-1/2 -translate-y-1/2 bg-black bg-opacity-40 text-white rounded-full w-8 h-8 flex items-center justify-center">
+                            class="md:absolute right-3 top-1/2 -translate-y-1/2 bg-black bg-opacity-40 text-white rounded-full w-8 h-8 flex items-center justify-center">
                             ›
                         </button>
 
                         <!-- Indicator -->
-                        <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+                        <div class="md:absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
                             <template x-for="(media, index) in {{ json_encode($latestMedia) }}" :key="'dot-' + index">
                                 <div @click="currentIndex = index"
                                     :class="currentIndex === index ? 'bg-white' : 'bg-gray-400'"
@@ -93,34 +92,44 @@
                     </div>
 
                     <!-- Banner kanan atas -->
-                    <div class="col-auto row-auto relative shadow-md border border-neutral-200 rounded-2xl">
+                    <div class="col-auto row-auto md:relative shadow-md border border-neutral-200 rounded-2xl">
                         @if ($newItem['book'])
                             <img src="{{ asset('storage/' . $newItem['book']->cover) }}" alt=""
                                 class="w-full h-full object-cover rounded-2xl">
                             <div
-                                class="absolute bottom-0 w-full  bg-gradient-to-t from-black/80 via-black/50 to-transparent text-white text-sm text-center py-1 rounded-b-2xl">
-                                Buku Terbaru
+                                class="md:absolute bottom-0 w-full bg-gradient-to-t from-black/80 via-black/50 to-transparent text-white text-sm text-center py-1 rounded-b-2xl">
+                                <div class="flex items-center justify-between px-5 py-3">
+                                    <a href="{{ route('show.book', $newItem['book']) }}"
+                                        class="block px-2 py-1 rounded-md text-sm bg-sky-500 text-neutral-50">Lihat
+                                        Detail</a>
+                                    <span class="block">Buku Terbaru</span>
+                                </div>
                             </div>
                         @else
                             <div
-                                class="w-full h-full  bg-gradient-to-t from-black/80 via-black/50 to-transparent rounded-2xl flex items-center justify-center">
+                                class="w-full h-full bg-gradient-to-t from-black/80 via-black/50 to-transparent rounded-2xl flex items-center justify-center">
                                 <span class="text-gray-900 z-50">No Book</span>
                             </div>
                         @endif
                     </div>
 
                     <!-- Banner kanan bawah -->
-                    <div class="col-auto row-auto relative shadow-md border border-neutral-200 rounded-2xl">
+                    <div class="col-auto row-auto md:relative shadow-md border border-neutral-200 rounded-2xl">
                         @if ($newItem['event'])
                             <img src="{{ asset('storage/' . $newItem['event']->poster) }}" alt=""
                                 class="w-full h-full object-cover rounded-2xl">
                             <div
                                 class="absolute bottom-0 w-full  bg-gradient-to-t from-black/80 via-black/50 to-transparent text-white text-sm text-center py-1 rounded-b-2xl">
-                                Kegiatan Terbaru
+                                <div class="flex items-center justify-between px-5 py-3">
+                                    <a href="{{ route('event', $newItem['event']) }}"
+                                        class="block px-2 py-1 rounded-md text-sm bg-sky-500 text-neutral-50">Lihat
+                                        Detail</a>
+                                    <span class="block">Kegiatan Terbaru</span>
+                                </div>
                             </div>
                         @else
                             <div
-                                class="w-full h-full  bg-gradient-to-t from-black/80 via-black/50 to-transparent rounded-2xl flex items-center justify-center">
+                                class="w-full h-full bg-gradient-to-t from-black/80 via-black/50 to-transparent rounded-2xl flex items-center justify-center">
                                 <span class="text-gray-500 z-50">No Event</span>
                             </div>
                         @endif
@@ -129,10 +138,30 @@
             </section>
 
             {{-- Latest Collection --}}
-            <section class="md:py-1 px-2 w-full mx-auto bg-sky-50">
+            <section class="md:py-1 px-2 w-full mx-auto bg-white border-t border-neutral-100">
                 <div class="max-w-7xl mx-auto p-2">
-                    <div>
-                        <h1 class="font-bold text-neutral-700 text-xl p-2">Terbaru</h1>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h1 class="font-bold text-neutral-700 text-xl">Rekomendasi Bacaan</h1>
+                            <p class="text-xs ">Jelajahi inspirasi baca kamu!</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-sky-200">
+                                <a href="#">Direkomendasikan</a>
+                            </div>
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-neutral-200 text-center">
+                                <a href="#">Teknologi</a>
+                            </div>
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-neutral-200 text-center">
+                                <a href="#">Sejarah</a>
+                            </div>
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-neutral-200 text-center">
+                                <a href="#">Religi</a>
+                            </div>
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-neutral-200 text-center">
+                                <a href="#">Novel</a>
+                            </div>
+                        </div>
                     </div>
                     <div
                         class="gap-4 xl:p-4 grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 mx-auto content-around">
@@ -175,10 +204,24 @@
             </section>
 
             {{-- Popular Collection --}}
-            <section class="md:py-1 px-2 w-full mx-auto bg-white">
+            <section class="md:py-1 px-2 w-full mx-auto bg-white border-t border-neutral-100">
                 <div class="max-w-7xl mx-auto p-2">
-                    <div>
-                        <h1 class="font-bold text-neutral-700 text-xl p-2">Koleksi Populer</h1>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h1 class="font-bold text-neutral-700 text-xl">Koleksi Populer</h1>
+                            <p class="text-xs ">Bacaan yang membuat banyak orang tertarik</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-sky-200">
+                                <a href="#">Populer Tahun Ini</a>
+                            </div>
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-neutral-200 text-center">
+                                <a href="#">2024</a>
+                            </div>
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-neutral-200 text-center">
+                                <a href="#">2023</a>
+                            </div>
+                        </div>
                     </div>
                     <div
                         class=" gap-4 xl:p-4 grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 mx-auto content-around">
@@ -223,8 +266,19 @@
             {{-- Latest Event --}}
             <section class="md:py-1 px-2 w-full mx-auto bg-sky-50">
                 <div class="max-w-7xl mx-auto p-2">
-                    <div>
-                        <h1 class="font-bold text-neutral-700 text-xl p-2">Kegiatan Terbaru</h1>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h1 class="font-bold text-neutral-700 text-xl">Kegiatan Terbaru</h1>
+                            <p class="text-xs ">Nikmati Berbagai Kegiatan Menarik dari Perpustakaan</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-sky-200">
+                                <a href="#">Sedang Berlangsung</a>
+                            </div>
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-neutral-200 text-center">
+                                <a href="#">Akan Datang</a>
+                            </div>
+                        </div>
                     </div>
                     <div
                         class="gap-4 xl:p-4 grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 mx-auto content-around">
