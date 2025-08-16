@@ -79,7 +79,7 @@
             use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
         @endphp
         <div class="profile hidden lg:flex gap-3 items-center p-3">
-            <ul class="flex gap-3">
+            <ul class="flex gap-3 mx-4">
                 @foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
                     @php
                         $flag = match ($properties['native']) {

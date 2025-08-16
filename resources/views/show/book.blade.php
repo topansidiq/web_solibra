@@ -94,7 +94,7 @@
                             Deskripsi
                         </div>
                         <div class="py-4 text-justify">
-                            {{ $book->description }}
+                            {!! $book->description !!}
                         </div>
                     </div>
                 </div>

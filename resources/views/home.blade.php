@@ -264,12 +264,12 @@
             </section>
 
             {{-- Latest Event --}}
-            <section class="md:py-1 px-2 w-full mx-auto bg-sky-50">
+            <section class="md:py-1 px-2 w-full mx-auto bg-white border-t border-neutral-100">
                 <div class="max-w-7xl mx-auto p-2">
                     <div class="flex items-center justify-between">
                         <div>
                             <h1 class="font-bold text-neutral-700 text-xl">Kegiatan Terbaru</h1>
-                            <p class="text-xs ">Nikmati Berbagai Kegiatan Menarik dari Perpustakaan</p>
+                            <p class="text-xs ">Nikmati berbagai kegiatan menarik dari perpustakaan</p>
                         </div>
                         <div class="flex gap-3">
                             <div class="rounded-md px-1 py-0.5 text-xs bg-sky-200">

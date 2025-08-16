@@ -23,7 +23,7 @@ class RoleMiddleware
         $allowedRoles = array_map(fn($role) => Role::tryFrom($role), $roles);
 
         if (!in_array($user->role, $allowedRoles, strict: true)) {
-            abort(403, 'Unauthorized');
+            abort(403);
         }
 
         return $next($request);

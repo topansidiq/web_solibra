@@ -8,6 +8,7 @@
     <title>Solibra - Perpustakaan Umum Kota Solok</title>
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
+    <link rel="icon" type="image/png" href="{{ asset('img/logo.png') }}">
 </head>
 
 <body class="bg-slate-200">

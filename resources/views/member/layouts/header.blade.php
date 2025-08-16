@@ -22,9 +22,9 @@
 <div class="w-full grid items-center xl:flex sticky top-0 z-50 bg-sky-800 text-slate-50" x-data="{ active: '{{ Route::currentRouteName() }}' }"
     x-transition>
     <div class="xl:p-4 flex justify-between gap-5 w-full">
-        <div class="p-3 flex gap-2 items-center pb-2">
-            <div class="w-8 h-8 bg-yellow-500">
-                <i data-lucide="library" class="w-auto text-neutral-800"></i>
+        <div class="flex items-center">
+            <div class="w-13 h-13 pt-1">
+                <img src="{{ asset('img/logo.png') }}" alt="">
             </div>
             <div class="">
                 <p class="font-serif">SOLIBRA</p>

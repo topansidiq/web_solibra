@@ -1,5 +1,16 @@
 @extends('layouts.app')
 
+@php
+    $options = [
+        ['status' => 'Akan Datang', 'value' => 'upcoming'],
+        ['status' => 'Sedang Berlangsung', 'value' => 'ongoing'],
+        ['status' => 'Sudah Selesai', 'value' => 'completed'],
+        ['status' => 'Dibatalkan', 'value' => 'cancelled'],
+    ];
+
+    $statusLabels = collect($options)->pluck('status', 'value');
+@endphp
+
 @section('content')
     <main class="bg-white py-12">
         <div class="max-w-7xl mx-auto px-4">
@@ -9,6 +20,24 @@
                 <h2 class="text-3xl font-extrabold text-sky-800">Informasi Kegiatan</h2>
                 <p class="text-gray-500 mt-2">Kegiatan terbaru dari Perpustakaan Umum Kota Solok</p>
                 <div class="w-20 border-b-4 border-sky-600 mt-3"></div>
+            </div>
+
+            <div class="block gap-6 text-sm items-center content-between" x-data="{ openNav: false }">
+                <div @mouseenter="openNav=true" @mouseleave="openNav=false"
+                    class="w-40 cursor-pointer bg-sky-50 border border-sky-200 rounded-md">
+                    <span class="p-2 block text-center">Filter Informasi</span>
+                    <div x-show="openNav" x-transition class="border-t border-neutral-600 bg-sky-50 fixed w-40">
+                        @foreach ($options as $option)
+                            <div class="">
+                                <a href="#"
+                                    class="flex items-center gap-2 py-3 hover:text-neutral-50 px-3 hover:bg-sky-500 transition-all text-xs"
+                                    :class="active === '{{ $option['value'] }}' ? 'text-sky-500' : ''">
+                                    <span>{{ $option['status'] }}</span>
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
             </div>
 
             <!-- Grid -->
@@ -63,7 +92,7 @@
 
     <!-- Script JS: Load More / Load Less -->
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const cards = document.querySelectorAll(".info-card");
             const loadMore = document.getElementById("load-more");
             const loadLess = document.getElementById("load-less");

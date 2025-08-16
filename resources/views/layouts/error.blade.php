@@ -8,13 +8,11 @@
     <title>@yield('title')</title>
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
-    <link rel="icon" type="image/png" href="{{ asset('img/logo.png') }}">
 </head>
 
 <body>
     <x-header-guest />
     @yield('content')
-    <x-footer-guest />
 </body>
 
 </html>

@@ -32,15 +32,15 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
                     <input type="text" name="email" required autofocus
                         class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
-                        placeholder="{{ __("auth.enter_email") }}" value="{{ old('email') }}"
-                        autocomplete="email">
+                        placeholder="{{ __('auth.enter_email') }}" value="{{ old('email') }}" autocomplete="email">
                     @error('email')
                         <span class="text-sm text-red-500 mt-1">{{ $message }}</span>
                     @enderror
                 </div>
 
                 <div class="mb-6" x-data="{ show: false }">
-                    <label class="block text-sm font-medium
+                    <label
+                        class="block text-sm font-medium
                     text-gray-700 mb-2">{{ __('auth.password') }}</label>
                     <div class="relative">
                         <input :type="show ? 'text' : 'password'" id="password" name="password" required
@@ -68,7 +68,8 @@
                         <input type="checkbox" name="remember" class="form-checkbox text-teal-600">
                         <span class="ml-2 text-sm text-gray-600">{{ __('auth.remember_me') }}</span>
                     </label>
-                    <a href="{{ route('password.forgot') }}" class="text-sm text-sky-600 hover:underline">{{ __('auth.forgot_password') }}</a>
+                    <a href="{{ route('password.forgot') }}"
+                        class="text-sm text-sky-600 hover:underline">{{ __('auth.forgot_password') }}</a>
                 </div>
 
                 <input type="hidden" name="role_id">
