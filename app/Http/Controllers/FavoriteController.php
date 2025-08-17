@@ -16,12 +16,12 @@ class FavoriteController extends Controller
 
         if ($user->favoriteBooks->where('book_id', $book->id)->exists()) {
             $user->favoriteBooks->detach($book->id);
-            return back()->with('success', 'Buku berhasil dihapus dari favorit');
+            return back()->with('success', 'Koleksi berhasil dihapus dari favorit.');
         }
 
         $user->favoriteBooks->attach($book->id);
 
-        return back()->with('success', 'Buku berhasil ditambahkan ke favorit');
+        return back()->with('success', 'Koleksi berhasil ditambahkan ke favorit');
     }
 
     public function myFavorites()

@@ -83,10 +83,7 @@ class GuestController extends Controller
     public function showBook(Book $book)
     {
         $book->load('categories');
-
         $categoryIds = $book->categories->pluck('id');
-
-        // Ambil buku lain yang punya salah satu kategori yang sama
         $relatedBooks = Book::whereHas('categories', function ($query) use ($categoryIds) {
             $query->whereIn('categories.id', $categoryIds);
         })

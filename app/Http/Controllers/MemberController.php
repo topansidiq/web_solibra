@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Borrow;
 use App\Models\Category;
+use App\Models\Event;
+use App\Models\Gallery;
 use App\Models\Information;
 use App\Models\Notification;
 use App\Models\OTP;
@@ -22,8 +24,17 @@ class MemberController extends Controller
 {
     public function dashboard()
     {
+        $latestBook = Book::latest()->take(6)->get();
+        $latestMedia = Gallery::latest()->take(6)->get();
+        $latestEvent = Event::latest()->take(6)->get();
+        $newItem = [
+            'book' => Book::latest()->first(),
+            'event' => Event::latest()->first(),
+            'information' => Information::latest()->first(),
+        ];
         $user = Auth::user();
-        return view("member.home.index", compact('user'));
+        $borrows = Borrow::where('user_id', $user->id)->latest()->take(6)->get();
+        return view("member.home.index", compact('user', 'latestBook', 'latestMedia', 'latestEvent', 'newItem', 'borrows'));
     }
 
     public function profile()
@@ -69,14 +80,13 @@ class MemberController extends Controller
 
     public function getUserByPhone(Request $request)
     {
-        // contoh
         $user = User::with(['borrows.book'])
             ->where('phone_number', $request->phone_number)
             ->first();
 
 
         if (!$user) {
-            return response()->json(['message' => 'User tidak ditemukan']);
+            return response()->json(['message' => 'Member tidak ditemukan']);
         }
 
         $borrows = Borrow::with('book')
@@ -99,13 +109,10 @@ class MemberController extends Controller
     public function collection(Request $request)
     {
 
-        /** @var User $user */
         $user = Auth::user();
 
-        // Ambil kategori yang punya buku
         $categories = Category::whereHas('books')->take(5)->get();
 
-        // Filter kategori (kalau ada)
         $selectedCategory = $request->query('category');
 
         $books = Book::when($selectedCategory, function ($query, $categoryId) {
@@ -117,12 +124,11 @@ class MemberController extends Controller
             ->take(10)
             ->get();
 
-        // Ambil daftar pinjaman (status masih dipinjam)
-        $collections = $user->borrows()
-            ->whereIn('status', ['confirmed', 'overdue']) // hanya buku aktif dipinjam
+        $collections = $user->borrows
+            ->whereIn('status', ['confirmed', 'overdue'])
             ->with('book.categories')
             ->get()
-            ->pluck('book'); // langsung koleksi Book
+            ->pluck('book');
 
         return view('member.collection.index', [
             'books' => $books,
@@ -139,7 +145,6 @@ class MemberController extends Controller
         $book = Book::where('id', $id)->with('categories')->first();
         $categoryIds = $book->categories->pluck('id');
 
-        // Buku terkait
         $relatedBooks = Book::whereHas('categories', function ($query) use ($categoryIds) {
             $query->whereIn('categories.id', $categoryIds);
         })
@@ -149,12 +154,10 @@ class MemberController extends Controller
             ->take(6)
             ->get();
 
-        // Cek overdue
         $isOverdue = Borrow::where('user_id', $user->id)
             ->where('status', 'overdue')
             ->exists();
 
-        // Cek maksimal peminjaman
         $maxBorrow = 3;
         $currentBorrowCount = Borrow::where('user_id', $user->id)
             ->whereIn('status', ['borrowed', 'pending'])
@@ -167,20 +170,18 @@ class MemberController extends Controller
 
     public function borrow()
     {
-        /** @var User $user */
         $user = Auth::user();
         $borrows = $user->borrows;
 
-        $collections = $user->borrows()
-            ->whereIn('status', ['confirmed', 'overdue']) // hanya buku aktif dipinjam
+        $collections = $user->borrows
+            ->whereIn('status', ['confirmed', 'overdue'])
             ->with('book.categories')
             ->get()
-            ->pluck('book'); // langsung koleksi Book
+            ->pluck('book');
 
         return view('member.borrow.index', compact('borrows', 'user', 'collections'));
     }
 
-    // Endpoint untuk API pencarian buku
     public function searchBooks(Request $request)
     {
         $q = $request->get('q');
@@ -221,8 +222,8 @@ class MemberController extends Controller
         $user = Auth::user();
         $isBorrow = Borrow::where('user_id', $user->id)->where('status', 'unconfirmed')->exists();
 
-        if ($isBorrow){
-            return back()->with('error', 'Anda telah mengajukan peminjaman untuk buku ini. Silahkan menunggu konfirmasi admin. Anda dapat melihat daftar peminjaman anda di halaman peminjaman!')->with('duration', 10000);
+        if ($isBorrow) {
+            return back()->with('error', 'Kamu telah mengajukan peminjaman untuk buku ini. Silahkan menunggu konfirmasi admin. Kamu dapat melihat daftar peminjaman anda di halaman peminjaman!')->with('duration', 10000);
         }
 
         $isOverdue = Borrow::where('user_id', $user->id)
@@ -230,7 +231,7 @@ class MemberController extends Controller
             ->exists();
 
         if ($isOverdue) {
-            return redirect()->back()->with('error', 'Tidak bisa meminjam karena anda memiliki peminjaman yang sudah jatuh tempo.');
+            return redirect()->back()->with('error', 'Tidak bisa meminjam karena kamu memiliki peminjaman yang sudah jatuh tempo.');
         }
 
         // Cek maksimal peminjaman
@@ -247,7 +248,6 @@ class MemberController extends Controller
 
         $due_date = now()->addDays(14);
 
-        // Buat peminjaman
         $borrow = Borrow::create([
             'user_id' => $user->id,
             'book_id' => $request->book_id,
@@ -255,7 +255,6 @@ class MemberController extends Controller
             'due_date' => $due_date,
         ]);
 
-        // Notifikasi admin
         $recipients = User::whereIn('role', [
             Role::Admin->value,
             Role::Librarian->value

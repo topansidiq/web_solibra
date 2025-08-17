@@ -1,111 +1,435 @@
 @extends('member.layouts.app')
 
+@section('title', 'Beranda | Perpustakaan Umum Kota Solok')
+
 @section('content')
-    <div>
-        <section
-            class="xl:flex grid w-full overflow-hidden shadow-lg bg-cover bg-no-repeat bg-center items-center justify-between 2xl:px-30 2xl:py-24 text-slate-50 text-shadow-md"
-            style="background-image: url({{ asset('img/perpustakaan_umum.jpg') }})">
-            <div class="md:p-10 lg:p-16 p-5">
-                <h1 class="text-3xl md:text-5xl font-extrabold leading-tight mb-4">
-                    <span>
-                        Perpustakaan<br>Umum Kota Solok
-                    </span>
-                </h1>
-                <div class="hidden lg:flex gap-4">
-                    <a href="#"
-                        class=" bg-yellow-500 hover:bg-yellow-700 text-white px-5 py-2 rounded-full shadow-md transition duration-300">
-                        Hubungi Kami
-                    </a>
-                </div>
-            </div>
-            <div class="md:p-10 lg:p-16 p-5 md:text-lg">
-                <h1 class="text-xl md:text-5xl font-extrabold leading-tight mb-4">
-                    <span>
-                        Halo, <br> {{ $user->name }}
-                    </span>
-                </h1>
-            </div>
-        </section>
-
-
-
-        <!-- Sambutan -->
-        <section class="py-10 px-6 w-full mx-auto bg-white">
-            <div class="bg-neutral-50 max-w-7xl mx-auto rounded-md shadow-md border border-gray-200 p-6">
-                <h2
-                    class="text-left text-2xl font-bold pb-7 mb-3 border-b border-neutral-200 max-w-fit mx-auto text-neutral-700">
-                    Selamat
-                    Datang di
-                    Perpustakaan Umum Kota Solok
-                </h2>
-
-                <div class="border-l-4 border-l-yellow-500 p-5">
-                    <p class="text-gray-700 leading-relaxed text-justify pl-1">
-                        <strong class="text-neutral-700">Perpustakaan Umum Kota Solok</strong> adalah salah satu lembaga
-                        penting
-                        di kota Solok, Sumatera
-                        Barat,
-                        yang berfungsi sebagai pusat pembelajaran dan pengembangan literasi di kalangan masyarakat.
-                        Dikenal dengan kota yang kaya akan budaya dan tradisi, Perpustakaan Kota Solok berperan besar
-                        dalam mendukung pembangunan pendidikan yang berkualitas, sekaligus memberikan akses bagi warga
-                        untuk memperoleh informasi dan pengetahuan yang mereka butuhkan. Sebagai lembaga pendidikan
-                        non-formal, perpustakaan ini terus berupaya untuk memperbaiki kualitas layanan dan meningkatkan
-                        minat baca masyarakat dari segala usia. Dalam artikel ini, kita akan membahas secara mendalam
-                        mengenai berbagai aspek yang ada di Perpustakaan Kota Solok, termasuk sejarah, visi dan misi,
-                        layanan, serta program-program unggulan yang mereka tawarkan.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- Bacaan Anda -->
-        <section class="py-8 bg-gray-50">
-            <div class="max-w-5xl mx-auto px-6">
-                <h3 class="text-xl font-semibold mb-4">Bacaan Anda</h3>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {{-- @foreach ($books as $book)
-                    <div class="bg-white p-2 rounded shadow">
-                        <img src="{{ $book->cover }}" alt="{{ $book->title }}" class="w-full h-48 object-cover rounded">
-                        <h4 class="mt-2 text-sm font-semibold">{{ $book->title }}</h4>
-                        <p class="text-xs text-gray-500">Teknologi - {{ $book->published_at->format('d M Y') }}</p>
+    {{-- @if (request()->is('/') || request()->is('home')) --}}
+    <main>
+        <script src="{{ asset('js/guest/home.js') }}"></script>
+        <div class="grid">
+            <section
+                class="xl:flex grid w-full overflow-hidden shadow-lg bg-cover bg-no-repeat bg-center items-center justify-between 2xl:px-30 2xl:py-24 text-slate-50 text-shadow-md"
+                style="background-image: url({{ asset('img/Perpustakaan_Umum_Kota_Solok.jpg') }})">
+                <div class="md:p-10 lg:p-16 p-5">
+                    <h1 class="text-3xl md:text-5xl font-extrabold leading-tight mb-4">
+                        <span class="block text-xl">{{ __('message.welcome', ['puks' => '']) }}</span>
+                        <span>
+                            Perpustakaan Umum Kota Solok
+                        </span>
+                    </h1>
+                    <div class="hidden lg:flex gap-4">
+                        <a href="#"
+                            class=" bg-yellow-500 hover:bg-yellow-700 text-white px-5 py-2 rounded-full shadow-md transition duration-300">
+                            {{ __('message.contact_us') }}
+                        </a>
                     </div>
-                @endforeach --}}
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Buku Favorit -->
-        <section class="py-8">
-            <div class="max-w-5xl mx-auto px-6">
-                <h3 class="text-xl font-semibold mb-4">Buku Favorit</h3>
-                <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
-                    {{-- @foreach ($favoriteBooks as $book)
-                    <div class="bg-white p-2 rounded shadow">
-                        <img src="{{ $book->cover }}" alt="{{ $book->title }}" class="w-full h-48 object-cover rounded">
-                        <h4 class="mt-2 text-sm font-semibold">{{ $book->title }}</h4>
-                        <p class="text-xs text-gray-500">Teknologi - {{ $book->published_at->format('d M Y') }}</p>
+            {{-- Dashboard --}}
+            <section class="py-5 px-6 w-full bg-white max-w-7xl mx-auto">
+                <div class="border border-neutral-200 rounded-2xl">
+                    <div class="p-5 gap-3 justify-between" x-data="{ showActiveBorrow: false }">
+                        <div class="grid grid-cols-4 gap-3 items-center justify-stretch">
+                            <div>
+                                <h1 class="text-sm font-semibold mb-3">Peminjaman Aktif:</h1>
+                                <div class="rounded-md shadow-md p-2 border border-neutral-200 text-4xl">
+                                    <div>
+                                        <div class="p-4">{{ $user->borrows->count() }}</div>
+                                        <div
+                                            class="px-2 py-1 text-left bg-white p-2 text-sm rounded-md border border-neutral-200">
+                                            <button @click="showActiveBorrow=true">Lihat Peminjaman</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h1 class="text-sm font-semibold mb-3">Peminjaman Aktif:</h1>
+                                <div class="rounded-md shadow-md p-2 border border-neutral-200 text-4xl">
+                                    <div>
+                                        <div>{{ $user->borrows->count() }}</div>
+                                        <div
+                                            class="px-2 py-1 text-left bg-white p-2 text-sm rounded-md border border-neutral-200">
+                                            <button @click="showActiveBorrow=true">Lihat Peminjaman</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h1 class="text-sm font-semibold mb-3">Peminjaman Aktif:</h1>
+                                <div class="rounded-md shadow-md p-2 border border-neutral-200 text-4xl">
+                                    <div>
+                                        <div>{{ $user->borrows->count() }}</div>
+                                        <div
+                                            class="px-2 py-1 text-left bg-white p-2 text-sm rounded-md border border-neutral-200">
+                                            <button @click="showActiveBorrow=true">Lihat Peminjaman</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h1 class="text-sm font-semibold mb-3">Peminjaman Aktif:</h1>
+                                <div class="rounded-md shadow-md p-2 border border-neutral-200 text-4xl">
+                                    <div>
+                                        <div>{{ $user->borrows->count() }}</div>
+                                        <div
+                                            class="px-2 py-1 text-left bg-white p-2 text-sm rounded-md border border-neutral-200">
+                                            <button @click="showActiveBorrow=true">Lihat Peminjaman</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div>
+                                <div x-show="showActiveBorrow">
+                                    <ul class="p-3 border-l border-neutral-200">
+                                        <li>Lorem ipsum dolor sit amet.</li>
+                                        <li>Lorem ipsum dolor sit amet.</li>
+                                        <li>Lorem ipsum dolor sit amet.</li>
+                                        <li>Lorem ipsum dolor sit amet.</li>
+                                        <li>Lorem ipsum dolor sit amet.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div>
+                                <div x-show="showActiveBorrow">
+                                    <ul class="p-3 border-l border-neutral-200">
+                                        <li>Lorem ipsum dolor sit amet.</li>
+                                        <li>Lorem ipsum dolor sit amet.</li>
+                                        <li>Lorem ipsum dolor sit amet.</li>
+                                        <li>Lorem ipsum dolor sit amet.</li>
+                                        <li>Lorem ipsum dolor sit amet.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div>
+                                <div x-show="showActiveBorrow">
+                                    <ul class="p-3 border-l border-neutral-200">
+                                        <li>Lorem ipsum dolor sit amet.</li>
+                                        <li>Lorem ipsum dolor sit amet.</li>
+                                        <li>Lorem ipsum dolor sit amet.</li>
+                                        <li>Lorem ipsum dolor sit amet.</li>
+                                        <li>Lorem ipsum dolor sit amet.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div>
+                                <div x-show="showActiveBorrow">
+                                    <ul class="p-3 border-l border-neutral-200">
+                                        <li>Lorem ipsum dolor sit amet.</li>
+                                        <li>Lorem ipsum dolor sit amet.</li>
+                                        <li>Lorem ipsum dolor sit amet.</li>
+                                        <li>Lorem ipsum dolor sit amet.</li>
+                                        <li>Lorem ipsum dolor sit amet.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div>
+                                <div x-show="showActiveBorrow">
+                                    <ul class="p-3 border-l border-neutral-200">
+                                        <li>Lorem ipsum dolor sit amet.</li>
+                                        <li>Lorem ipsum dolor sit amet.</li>
+                                        <li>Lorem ipsum dolor sit amet.</li>
+                                        <li>Lorem ipsum dolor sit amet.</li>
+                                        <li>Lorem ipsum dolor sit amet.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                @endforeach --}}
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Kegiatan Terbaru -->
-        <section class="py-8 bg-gray-50">
-            <div class="max-w-5xl mx-auto px-6">
-                <h3 class="text-xl font-semibold mb-4">Kegiatan Terbaru</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {{-- @foreach ($events as $event)
-                    <div class="bg-white p-4 rounded shadow">
-                        <img src="{{ $event->image }}" alt="{{ $event->title }}" class="w-full h-40 object-cover rounded mb-2">
-                        <h4 class="text-base font-bold">{{ $event->title }}</h4>
-                        <p class="text-sm text-gray-600 mb-2">{{ $event->excerpt }}</p>
-                        <a href="{{ route('event.show', $event->slug) }}" class="text-blue-600 text-sm">Baca Selengkapnya</a>
+            {{-- Beranda --}}
+            <section class="py-5 px-6 w-full bg-white">
+
+                <div class="hidden md:grid grid-rows-2 grid-cols-3 md:max-w-7xl max-h-80 mx-auto justify-center gap-4">
+
+                    <div class="col-span-2 row-span-2 rounded-2xl md:relative overflow-hidden shadow-md border border-neutral-200"
+                        x-data="{
+                            currentIndex: 0,
+                            total: {{ count($latestMedia) }},
+                            interval: null,
+                            startAutoplay() {
+                                this.interval = setInterval(() => {
+                                    this.currentIndex = (this.currentIndex + 1) % this.total;
+                                }, 7000);
+                            },
+                            stopAutoplay() {
+                                clearInterval(this.interval);
+                            }
+                        }" x-init="startAutoplay()" @mouseenter="stopAutoplay"
+                        @mouseleave="startAutoplay">
+                        <!-- Slides -->
+                        <template x-for="(media, index) in {{ json_encode($latestMedia) }}" :key="index">
+                            <div x-show="currentIndex === index" x-transition.opacity.duration.500ms
+                                class="md:absolute inset-0">
+
+                                <!-- Image -->
+                                <template x-if="media.type === 'image'">
+                                    <img :src="'/storage/' + media.file" class="w-full h-full object-cover rounded-2xl">
+                                </template>
+
+                                <!-- Video -->
+                                <template x-if="media.type === 'video'">
+                                    <video controls class="w-full h-full object-cover rounded-2xl">
+                                        <source :src="'/storage/' + media.file" type="video/mp4">
+                                        Browser tidak mendukung video.
+                                    </video>
+                                </template>
+
+                                <!-- Judul overlay -->
+                                <div class="w-full text-sm text-center py-2 rounded-b-2xl z-30">
+                                    <span>Terbaru</span>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- Tombol navigasi -->
+                        <button @click="currentIndex = (currentIndex - 1 + total) % total"
+                            class="md:absolute left-3 top-1/2 -translate-y-1/2 bg-black bg-opacity-40 text-white rounded-full w-8 h-8 flex items-center justify-center">
+                            ‹
+                        </button>
+                        <button @click="currentIndex = (currentIndex + 1) % total"
+                            class="md:absolute right-3 top-1/2 -translate-y-1/2 bg-black bg-opacity-40 text-white rounded-full w-8 h-8 flex items-center justify-center">
+                            ›
+                        </button>
+
+                        <!-- Indicator -->
+                        <div class="md:absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+                            <template x-for="(media, index) in {{ json_encode($latestMedia) }}" :key="'dot-' + index">
+                                <div @click="currentIndex = index"
+                                    :class="currentIndex === index ? 'bg-white' : 'bg-gray-400'"
+                                    class="w-3 h-3 rounded-full cursor-pointer ring-1 ring-gray-300 transition"></div>
+                            </template>
+                        </div>
                     </div>
-                @endforeach --}}
+
+                    <!-- Banner kanan atas -->
+                    <div class="col-auto row-auto md:relative shadow-md border border-neutral-200 rounded-2xl">
+                        @if ($newItem['book'])
+                            <img src="{{ asset('storage/' . $newItem['book']->cover) }}" alt=""
+                                class="w-full h-full object-cover rounded-2xl">
+                            <div
+                                class="md:absolute bottom-0 w-full bg-gradient-to-t from-black/80 via-black/50 to-transparent text-white text-sm text-center py-1 rounded-b-2xl">
+                                <div class="flex items-center justify-between px-5 py-3">
+                                    <a href="{{ route('show.book', $newItem['book']) }}"
+                                        class="block px-2 py-1 rounded-md text-sm bg-sky-500 text-neutral-50">Lihat
+                                        Detail</a>
+                                    <span class="block">Buku Terbaru</span>
+                                </div>
+                            </div>
+                        @else
+                            <div
+                                class="w-full h-full bg-gradient-to-t from-black/80 via-black/50 to-transparent rounded-2xl flex items-center justify-center">
+                                <span class="text-gray-900 z-50">No Book</span>
+                            </div>
+                        @endif
+                    </div>
+
+                    <!-- Banner kanan bawah -->
+                    <div class="col-auto row-auto md:relative shadow-md border border-neutral-200 rounded-2xl">
+                        @if ($newItem['event'])
+                            <img src="{{ asset('storage/' . $newItem['event']->poster) }}" alt=""
+                                class="w-full h-full object-cover rounded-2xl">
+                            <div
+                                class="absolute bottom-0 w-full  bg-gradient-to-t from-black/80 via-black/50 to-transparent text-white text-sm text-center py-1 rounded-b-2xl">
+                                <div class="flex items-center justify-between px-5 py-3">
+                                    <a href="{{ route('event', $newItem['event']) }}"
+                                        class="block px-2 py-1 rounded-md text-sm bg-sky-500 text-neutral-50">Lihat
+                                        Detail</a>
+                                    <span class="block">Kegiatan Terbaru</span>
+                                </div>
+                            </div>
+                        @else
+                            <div
+                                class="w-full h-full bg-gradient-to-t from-black/80 via-black/50 to-transparent rounded-2xl flex items-center justify-center">
+                                <span class="text-gray-500 z-50">No Event</span>
+                            </div>
+                        @endif
+                    </div>
                 </div>
-            </div>
-        </section>
-    </div>
+            </section>
+
+            {{-- Latest Collection --}}
+            <section class="md:py-1 px-2 w-full mx-auto bg-white border-t border-neutral-100">
+                <div class="max-w-7xl mx-auto p-2">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h1 class="font-bold text-neutral-700 text-xl">Rekomendasi Bacaan</h1>
+                            <p class="text-xs ">Jelajahi inspirasi baca kamu!</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-sky-200">
+                                <a href="#">Direkomendasikan</a>
+                            </div>
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-neutral-200 text-center">
+                                <a href="#">Teknologi</a>
+                            </div>
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-neutral-200 text-center">
+                                <a href="#">Sejarah</a>
+                            </div>
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-neutral-200 text-center">
+                                <a href="#">Religi</a>
+                            </div>
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-neutral-200 text-center">
+                                <a href="#">Novel</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="gap-4 xl:p-4 grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 mx-auto content-around">
+                        @foreach ($latestBook as $book)
+                            <a href="{{ route('show.book', $book) }}">
+                                <div
+                                    class="book h-full bg-slate-50 rounded-md shadow border border-slate-300 cursor-pointer hover:scale-105 transition">
+
+                                    @if ($book->cover && Storage::disk('public')->exists($book->cover))
+                                        <div class="h-72"
+                                            style="background-image: url({{ asset('storage/' . $book->cover) }})">
+                                        </div>
+                                    @else
+                                        <div class="h-72 bg-cover bg-no-repeat py-10 flex items-center justify-center text-white text-2xl font-semibold"
+                                            style="background-image: url({{ asset('img/default_cover.jpg') }})">
+                                            <h1 class="p-3">{{ $book->clean_title }}</h1>
+                                        </div>
+                                    @endif
+
+                                    <div class="p-3">
+                                        <h2 class="font-bold text-sm">{{ $book->clean_title }} ({{ $book->year }})
+                                        </h2>
+                                        <div class="text-xs">
+                                            @foreach ($book->categories as $category)
+                                                <span>{{ $category->name }}@if (!$loop->last)
+                                                        ,
+                                                    @endif
+                                                </span>
+                                            @endforeach
+                                        </div>
+                                        <p class="text-xs font-semibold text-slate-500">Penulis:
+                                            {{ $book->formatted_author }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            </section>
+
+            {{-- Popular Collection --}}
+            <section class="md:py-1 px-2 w-full mx-auto bg-white border-t border-neutral-100">
+                <div class="max-w-7xl mx-auto p-2">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h1 class="font-bold text-neutral-700 text-xl">Koleksi Populer</h1>
+                            <p class="text-xs ">Bacaan yang membuat banyak orang tertarik</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-sky-200">
+                                <a href="#">Populer Tahun Ini</a>
+                            </div>
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-neutral-200 text-center">
+                                <a href="#">2024</a>
+                            </div>
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-neutral-200 text-center">
+                                <a href="#">2023</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class=" gap-4 xl:p-4 grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 mx-auto content-around">
+                        @foreach ($latestBook as $book)
+                            <a href="{{ route('show.book', $book) }}">
+                                <div
+                                    class="book h-full bg-slate-50 rounded-md shadow border border-slate-300 cursor-pointer hover:scale-105 transition">
+
+                                    @if ($book->cover && Storage::disk('public')->exists($book->cover))
+                                        <div class="h-72"
+                                            style="background-image: url({{ asset('storage/' . $book->cover) }})">
+                                        </div>
+                                    @else
+                                        <div class="h-72 bg-cover bg-no-repeat py-10 flex items-center justify-center text-white text-2xl font-semibold"
+                                            style="background-image: url({{ asset('img/default_cover.jpg') }})">
+                                            <h1 class="p-3">{{ $book->clean_title }}</h1>
+                                        </div>
+                                    @endif
+
+                                    <div class="p-3">
+                                        <h2 class="font-bold text-sm">{{ $book->clean_title }} ({{ $book->year }})
+                                        </h2>
+                                        <div class="text-xs">
+                                            @foreach ($book->categories as $category)
+                                                <span>{{ $category->name }}@if (!$loop->last)
+                                                        ,
+                                                    @endif
+                                                </span>
+                                            @endforeach
+                                        </div>
+                                        <p class="text-xs font-semibold text-slate-500">Penulis:
+                                            {{ $book->formatted_author }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            </section>
+
+            {{-- Latest Event --}}
+            <section class="md:py-1 px-2 w-full mx-auto bg-white border-t border-neutral-100">
+                <div class="max-w-7xl mx-auto p-2">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h1 class="font-bold text-neutral-700 text-xl">Kegiatan Terbaru</h1>
+                            <p class="text-xs ">Nikmati berbagai kegiatan menarik dari perpustakaan</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-sky-200">
+                                <a href="#">Sedang Berlangsung</a>
+                            </div>
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-neutral-200 text-center">
+                                <a href="#">Akan Datang</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="gap-4 xl:p-4 grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 mx-auto content-around">
+                        @if ($latestEvent->isEmpty())
+                            <p class="text-black">Tidak ada kegiatan</p>
+                        @else
+                            @foreach ($latestEvent as $event)
+                                <a href="{{ route('show.event', $event) }}">
+                                    <div
+                                        class="book h-full bg-slate-50 rounded-md shadow border border-slate-300 cursor-pointer hover:scale-105 transition">
+
+                                        @if ($event->poster && Storage::disk('public')->exists($event->poster))
+                                            <div class="h-96 bg-no-repeat bg-cover"
+                                                style="background-image: url({{ asset('storage/' . $event->poster) }})">
+                                            </div>
+                                        @else
+                                            <div class="h-72 bg-cover bg-no-repeat py-10 flex items-center justify-center text-white text-2xl font-semibold"
+                                                style="background-image: url({{ asset('img/default_cover.jpg') }})">
+                                                <h1 class="p-3">{{ $event->title }}</h1>
+                                            </div>
+                                        @endif
+
+                                        <div class="p-3">
+                                            <h2 class="font-bold text-sm">{{ $event->title }} ({{ $event->start_at }})
+                                            </h2>
+                                            <p class="text-xs font-semibold text-slate-500">
+                                                {{ $event->status }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            @endforeach
+                        @endif
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
 @endsection
