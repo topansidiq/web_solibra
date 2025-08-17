@@ -56,7 +56,7 @@ class BookController extends Controller
             ]);
         } catch (Exception $e) {
             Log::error("Error fetching books: " . $e->getMessage());
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data buku.');
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data koleksi.');
         }
     }
 
@@ -103,15 +103,15 @@ class BookController extends Controller
                 $book->categories()->sync($validated['categories']);
             }
 
-            return redirect()->route('books.index')->with('success', 'Buku berhasil ditambahkan.');
+            return redirect()->route('books.index')->with('success', 'Koleksi berhasil ditambahkan.');
         } catch (Throwable $e) {
-            Log::error('Gagal membuat buku', [
+            Log::error('Gagal menambahkan koleksi!', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);
 
             return response()->json([
-                'message' => 'Terjadi kesalahan saat menambahkan buku.',
+                'message' => 'Terjadi kesalahan saat menambahkan koleksi.',
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -153,15 +153,15 @@ class BookController extends Controller
 
             $book->categories()->sync($request->categories ?? []);
 
-            return redirect()->route('books.index')->with('success', 'Buku berhasil diperbarui.');
+            return redirect()->route('books.index')->with('success', 'Koleksi berhasil diperbarui.');
         } catch (Throwable $e) {
-            Log::error('Gagal update buku', [
+            Log::error('Gagal memperbarui koleksi', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);
 
             return response()->json([
-                'message' => 'Terjadi kesalahan saat memperbarui buku.',
+                'message' => 'Terjadi kesalahan saat memperbarui koleksi.',
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -187,6 +187,6 @@ class BookController extends Controller
         // Hapus buku
         $book->delete();
 
-        return redirect()->route('books.index')->with('success', 'Buku berhasil dihapus.');
+        return redirect()->route('books.index')->with('success', 'Koleksi berhasil dihapus.');
     }
 }

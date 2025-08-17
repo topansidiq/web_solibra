@@ -89,7 +89,7 @@ class BorrowController extends Controller
         }
 
         if ($borrowsOverdue) {
-            return redirect()->back()->with('error', 'Ada buku yang belum dikembalikan dan sudah jatuh tempo.');
+            return redirect()->back()->with('error', 'Ada peminjaman yang belum dikembalikan dan sudah jatuh tempo.');
         }
 
         if ($borrowsCount >= $this->borrows['max']) {
@@ -103,26 +103,19 @@ class BorrowController extends Controller
             'due_date' => now()->addDays(42),
         ]);
 
-        if ($user->role == 'member') {
-            $message = "Peminjaman anda untuk {$borrow->book->physical_shape} {$borrow->book->title} telah berhasil di tambahkan. Silahkan mengambil buku dan konfirmasi ke Admin.";
 
-            Notification::create([
-                'user_id' => $request->user_id,
-                'type' => 'loan_request',
-                'message' => $message,
-            ]);
+        $message = "Peminjaman kamu untuk {$borrow->book->physical_shape} {$borrow->book->title} telah berhasil di tambahkan. Silahkan mengambil buku dan konfirmasi ke Admin.";
 
-            try {
-                $this->bot->sendMessage(formattedPhoneNumberToUs62($user->phone_number), $message);
-            } catch (\Throwable $th) {
-                throw $th;
-            }
-        } elseif (Auth::user()->role == 'admin' || Auth::user()->role == 'librarian') {
-            Notification::create([
-                'user_id' => $request->user_id,
-                'type' => 'loan_request',
-                'message' => "Peminjaman buku baru telah berhasil dibuat untuk {$borrow->book->physical_shape} {$borrow->book->title} pada {$borrow->borrowed_at}'.",
-            ]);
+        Notification::create([
+            'user_id' => $request->user_id,
+            'type' => 'loan_request',
+            'message' => $message,
+        ]);
+
+        try {
+            $this->bot->sendMessage(formattedPhoneNumberToUs62($user->phone_number), "> Layanan Chatbot Perpustakaan Umum Kota Solok\n\n{$message}");
+        } catch (\Throwable $th) {
+            throw $th;
         }
 
         return redirect()->route('borrows.index')->with('success', 'Peminjaman berhasil dibuat!');
@@ -153,7 +146,7 @@ class BorrowController extends Controller
         }
 
         if ($book->stock <= 0) {
-            return back()->with('error', 'Stok buku sudah habis. Tidak bisa dikonfirmasi.');
+            return back()->with('error', 'Stok koleksi sudah habis. Tidak bisa dikonfirmasi.');
         }
 
         $borrowsCount = Borrow::where('user_id', $borrow->user_id)->whereIn('status', ['confirmed', 'overdue'])->count();
@@ -165,7 +158,7 @@ class BorrowController extends Controller
         $borrowsOverdue = Borrow::where('user_id', $borrow->user_id)->where('due_date', '<', now())->whereIn('status', ['confirmed', 'overdue'])->whereRaw('due_date > DATE_ADD(borrowed_at, INTERVAL 42 DAY)')->exists();
 
         if ($borrowsOverdue) {
-            return back()->with('error', 'Ada buku yang belum dikembalikan dan sudah jatuh tempo.');
+            return back()->with('error', 'Ada peminjaman yang belum dikembalikan dan sudah jatuh tempo.');
         }
 
         $borrow->update([
@@ -251,13 +244,13 @@ class BorrowController extends Controller
         $book = $borrow->book;
 
         if ($borrow->extend >= 3) {
-            return back()->with('error', "Telah mencapai batas maksimal (3) kali perpanjangan buku.");
+            return back()->with('error', "Telah mencapai batas maksimal (3) kali perpanjangan peminjaman.");
         }
 
         $borrowsOverdue = Borrow::where('user_id', $borrow->user_id)->where('due_date', '<', now())->whereIn('status', ['confirmed', 'overdue'])->whereRaw('due_date > DATE_ADD(borrowed_at, INTERVAL 42 DAY)')->exists();
 
         if ($borrowsOverdue) {
-            return redirect()->back()->with('error', 'Ada buku yang belum dikembalikan dan sudah jatuh tempo.');
+            return redirect()->back()->with('error', 'Ada peminjaman yang belum dikembalikan dan sudah jatuh tempo.');
         }
 
         $borrow->increment('extend');

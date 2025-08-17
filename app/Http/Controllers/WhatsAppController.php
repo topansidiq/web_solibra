@@ -52,12 +52,14 @@ class WhatsAppController extends Controller
     {
         $book = $borrow->book;
         if ($borrow->extend >= 3) {
-           $message = 'Telah mencapai batas maksimal (3) kali perpanjangan buku.';
-           $this->bot->sendMessage(formattedPhoneNumberToUs62($borrow->user->phone_number), $message);
-            return back()->with('error', 'Telah mencapai batas maksimal (3) kali perpanjangan buku.');
+            $message = "Perpanjangan untuk nomor peminjaman {$borrow->id} yaitu {$borrow->book->physical_shape} {$borrow->book->clean_title} gagal karena kamu telah mencapai batas maksimal (3) kali perpanjangan. Silahkan melakukan pengembalian untuk pengajuan peminjaman ulang. Terima kasih.";
+            $this->bot->sendMessage(formattedPhoneNumberToUs62($borrow->user->phone_number), "> Layanan Chatbot Perpustakaan Umum Kota Solok\n\n{$message}");
+            return back()->with('error', $message);
         }
         $borrowsOverdue = Borrow::where('user_id', $borrow->user_id)->where('due_date', '<', now())->whereIn('status', ['confirmed', 'overdue'])->whereRaw('due_date > DATE_ADD(borrowed_at, INTERVAL 42 DAY)')->exists();
         if ($borrowsOverdue) {
+            $message = "Perpanjangan untuk nomor peminjaman {$borrow->id} yaitu {$borrow->book->physical_shape} {$borrow->book->clean_title} gagal karena kamu memiliki peminjaman yang sudah jatuh tempo. Silahkan melakukan pengembalian untuk pengajuan perpanjangan. Terima kasih.";
+            $this->bot->sendMessage(formattedPhoneNumberToUs62($borrow->user->phone_number), "> Layanan Chatbot Perpustakaan Umum Kota Solok\n\n{$message}");
             return redirect()->back()->with('error', 'Ada buku yang belum dikembalikan dan sudah jatuh tempo.');
         }
         $borrow->increment('extend');
@@ -72,7 +74,7 @@ class WhatsAppController extends Controller
             'type' => 'extend_confirmed',
             'message' => $message,
         ]);
-        $this->bot->sendMessage(formattedPhoneNumberToUs62($borrow->user->phone_number), $message);
+        $this->bot->sendMessage(formattedPhoneNumberToUs62($borrow->user->phone_number), "> Layanan Chatbot Perpustakaan Umum Kota Solok\n\n{$message}");
         return response()->json([
             'success' => true,
             'message' => 'Perpanjangan peminjaman berhasil dikonfirmasi.',

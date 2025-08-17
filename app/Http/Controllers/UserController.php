@@ -212,7 +212,7 @@ class UserController extends Controller
         $user->update(['member_status' => 'validated']);
         $user->save();
 
-        $message = "Selamat, status keanggotaan anda sekarang sudah tervalidasi. Anda dapat menikmati layanan peminjaman dan lainnya. Terima kasih";
+        $message = "Selamat, status keanggotaan anda sekarang sudah tervalidasi. Anda dapat menikmati layanan peminjaman dan lainnya. Terima kasih.";
 
         Notification::create([
             'user_id' => $user->id,

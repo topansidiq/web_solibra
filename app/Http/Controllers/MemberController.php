@@ -271,7 +271,7 @@ class MemberController extends Controller
         }
 
         // Notifikasi user
-        $message = "> Layanan Chatbot Perpustakaan Umum Kota Solok\n\nHai {$borrow->user->name},pengajuan peminjaman buku *{$borrow->book->clean_title}* kamu telah dikirim ke petugas perpustakaan. Mohon tunggu konfirmasi selanjutnya. Terima kasih";
+        $message = "> Layanan Chatbot Perpustakaan Umum Kota Solok\n\nHai {$borrow->user->name},pengajuan peminjaman buku *{$borrow->book->clean_title}* kamu telah dikirim ke petugas perpustakaan. Mohon tunggu konfirmasi selanjutnya. Terima kasih.";
 
         Notification::create([
             'user_id' => $user->id,
