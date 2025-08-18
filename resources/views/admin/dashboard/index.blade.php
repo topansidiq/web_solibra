@@ -92,7 +92,7 @@
                         </div>
 
                         <form action="{{ route('borrows.store') }}" method="POST"
-                            class="grid grid-cols-2 gap-4 p-5 w-full">
+                        class="grid grid-cols-2 gap-4 p-5 w-full">
                             @csrf
 
                             {{-- Select Book --}}
@@ -150,7 +150,7 @@
                             <div>
                                 <label class="block font-semibold">Harus dikembalikan pada</label>
                                 <input type="date" readonly name="due_date"
-                                    value="{{ now()->addDays(7)->toDateString() }}">
+                                value="{{ now()->addDays(7)->toDateString() }}">
                                 <p class="text-sm text-neutral-700 mt-1">
                                     (otomatis 7 hari setelah tanggal peminjaman)
                                 </p>
@@ -178,152 +178,110 @@
 
                 </div>
 
-                {{-- Add new user button --}}
-                {{-- Add new event button --}}
-                {{-- Add new post button --}}
-
             </div>
-
         </div>
 
-        {{-- New Book --}}
-        <div class="mx-4 p-4 shadow rounded-xl bg-white text-sm text-slate-800 w-auto h-fit">
-            <div>
-                <h2 class="text-lg text-neutral-700 font-bold">Buku Terbaru</h2>
-                <p class="text-xs text-neutral-500">6 buku terbaru ditambahkan</p>
-            </div>
-
-            <div class="py-2 grid xl:grid-cols-6 gap-2 sm:grid-cols-3" x-data="{ open: false, book: {} }" x-ref="modal">
-                @forelse ($latestBooks as $book)
-                    <div class="border border-slate-200 p-4 book cursor-pointer hover:shadow-md transition"
-                        @click="open = true; book = {{ json_encode([
-                            'title' => $book->title,
-                            'author' => $book->author,
-                            'publisher' => $book->publisher,
-                            'publication_place' => $book->publication_place,
-                            'pages' => $book->pages,
-                            'year' => $book->year,
-                            'isbn' => $book->isbn,
-                            'stock' => $book->stock,
-                            'description' => $book->description,
-                            'cover' => $book->cover ? asset('storage/' . $book->cover) : '',
-                            'initial' => $book->initial,
-                            'categories' => $book->categories->pluck('name')->join(', '),
-                            'created_at' => $book->created_at->format('d M Y'),
-                        ]) }}">
-                        <div
-                            class="xl:h-70 sm:h-40 bg-gradient-to-bl from-sky-700 to-sky-400 text-white flex items-center justify-center rounded shadow text-3xl font-bold">
-                            @if ($book->cover)
-                                <img src="{{ asset('storage/' . $book->cover) }}" alt="{{ $book->title }}"
-                                    class="w-full h-full object-cover rounded-xl">
-                            @else
-                                {{ $book->initial }}
-                            @endif
-                        </div>
-                        <div class="pt-2">
-                            <strong>{{ $book->title }} ({{ $book->year }})</strong><br>
-                            <p class="text-xs">Penulis: {{ $book->author }} </p>
-                            <span class="text-xs text-slate-500">Ditambahkan pada
-                                {{ $book->created_at->diffForHumans() }}</span>
-                        </div>
-                    </div>
-                @empty
-                    <li>Tidak ada buku terbaru.</li>
-                @endforelse
-
-                {{-- Modal --}}
-                <div x-show="open" x-transition class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-                    style="display: none;">
-                    <div class="bg-white p-6 rounded-lg w-11/12 md:w-1/2 relative" @click.away="open = false">
-                        <!-- Tombol Tutup -->
-                        <button class="absolute top-4 right-4 text-slate-500 hover:text-red-500" @click="open = false">
-                            <i data-lucide="x"></i>
-                        </button>
-
-                        <!-- Judul dan Penulis -->
-                        <div class="flex flex-col mb-4">
-                            <h2 class="text-xl font-semibold" x-text="book.title"></h2>
-                            <span class="text-xs text-slate-600" x-text="book.author"></span>
-                        </div>
-
-                        <!-- Cover atau Inisial -->
-                        <template x-if="book.cover">
-                            <img :src="book.cover" alt="Book Cover" class="w-full h-64 object-cover rounded mb-4" />
-                        </template>
-                        <template x-if="!book.cover">
-                            <div class="w-full h-64 bg-gradient-to-bl from-sky-700 to-sky-400 text-white flex items-center justify-center rounded text-5xl font-bold mb-4"
-                                x-text="book.initial"></div>
-                        </template>
-
-                        <!-- Info Buku -->
-                        <div class="grid grid-cols-2 gap-2 text-sm">
-                            <div>
-                                <strong>Penerbit</strong>
-                                <span class="block text-xs text-slate-700" x-text="book.publisher"></span>
-                            </div>
-                            <div>
-                                <strong>Bahasa</strong>
-                                <span class="block text-xs text-slate-700" x-text="book.language"></span>
-                            </div>
-                            <div>
-                                <strong>Halaman</strong>
-                                <span class="block text-xs text-slate-700" x-text="book.pages"></span>
-                            </div>
-                            <div>
-                                <strong>Tahun</strong>
-                                <span class="block text-xs text-slate-700" x-text="book.year"></span>
-                            </div>
-                            <div>
-                                <strong>ISBN</strong>
-                                <span class="block text-xs text-slate-700" x-text="book.isbn"></span>
-                            </div>
-                            <div>
-                                <strong>Stok</strong>
-                                <span class="block text-xs text-slate-700" x-text="book.stock"></span>
-                            </div>
-                            <div>
-                                <strong>Kategori</strong>
-                                <span class="block text-xs text-slate-700" x-text="book.categories"></span>
-                            </div>
-                            <div>
-                                <strong>Ditambahkan</strong>
-                                <span class="block text-xs text-slate-700" x-text="book.created_at"></span>
-                            </div>
-                        </div>
-
-                        <!-- Deskripsi -->
-                        <div class="mt-4 text-sm">
-                            <h3 class="font-bold mb-1">Deskripsi</h3>
-                            <p class="text-xs text-slate-700" x-text="book.description"></p>
-                        </div>
-                    </div>
+        {{-- Activity (Overview Cards) --}}
+        <div class="ml-4 p-4 shadow rounded-xl bg-white text-sm text-slate-800 w-auto mt-2">
+            <h2 class="text-lg font-bold mb-4">Aktivitas</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div
+                    class="border border-slate-200 flex flex-col items-center justify-center h-40 rounded-xl shadow-sm bg-slate-50">
+                    <h3 class="text-base font-semibold text-slate-600">Total Buku</h3>
+                    <p class="text-4xl font-bold mt-2">{{ $books_count }}</p>
                 </div>
-
-            </div>
-
-        </div>
-
-        {{-- Activity --}}
-        <div class="ml-4 p-4 shadow rounded-xl bg-white text-sm text-slate-800 w-fit h-fit mt-2">
-            <h2 class="text-lg font-bold">Aktivitas</h2>
-            <div class="py-2 grid grid-cols-6 gap-2">
-                <div class="border border-slate-200 w-60 h-60 content-center text-center p-10 rounded-xl">
-                    <h3>Total Buku</h3>
-                    <p class="text-6xl font-bold">{{ $books_count }}</p>
+                <div
+                    class="border border-slate-200 flex flex-col items-center justify-center h-40 rounded-xl shadow-sm bg-slate-50">
+                    <h3 class="text-base font-semibold text-slate-600">Total Kategori</h3>
+                    <p class="text-4xl font-bold mt-2">{{ $categories_count }}</p>
                 </div>
-                <div class="border border-slate-200 w-60 h-60 content-center text-center p-10 rounded-xl">
-                    <h3>Total Kategori</h3>
-                    <p class="text-6xl font-bold">{{ $categories_count }}</p>
+                <div
+                    class="border border-slate-200 flex flex-col items-center justify-center h-40 rounded-xl shadow-sm bg-slate-50">
+                    <h3 class="text-base font-semibold text-slate-600">Total Buku Dipinjam</h3>
+                    <p class="text-4xl font-bold mt-2">{{ $borrows_count }}</p>
                 </div>
-                <div class="border border-slate-200 w-60 h-60 content-center text-center p-10 rounded-xl">
-                    <h3>Total Buku Dipinjam</h3>
-                    <p class="text-6xl font-bold">{{ $borrows_count }}</p>
-                </div>
-                <div class="border border-slate-200 w-60 h-60 content-center text-center p-10 rounded-xl">
-                    <h3>Total Pengguna Terdaftar</h3>
-                    <p class="text-6xl font-bold">{{ $users_count }}</p>
+                <div
+                    class="border border-slate-200 flex flex-col items-center justify-center h-40 rounded-xl shadow-sm bg-slate-50">
+                    <h3 class="text-base font-semibold text-slate-600">Total Pengguna Terdaftar</h3>
+                    <p class="text-4xl font-bold mt-2">{{ $users_count }}</p>
                 </div>
             </div>
         </div>
+
+        {{-- Laporan Grafik --}}
+        <div class="ml-4 p-4 shadow rounded-xl bg-white text-sm text-slate-800 w-auto mt-4">
+            <h2 class="text-lg font-bold mb-4">Laporan Grafik</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="p-4 border border-slate-200 rounded-xl shadow-sm bg-slate-50">
+                    <h3 class="text-base font-semibold mb-2 text-slate-700">Laporan Peminjaman Buku</h3>
+                    <canvas id="borrowChart" class="w-full h-64"></canvas>
+                </div>
+
+                <div class="p-4 border border-slate-200 rounded-xl shadow-sm bg-slate-50">
+                    <h3 class="text-base font-semibold mb-2 text-slate-700"> LaporanKeterlambatan </h3>
+                    <canvas id="overdueChart" class="w-full h-64"></canvas>
+                </div>
+            </div>
+        </div>
+
+        {{-- ChartJS --}}
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            const labels = @json($months);
+
+            // Chart Peminjaman
+            const borrowData = {
+                labels: labels,
+                datasets: [{
+                    label: 'Jumlah Peminjaman',
+                    data: @json($borrowData),
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: true,
+                    pointBackgroundColor: 'blue',
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                }]
+            };
+
+            new Chart(document.getElementById('borrowChart'), {
+                type: 'line',
+                data: borrowData,
+                options: {
+                    responsive: true,
+                    animation: false,
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+
+            // Chart Overdue
+            const overdueData = {
+                labels: labels,
+                datasets: [{
+                    label: 'Jumlah Overdue',
+                    data: @json($overdueData),
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: true,
+                    pointBackgroundColor: 'red',
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                }]
+            };
+
+            new Chart(document.getElementById('overdueChart'), {
+                type: 'line',
+                data: overdueData,
+                options: {
+                    responsive: true,
+                    animation: false,
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        </script>
     </div>
 @endsection
