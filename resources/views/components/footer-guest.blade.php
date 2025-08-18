@@ -7,16 +7,17 @@
         </iframe>
         <div class="pl-2 md:justify-self-end max-w-md">
 
-            <h3 class="text-md font-bold mb-3 border-b-2 inline-block border-gray-400">Alamat</h3>
-            <p class="text-gray-700 mb-2">Perpustakaan Umum Kota Solok d/a Jl. Natsir Sutan Pamuncak<br>Kel. Simpang
-                Rumbio Kec. Lubuk Sikarah Kota Solok</p>
+            <h3 class="text-md font-bold mb-3 border-b-2 inline-block border-gray-400">
+                {{ __('main.footer.address_heading') }}</h3>
+            <p class="text-gray-700 mb-2">{{ __('main.footer.address_content') }}</p>
 
             <div class="mb-4 text-gray-700 text-sm space-y-1">
-                <p><strong>Phone</strong> : (0755) 20211</p>
-                <p><strong>Handphone</strong> : 0823-8840-7308</p>
-                <p><strong>Email</strong> : solok@gmail.com</p>
+                <p>{!! __('main.footer.telephone') !!}</p>
+                <p>{!! __('main.footer.whatsapp') !!}</p>
+                <p>{!! __('main.footer.email') !!}</p>
             </div>
-            <h3 class="text-md font-bold mb-3 border-b-2 inline-block border-gray-400">Sosial</h3>
+            <h3 class="text-md font-bold mb-3 border-b-2 inline-block border-gray-400">{{ __('main.footer.social') }}
+            </h3>
             <div class="flex items-center mt-1 space-x-3">
                 <a href="/"
                     class="text-gray-500 transition-colors duration-300 hover:text-deep-purple-accent-400">

@@ -1,9 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Beranda | Perpustakaan Umum Kota Solok')
+@section('title', __('main.navigation.home') . ' | Perpustakaan Umum Kota Solok')
 
 @section('content')
-    {{-- @if (request()->is('/') || request()->is('home')) --}}
     <main>
         <script src="{{ asset('js/guest/home.js') }}"></script>
         <div class="grid">
@@ -14,7 +13,7 @@
                     <h1 class="text-3xl md:text-5xl font-extrabold leading-tight mb-4">
                         <span class="block text-xl">{{ __('message.welcome', ['puks' => '']) }}</span>
                         <span>
-                            Perpustakaan Umum Kota Solok
+                            {{ __('main.puks') }}
                         </span>
                     </h1>
                     <div class="hidden lg:flex gap-4">
@@ -60,13 +59,13 @@
                                 <template x-if="media.type === 'video'">
                                     <video controls class="w-full h-full object-cover rounded-2xl">
                                         <source :src="'/storage/' + media.file" type="video/mp4">
-                                        Browser tidak mendukung video.
+                                        {{ __('home.video_failed') }}
                                     </video>
                                 </template>
 
                                 <!-- Judul overlay -->
                                 <div class="w-full text-sm text-center py-2 rounded-b-2xl z-30">
-                                    <span>Terbaru</span>
+                                    <span>{{ __('home.new') }}</span>
                                 </div>
                             </div>
                         </template>
@@ -100,15 +99,14 @@
                                 class="md:absolute bottom-0 w-full bg-gradient-to-t from-black/80 via-black/50 to-transparent text-white text-sm text-center py-1 rounded-b-2xl">
                                 <div class="flex items-center justify-between px-5 py-3">
                                     <a href="{{ route('show.book', $newItem['book']) }}"
-                                        class="block px-2 py-1 rounded-md text-sm bg-sky-500 text-neutral-50">Lihat
-                                        Detail</a>
-                                    <span class="block">Buku Terbaru</span>
+                                        class="block px-2 py-1 rounded-md text-sm bg-sky-500 text-neutral-50">{{ __('home.show_detail') }}</a>
+                                    <span class="block">{{ __('home.new_book') }}</span>
                                 </div>
                             </div>
                         @else
                             <div
                                 class="w-full h-full bg-gradient-to-t from-black/80 via-black/50 to-transparent rounded-2xl flex items-center justify-center">
-                                <span class="text-gray-900 z-50">No Book</span>
+                                <span class="text-gray-900 z-50">{{ __('home.no_book') }}</span>
                             </div>
                         @endif
                     </div>
@@ -122,15 +120,14 @@
                                 class="absolute bottom-0 w-full  bg-gradient-to-t from-black/80 via-black/50 to-transparent text-white text-sm text-center py-1 rounded-b-2xl">
                                 <div class="flex items-center justify-between px-5 py-3">
                                     <a href="{{ route('event', $newItem['event']) }}"
-                                        class="block px-2 py-1 rounded-md text-sm bg-sky-500 text-neutral-50">Lihat
-                                        Detail</a>
-                                    <span class="block">Kegiatan Terbaru</span>
+                                        class="block px-2 py-1 rounded-md text-sm bg-sky-500 text-neutral-50">{{ __('home.show_detail') }}</a>
+                                    <span class="block">{{ __('home.new_event') }}</span>
                                 </div>
                             </div>
                         @else
                             <div
                                 class="w-full h-full bg-gradient-to-t from-black/80 via-black/50 to-transparent rounded-2xl flex items-center justify-center">
-                                <span class="text-gray-500 z-50">No Event</span>
+                                <span class="text-gray-500 z-50">{{ __('home.no_event') }}</span>
                             </div>
                         @endif
                     </div>
@@ -142,12 +139,12 @@
                 <div class="max-w-7xl mx-auto p-2">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h1 class="font-bold text-neutral-700 text-xl">Rekomendasi Bacaan</h1>
-                            <p class="text-xs ">Jelajahi inspirasi baca kamu!</p>
+                            <h1 class="font-bold text-neutral-700 text-xl">{{ __('home.recommendation') }}</h1>
+                            <p class="text-xs ">{{ __('home.recommendation_message') }}</p>
                         </div>
                         <div class="flex gap-3">
                             <div class="rounded-md px-1 py-0.5 text-xs bg-sky-200">
-                                <a href="#">Direkomendasikan</a>
+                                <a href="#">{{ __('home.recommendation_button') }}</a>
                             </div>
                             <div class="rounded-md px-1 py-0.5 text-xs bg-neutral-200 text-center">
                                 <a href="#">Teknologi</a>
@@ -192,7 +189,7 @@
                                                 </span>
                                             @endforeach
                                         </div>
-                                        <p class="text-xs font-semibold text-slate-500">Penulis:
+                                        <p class="text-xs font-semibold text-slate-500">{{ __('home.author') }}:
                                             {{ $book->formatted_author }}
                                         </p>
                                     </div>
@@ -208,12 +205,12 @@
                 <div class="max-w-7xl mx-auto p-2">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h1 class="font-bold text-neutral-700 text-xl">Koleksi Populer</h1>
-                            <p class="text-xs ">Bacaan yang membuat banyak orang tertarik</p>
+                            <h1 class="font-bold text-neutral-700 text-xl">{{ __('home.popular') }}</h1>
+                            <p class="text-xs ">{{ __('home.popular_message') }}</p>
                         </div>
                         <div class="flex gap-3">
                             <div class="rounded-md px-1 py-0.5 text-xs bg-sky-200">
-                                <a href="#">Populer Tahun Ini</a>
+                                <a href="#">{{ __('home.popular_button') }}</a>
                             </div>
                             <div class="rounded-md px-1 py-0.5 text-xs bg-neutral-200 text-center">
                                 <a href="#">2024</a>
@@ -252,7 +249,7 @@
                                                 </span>
                                             @endforeach
                                         </div>
-                                        <p class="text-xs font-semibold text-slate-500">Penulis:
+                                        <p class="text-xs font-semibold text-slate-500">{{ __('home.author') }}:
                                             {{ $book->formatted_author }}
                                         </p>
                                     </div>
@@ -268,22 +265,28 @@
                 <div class="max-w-7xl mx-auto p-2">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h1 class="font-bold text-neutral-700 text-xl">Kegiatan Terbaru</h1>
-                            <p class="text-xs ">Nikmati berbagai kegiatan menarik dari perpustakaan</p>
+                            <h1 class="font-bold text-neutral-700 text-xl">{{ __('home.event') }}</h1>
+                            <p class="text-xs ">{{ __('home.event_message') }}</p>
                         </div>
                         <div class="flex gap-3">
                             <div class="rounded-md px-1 py-0.5 text-xs bg-sky-200">
-                                <a href="#">Sedang Berlangsung</a>
+                                <a href="#">{{ __('home.event_buttons.ongoing') }}</a>
                             </div>
-                            <div class="rounded-md px-1 py-0.5 text-xs bg-neutral-200 text-center">
-                                <a href="#">Akan Datang</a>
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-sky-200">
+                                <a href="#">{{ __('home.event_buttons.upcoming') }}</a>
+                            </div>
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-sky-200">
+                                <a href="#">{{ __('home.event_buttons.completed') }}</a>
+                            </div>
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-sky-200">
+                                <a href="#">{{ __('home.event_buttons.cancelled') }}</a>
                             </div>
                         </div>
                     </div>
                     <div
                         class="gap-4 xl:p-4 grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 mx-auto content-around">
                         @if ($latestEvent->isEmpty())
-                            <p class="text-black">Tidak ada kegiatan</p>
+                            <p class="text-black">{{ __('home.no_event') }}</p>
                         @else
                             @foreach ($latestEvent as $event)
                                 <a href="{{ route('show.event', $event) }}">
@@ -305,7 +308,15 @@
                                             <h2 class="font-bold text-sm">{{ $event->title }} ({{ $event->start_at }})
                                             </h2>
                                             <p class="text-xs font-semibold text-slate-500">
-                                                {{ $event->status }}
+                                                @if ($event->status === 'ongoing')
+                                                    {{ __('home.event_buttons.ongoing') }}
+                                                @elseif ($event->status === 'upcoming')
+                                                    {{ __('home.event_buttons.upcoming') }}
+                                                @elseif ($event->status === 'completed')
+                                                    {{ __('home.event_buttons.completed') }}
+                                                @elseif ($event->status === 'cancelled')
+                                                    {{ __('home.event_buttons.cancelled') }}
+                                                @endif
                                             </p>
                                         </div>
                                     </div>

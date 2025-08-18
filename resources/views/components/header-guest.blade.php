@@ -1,12 +1,20 @@
 @php
+    $home = __('main.navigation.home');
+    $collection = __('main.navigation.collection');
+    $profile = __('main.navigation.profile');
+    $service = __('main.navigation.service');
+    $event = __('main.navigation.event');
+    $information = __('main.navigation.information');
+    $gallery = __('main.navigation.gallery');
+
     $menu = [
-        ['label' => 'Beranda', 'name' => 'home'],
-        ['label' => 'Koleksi', 'name' => 'collection'],
-        ['label' => 'Profil', 'name' => 'profile'],
-        ['label' => 'Layanan', 'name' => 'service'],
-        ['label' => 'Kegiatan', 'name' => 'event'],
-        ['label' => 'Informasi', 'name' => 'information'],
-        ['label' => 'Galeri', 'name' => 'gallery'],
+        ['label' => $home, 'name' => 'home'],
+        ['label' => $collection, 'name' => 'collection'],
+        ['label' => $profile, 'name' => 'profile'],
+        ['label' => $service, 'name' => 'service'],
+        ['label' => $event, 'name' => 'event'],
+        ['label' => $information, 'name' => 'information'],
+        ['label' => $gallery, 'name' => 'gallery'],
     ];
 @endphp
 
@@ -40,10 +48,10 @@
                     @if ($item['name'] === 'event')
                         @php
                             $options = [
-                                ['status' => 'Akan Datang', 'value' => 'upcoming'],
-                                ['status' => 'Sedang Berlangsung', 'value' => 'ongoing'],
-                                ['status' => 'Sudah Selesai', 'value' => 'completed'],
-                                ['status' => 'Dibatalkan', 'value' => 'cancelled'],
+                                ['status' => __('home.event_buttons.ongoing'), 'value' => 'ongoing'],
+                                ['status' => __('home.event_buttons.upcoming'), 'value' => 'upcoming'],
+                                ['status' => __('home.event_buttons.completed'), 'value' => 'completed'],
+                                ['status' => __('home.event_buttons.cancelled'), 'value' => 'cancelled'],
                             ];
                         @endphp
 
@@ -103,12 +111,12 @@
 
             <div class="login flex gap-3">
                 <div class="bg-yellow-500 px-4 py-1 rounded text-sm">
-                    <a href="/login" class="text-shadow-md">Masuk</a>
+                    <a href="/login" class="text-shadow-md">{{ __('main.navigation.enter_button') }}</a>
                 </div>
             </div>
             <div class="register flex gap-3">
                 <div class="bg-sky-500 px-4 py-1 rounded text-sm">
-                    <a href="/register" class="text-shadow-md">Bergabung</a>
+                    <a href="/register" class="text-shadow-md">{{ __('main.navigation.register_button') }}</a>
                 </div>
             </div>
         </div>
