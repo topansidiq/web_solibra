@@ -9,6 +9,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -34,11 +36,38 @@ class DashboardController extends Controller
             });
         }
 
-        $latestBooks = Book::with('categories')
-            ->orderBy('created_at', 'desc')
-            ->take(6)
-            ->get();
+        // Data peminjaman per bulan
+        $borrowsPerMonth = Borrow::select(
+                DB::raw('MONTH(borrowed_at) as month'),
+                DB::raw('COUNT(*) as total')
+            )
+            ->whereYear('borrowed_at', Carbon::now()->year)
+            ->groupBy('month')
+            ->pluck('total', 'month');
 
-        return view("admin.dashboard.index", compact("users", "borrows", "books", "categories", "latestBooks", "books_count", "categories_count", "borrows_count", "users_count", "selectedCategories", "user"));
+        // Data overdue per bulan
+        $overduePerMonth = Borrow::select(
+                DB::raw('MONTH(borrowed_at) as month'),
+                DB::raw('COUNT(*) as total')
+            )
+            ->where('status', 'overdue')
+            ->whereYear('borrowed_at', Carbon::now()->year)
+            ->groupBy('month')
+            ->pluck('total', 'month');
+
+        $months = collect(range(1, 12))->map(function ($m) {
+            return Carbon::create()->month($m)->locale('id')->translatedFormat('F');
+        });
+
+        $borrowData = $months->keys()->map(function ($i) use ($borrowsPerMonth) {
+            return $borrowsPerMonth[$i+1] ?? 0;
+        });
+
+        $overdueData = $months->keys()->map(function ($i) use ($overduePerMonth) {
+            return $overduePerMonth[$i+1] ?? 0;
+        });
+
+        return view("admin.dashboard.index", compact("users", "borrows", "books", "categories",  "books_count", "categories_count", "borrows_count", "users_count", "selectedCategories", "user","months","borrowData", "overdueData"
+        ));
     }
 }
