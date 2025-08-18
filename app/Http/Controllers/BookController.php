@@ -17,27 +17,31 @@ class BookController extends Controller
     public function index(Request $request)
     {
         try {
+            $query = Book::query();
+
+            if ($request->has('search') && $request->search !== '') {
+                $query->where('title', 'like', '%' . $request->search . '%')
+                    ->orWhere('author', 'like', '%' . $request->search . '%');
+            }
+
             $user = Auth::user();
             $categoryId = $request->get('category');
             $page = (int) $request->get('page', 1);
             $perPage = 20;
             $offset = ($page - 1) * $perPage;
 
-            // Query dasar
-            $booksQuery = Book::with(['categories', 'borrows.user']);
-
             // Filter kategori (jika ada)
             if ($categoryId) {
-                $booksQuery->whereHas('categories', function ($query) use ($categoryId) {
+                $query->whereHas('categories', function ($query) use ($categoryId) {
                     $query->where('categories.id', $categoryId);
                 });
             }
 
             // Hitung total data untuk pagination
-            $totalBooks = $booksQuery->count();
+            $totalBooks = $query->count();
 
             // Ambil data sesuai halaman
-            $books = $booksQuery
+            $books = $query
                 ->skip($offset)
                 ->take($perPage)->orderBy('title', 'asc')
                 ->get();

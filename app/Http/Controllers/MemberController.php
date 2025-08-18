@@ -9,10 +9,8 @@ use App\Models\Event;
 use App\Models\Gallery;
 use App\Models\Information;
 use App\Models\Notification;
-use App\Models\OTP;
 use App\Models\Role;
 use App\Models\User;
-use App\Models\WhatsApp;
 use App\Services\WhatsAppBotService;
 use Exception;
 use Illuminate\Http\Request;
@@ -33,7 +31,13 @@ class MemberController extends Controller
             'information' => Information::latest()->first(),
         ];
         $user = Auth::user();
-        $borrows = Borrow::where('user_id', $user->id)->latest()->take(6)->get();
+        $borrows = [
+            'overdue' => Borrow::where('user_id', $user->id)->where('status', 'overdue')->get(),
+            'active' => Borrow::where('user_id', $user->id)->where('status', 'confirmed')->get(),
+            'pending' => Borrow::where('user_id', $user->id)->where('status', 'unconfirmed')->get(),
+            'archive' => Borrow::where('user_id', $user->id)->where('status', 'returned')->get(),
+        ];
+
         return view("member.home.index", compact('user', 'latestBook', 'latestMedia', 'latestEvent', 'newItem', 'borrows'));
     }
 
@@ -124,7 +128,7 @@ class MemberController extends Controller
             ->take(10)
             ->get();
 
-        $collections = $user->borrows
+        $collections = $user->borrows()
             ->whereIn('status', ['confirmed', 'overdue'])
             ->with('book.categories')
             ->get()
@@ -171,9 +175,9 @@ class MemberController extends Controller
     public function borrow()
     {
         $user = Auth::user();
-        $borrows = $user->borrows;
+        $borrows = Borrow::where('user_id', $user->id)->get();
 
-        $collections = $user->borrows
+        $collections = $user->borrows()
             ->whereIn('status', ['confirmed', 'overdue'])
             ->with('book.categories')
             ->get()

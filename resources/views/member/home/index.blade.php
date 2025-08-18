@@ -27,116 +27,266 @@
             </section>
 
             {{-- Dashboard --}}
-            <section class="py-5 px-6 w-full bg-white max-w-7xl mx-auto">
-                <div class="border border-neutral-200 rounded-2xl">
-                    <div class="p-5 gap-3 justify-between" x-data="{ showActiveBorrow: false }">
-                        <div class="grid grid-cols-4 gap-3 items-center justify-stretch">
-                            <div>
-                                <h1 class="text-sm font-semibold mb-3">Peminjaman Aktif:</h1>
-                                <div class="rounded-md shadow-md p-2 border border-neutral-200 text-4xl">
-                                    <div>
-                                        <div class="p-4">{{ $user->borrows->count() }}</div>
-                                        <div
-                                            class="px-2 py-1 text-left bg-white p-2 text-sm rounded-md border border-neutral-200">
-                                            <button @click="showActiveBorrow=true">Lihat Peminjaman</button>
+            <section class="py-5 px-6 w-full bg-white max-w-[1680px] mx-auto">
+                <div class="border border-neutral-200 rounded-xl">
+                    {{-- Activity --}}
+                    <div class="py-3">
+                        <div class="px-5 font-bold text-neutral-700 text-xl">Aktivitas</div>
+                        <div class="p-5 gap-3 justify-between" x-data="{ showActiveBorrow: false, showOverdueBorrow: false, showUnconfirmedBorrow: false, showArchiveBorrow: false }">
+                            <div class="md:grid grid-cols-4 gap-3 flex flex-col">
+                                {{-- Actibe Borrow --}}
+                                <div>
+                                    <h1 class="text-sm font-semibold mb-3 flex items-center gap-3">
+                                        <i data-lucide="circle" class="fill-green-500 text-green-500 w-3 h-3"></i>
+                                        <p>Peminjaman Aktif:</p>
+                                    </h1>
+                                    <div class="rounded-md shadow-md p-2 border border-neutral-200">
+                                        <div>
+                                            <div class="p-4 flex items-center justify-between">
+                                                <div class="text-4xl">
+                                                    {{ $borrows['active']->count() }}
+                                                </div>
+                                                @if ($borrows['active']->count() > 0)
+                                                    <div class="text-sm text-neutral-500">
+                                                        Jatuh tempo pada
+                                                        {{ $borrows['active']->first()->due_date->format('d-m-Y') }}
+                                                    </div>
+                                                @endif
+                                            </div>
+
+                                            @if ($borrows['active']->count() > 0)
+                                                <div @click="showActiveBorrow=true"
+                                                    class="px-2 py-1 text-left bg-white p-2 text-sm rounded-md border border-neutral-200 hover:bg-neutral-700 hover:text-neutral-50 cursor-pointer">
+                                                    <button>Lihat Peminjaman</button>
+                                                </div>
+
+                                                <div class="grid gap-2 p-3" x-show="showActiveBorrow">
+                                                    <div class="flex items-center justify-between">
+                                                        <p style="font-size: 12px" class="font-bold text-neutral-500">Data
+                                                            peminjaman
+                                                            jatuh tempo</p>
+                                                        <button @click="showActiveBorrow=false" style="font-size: 12px"
+                                                            class="text-sky-500 font-semibold">Tutup</button>
+                                                    </div>
+                                                    <div class="flex items-center gap-3">
+                                                        <p class="font-bold text-sm">NP</p>
+                                                        <p class="font-bold text-sm">Data</p>
+                                                    </div>
+                                                    @foreach ($borrows['active'] as $borrow)
+                                                        <div class="flex items-start gap-3 hover:scale-105 transition-all">
+                                                            <div class="text-sm font-bold">
+                                                                {{ $borrow->id }}
+                                                            </div>
+                                                            <div>
+                                                                <p class="text-sm">{{ $borrow->book->clean_title }}</p>
+                                                                <p class="text-xs font-semibold text-neutral-500">Jatuh
+                                                                    tempo:
+                                                                    {{ $borrow->due_date->diffForHumans() }}</p>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            @else
+                                                <p
+                                                    class="px-2 py-1 text-left bg-white p-2 text-sm rounded-md border border-neutral-200">
+                                                    Tidak ada peminjaman aktif</p>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div>
-                                <h1 class="text-sm font-semibold mb-3">Peminjaman Aktif:</h1>
-                                <div class="rounded-md shadow-md p-2 border border-neutral-200 text-4xl">
-                                    <div>
-                                        <div>{{ $user->borrows->count() }}</div>
-                                        <div
-                                            class="px-2 py-1 text-left bg-white p-2 text-sm rounded-md border border-neutral-200">
-                                            <button @click="showActiveBorrow=true">Lihat Peminjaman</button>
+
+                                {{-- Overdue Borrow --}}
+                                <div>
+                                    <h1 class="text-sm font-semibold mb-3 flex items-center gap-3">
+                                        <i data-lucide="circle" class="fill-red-500 text-red-500 w-3 h-3"></i>
+                                        <p>Peminjaman Jatuh Tempo:</p>
+                                    </h1>
+                                    <div class="rounded-md shadow-md p-2 border border-neutral-200">
+                                        <div>
+                                            <div class="p-4 flex items-center justify-between">
+                                                <div class="text-4xl">
+                                                    {{ $borrows['overdue']->count() }}
+                                                </div>
+                                                @if ($borrows['overdue']->count() > 0)
+                                                    <div class="text-sm text-neutral-500">
+                                                        Telah terlambat selama
+                                                        {{ $borrows['overdue']->first()->due_date->diffInDays(now()) }}
+                                                        hari
+                                                    </div>
+                                                @endif
+                                            </div>
+
+                                            @if ($borrows['overdue']->count() > 0)
+                                                <div @click="showOverdueBorrow=true"
+                                                    class="px-2 py-1 text-left bg-white p-2 text-sm rounded-md border border-neutral-200 hover:bg-neutral-700 hover:text-neutral-50 cursor-pointer">
+                                                    <button>Lihat Peminjaman</button>
+                                                </div>
+
+                                                <div class="grid gap-2 p-3" x-show="showOverdueBorrow">
+                                                    <div class="flex items-center justify-between">
+                                                        <p style="font-size: 12px" class="font-bold text-neutral-500">Data
+                                                            peminjaman
+                                                            jatuh tempo</p>
+                                                        <button @click="showOverdueBorrow=false" style="font-size: 12px"
+                                                            class="text-sky-500 font-semibold">Tutup</button>
+                                                    </div>
+                                                    <div class="flex items-center gap-3">
+                                                        <p class="font-bold text-sm">NP</p>
+                                                        <p class="font-bold text-sm">Data</p>
+                                                    </div>
+                                                    @foreach ($borrows['overdue'] as $borrow)
+                                                        <div class="flex items-start gap-3 hover:scale-105 transition-all">
+                                                            <div class="text-sm font-bold">
+                                                                {{ $borrow->id }}
+                                                            </div>
+                                                            <div>
+                                                                <p class="text-sm">{{ $borrow->book->clean_title }}</p>
+                                                                <p class="text-xs font-semibold text-neutral-500">Jatuh
+                                                                    tempo:
+                                                                    {{ $borrow->due_date->diffForHumans() }}</p>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            @else
+                                                <p
+                                                    class="px-2 py-1 text-left bg-white p-2 text-sm rounded-md border border-neutral-200">
+                                                    Tidak ada peminjaman yang jatuh tempo</p>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div>
-                                <h1 class="text-sm font-semibold mb-3">Peminjaman Aktif:</h1>
-                                <div class="rounded-md shadow-md p-2 border border-neutral-200 text-4xl">
-                                    <div>
-                                        <div>{{ $user->borrows->count() }}</div>
-                                        <div
-                                            class="px-2 py-1 text-left bg-white p-2 text-sm rounded-md border border-neutral-200">
-                                            <button @click="showActiveBorrow=true">Lihat Peminjaman</button>
+
+                                {{-- Pending Borrow --}}
+                                <div>
+                                    <h1 class="text-sm font-semibold mb-3 flex items-center gap-3">
+                                        <i data-lucide="circle" class="fill-yellow-500 text-yellow-500 w-3 h-3"></i>
+                                        <p>Peminjaman Menunggu Konfirmasi:</p>
+                                    </h1>
+                                    <div class="rounded-md shadow-md p-2 border border-neutral-200 text-4xl">
+                                        <div>
+                                            <div class="p-4 flex items-center justify-between">
+                                                <div>
+                                                    {{ $borrows['pending']->count() }}
+                                                </div>
+                                                @if ($borrows['pending']->count() > 0)
+                                                    <div class="text-sm text-neutral-500">
+                                                        Diajukan pada
+                                                        {{ $borrows['pending']->first()->borrowed_at->format('d-m-Y') }}
+                                                    </div>
+                                                @endif
+                                            </div>
+
+                                            @if ($borrows['pending']->count() > 0)
+                                                <div @click="showUnconfirmedBorrow=true"
+                                                    class="px-2 py-1 text-left bg-white p-2 text-sm rounded-md border border-neutral-200 hover:bg-neutral-700 hover:text-neutral-50 cursor-pointer">
+                                                    <button>Lihat Pengajuan</button>
+                                                </div>
+
+                                                <div class="grid gap-2 p-3" x-show="showUnconfirmedBorrow">
+                                                    <div class="flex items-center justify-between">
+                                                        <p style="font-size: 12px" class="font-bold text-neutral-500">Data
+                                                            peminjaman
+                                                            diajukan</p>
+                                                        <button @click="showUnconfirmedBorrow=false" style="font-size: 12px"
+                                                            class="text-sky-500 font-semibold">Tutup</button>
+                                                    </div>
+                                                    <div class="flex items-center gap-3">
+                                                        <p class="font-bold text-sm">NP</p>
+                                                        <p class="font-bold text-sm">Data</p>
+                                                    </div>
+                                                    @foreach ($borrows['pending'] as $borrow)
+                                                        <div class="flex items-start gap-3 hover:scale-105 transition-all">
+                                                            <div class="text-sm font-bold">
+                                                                {{ $borrow->id }}
+                                                            </div>
+                                                            <div>
+                                                                <p class="text-sm">{{ $borrow->book->clean_title }}</p>
+                                                                <p class="text-xs font-semibold text-neutral-500">Jatuh
+                                                                    tempo:
+                                                                    {{ $borrow->due_date->diffForHumans() }}</p>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            @else
+                                                <p
+                                                    class="px-2 py-1 text-left bg-white p-2 text-sm rounded-md border border-neutral-200">
+                                                    Tidak ada pengajuan peminjaman</p>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div>
-                                <h1 class="text-sm font-semibold mb-3">Peminjaman Aktif:</h1>
-                                <div class="rounded-md shadow-md p-2 border border-neutral-200 text-4xl">
-                                    <div>
-                                        <div>{{ $user->borrows->count() }}</div>
-                                        <div
-                                            class="px-2 py-1 text-left bg-white p-2 text-sm rounded-md border border-neutral-200">
-                                            <button @click="showActiveBorrow=true">Lihat Peminjaman</button>
+
+                                {{-- Archive Borrow --}}
+                                <div>
+                                    <h1 class="text-sm font-semibold mb-3 flex items-center gap-3">
+                                        <i data-lucide="circle" class="fill-sky-500 text-sky-500 w-3 h-3"></i>
+                                        <p>Riwayat Peminjaman:</p>
+                                    </h1>
+                                    <div class="rounded-md shadow-md p-2 border border-neutral-200 text-4xl">
+                                        <div>
+                                            <div class="p-4 flex items-center justify-between">
+                                                <div>
+                                                    {{ $borrows['archive']->count() }}
+                                                </div>
+                                                @if ($borrows['archive']->count() > 0)
+                                                    <div class="text-sm text-neutral-500">
+                                                        Telah dikembalikan pada
+                                                        {{ $borrows['archive']->first()->return_date->format('d-m-Y') }}
+                                                    </div>
+                                                @endif
+                                            </div>
+
+                                            @if ($borrows['archive']->count() > 0)
+                                                <div @click="showArchiveBorrow=true"
+                                                    class="px-2 py-1 text-left bg-white p-2 text-sm rounded-md border border-neutral-200 hover:bg-neutral-700 hover:text-neutral-50 cursor-pointer">
+                                                    <button>Lihat Riwayat Peminjaman</button>
+                                                </div>
+
+                                                <div class="grid gap-2 p-3" x-show="showArchiveBorrow">
+                                                    <div class="flex items-center justify-between">
+                                                        <p style="font-size: 12px" class="font-bold text-neutral-500">
+                                                            Data peminjaman
+                                                        </p>
+                                                        <button @click="showArchiveBorrow=false" style="font-size: 12px"
+                                                            class="text-sky-500 font-semibold">Tutup</button>
+                                                    </div>
+                                                    <div class="flex items-center gap-3">
+                                                        <p class="font-bold text-sm">NP</p>
+                                                        <p class="font-bold text-sm">Data</p>
+                                                    </div>
+                                                    @foreach ($borrows['archive'] as $borrow)
+                                                        <div class="flex items-start gap-3 hover:scale-105 transition-all">
+                                                            <div class="text-sm font-bold">
+                                                                {{ $borrow->id }}
+                                                            </div>
+                                                            <div>
+                                                                <p class="text-sm">{{ $borrow->book->clean_title }}</p>
+                                                                <p class="text-xs font-semibold text-neutral-500">Tanggal
+                                                                    Kembali:
+                                                                    {{ $borrows['archive']->first()->return_date->diffForHumans() }}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            @else
+                                                <p
+                                                    class="px-2 py-1 text-left bg-white p-2 text-sm rounded-md border border-neutral-200">
+                                                    Tidak ada riwayat peminjaman</p>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="flex items-center">
-                            <div>
-                                <div x-show="showActiveBorrow">
-                                    <ul class="p-3 border-l border-neutral-200">
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div>
-                                <div x-show="showActiveBorrow">
-                                    <ul class="p-3 border-l border-neutral-200">
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div>
-                                <div x-show="showActiveBorrow">
-                                    <ul class="p-3 border-l border-neutral-200">
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div>
-                                <div x-show="showActiveBorrow">
-                                    <ul class="p-3 border-l border-neutral-200">
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div>
-                                <div x-show="showActiveBorrow">
-                                    <ul class="p-3 border-l border-neutral-200">
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+                    </div>
+
+                    {{-- Collection --}}
+                    <div class="py-3">
+                        <div class="px-5 font-bold text-neutral-700 text-xl">Koleksi Anda</div>
+
                     </div>
                 </div>
             </section>

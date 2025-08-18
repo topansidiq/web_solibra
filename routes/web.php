@@ -21,10 +21,6 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
-Route::fallback(function () {
-    abort(404);
-});
-
 Route::group([
     'prefix' => LaravelLocalization::setLocale(),
     'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
@@ -86,36 +82,43 @@ Route::group([
 
 // Admin or Librarian Routes
 Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
-    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
     // Resource routes
-    Route::resource('books', BookController::class);
-    Route::resource('categories', CategoryController::class);
-    Route::resource('borrows', BorrowController::class);
-    Route::resource('users', UserController::class);
-    Route::resource('events', EventController::class);
-    Route::resource('informations', InformationController::class);
-    Route::resource('galleries', GalleryController::class);
+    Route::prefix('admin')->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
-    // Custom book routes
-    Route::get('/books/search', [BookController::class, 'search'])->name('books.search');
+        Route::resource('books', BookController::class);
+        // Custom book routes
+        Route::get('/books/search', [BookController::class, 'search'])->name('books.search');
 
-    // Costum categories route
-    Route::post('/categories/storeOnBook', [CategoryController::class, 'storeOnBook'])->name('categories.store-on-book');
+        Route::resource('categories', CategoryController::class);
+        // Custom book routes
+        Route::post('/categories/stor-on-book', [CategoryController::class, 'storeOnBook'])->name('categories.store-on-book');
 
-    // Custom users routes
-    Route::post('/users/validation', [UserController::class, 'userValidation'])->name('users.validation');
+        Route::resource('borrows', BorrowController::class);
+        // Custom borrow routes
+        Route::patch('/borrows/{borrow}/confirm', [BorrowController::class, 'confirm'])->name('borrows.confirm');
+        Route::patch('/borrows/{borrow}/return', [BorrowController::class, 'return'])->name('borrows.return');
+        Route::patch('/borrows/{borrow}/overdue', [BorrowController::class, 'overdue'])->name('borrows.overdue');
+        Route::post('/borrows/{borrow}/extend', [BorrowController::class, 'extend'])->name('borrows.extend');
+        Route::patch('/borrows/{borrow}/archive', [BorrowController::class, 'archive'])->name('borrows.archive');
 
-    // Custom borrow actions
-    Route::patch('/borrows/{borrow}/confirm', [BorrowController::class, 'confirm'])->name('borrows.confirm');
-    Route::patch('/borrows/{borrow}/return', [BorrowController::class, 'return'])->name('borrows.return');
-    Route::patch('/borrows/{borrow}/overdue', [BorrowController::class, 'overdue'])->name('borrows.overdue');
-    Route::post('/borrows/{borrow}/extend', [BorrowController::class, 'extend'])->name('borrows.extend');
-    Route::patch('/borrows/{borrow}/archive', [BorrowController::class, 'archive'])->name('borrows.archive');
+        Route::resource('users', UserController::class);
+        // Custom users routes
+        Route::post('/users/validation', [UserController::class, 'userValidation'])->name('users.validation');
 
-    // Custom return route
-    Route::get('/admin/return', [BorrowController::class, 'returnTable'])->name('return.index');
-    Route::get('/admin/return/{borrow}', [BorrowController::class, 'returnShow'])->name('return.show');
+        Route::resource('events', EventController::class);
+        Route::resource('informations', InformationController::class);
+        Route::resource('galleries', GalleryController::class);
+
+        // Custom return route
+        Route::get('/return', [BorrowController::class, 'returnTable'])->name('return.index');
+        Route::get('/return/{borrow}', [BorrowController::class, 'returnShow'])->name('return.show');
+
+        // Custom archive route
+        Route::get('/archive', [BorrowController::class, 'archiveTable'])->name('borrows.archived');
+    });
+
 
     //informations
     Route::put('/informations/{id}', [InformationController::class, 'update'])->name('informations.update');

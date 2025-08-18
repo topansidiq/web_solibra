@@ -38,6 +38,13 @@
             <div class="flex gap-4">
                 {{-- Filter --}}
 
+                {{-- Search --}}
+                <form method="GET" action="{{ route('books.index') }}" class="flex items-center gap-2">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari judul/penulis..."
+                        class="flex flex-row items-center justify-around rounded-md cursor-pointer text-xs px-2 py-1 bg-sky-700 text-neutral-200 gap-2 w-2xs" />
+                    <button type="submit" class="px-2 py-1 bg-sky-600 text-white rounded-md text-xs">Cari</button>
+                </form>
+
                 {{-- Category Filter --}}
                 <form method="GET" class="flex items-center gap-2">
                     <label for="category" class="text-sm font-medium text-gray-700">Filter:</label>

@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    <x-header-guest />
+    {{-- <x-header-guest /> --}}
     @yield('content')
 </body>
 

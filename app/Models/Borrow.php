@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @mixin IdeHelperBorrow
+ */
 class Borrow extends Model
 {
     /** @use HasFactory<\Database\Factories\BorrowFactory> */
@@ -20,7 +23,9 @@ class Borrow extends Model
     ];
 
     protected $casts = [
+        'borrowed_at' => 'datetime',
         'due_date' => 'datetime',
+        'return_date' => 'datetime',
     ];
 
     public function user()

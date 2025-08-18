@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @mixin IdeHelperWhatsApp
+ */
 class WhatsApp extends Model
 {
     protected $fillable = [

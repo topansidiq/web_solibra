@@ -66,6 +66,15 @@ class BorrowController extends Controller
         return view("admin.return.index", compact("borrows", "categories", "books"));
     }
 
+    public function archiveTable()
+    {
+
+        $borrows = Borrow::with(['book', 'user'])->whereIn('status', ['archive', 'returned'])
+            ->paginate(20);
+
+        return view("admin.archive.index", compact("borrows"));
+    }
+
     public function returnShow(Borrow $borrow)
     {
         $user = Auth::user();

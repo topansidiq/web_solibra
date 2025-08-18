@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @mixin IdeHelperBook
+ */
 class Book extends Model
 {
     /** @use HasFactory<\Database\Factories\BookFactory> */

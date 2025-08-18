@@ -10,6 +10,10 @@ use Illuminate\Notifications\Notifiable;
 /**
  * @property \Illuminate\Database\Eloquent\Collection|\App\Models\Notification[] $notifications
  */
+/**
+ * @mixin \Eloquent
+ * @mixin IdeHelperUser
+ */
 
 class User extends Authenticatable
 {
@@ -109,6 +113,12 @@ class User extends Authenticatable
         ];
     }
 
+
+    /**
+     * App\Models\User
+     *
+     * @property \Illuminate\Database\Eloquent\Collection|\App\Models\Borrow[] $borrows
+     */
     public function borrows()
     {
         return $this->hasMany(Borrow::class);
