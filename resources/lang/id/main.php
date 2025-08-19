@@ -3,6 +3,8 @@
 return [
     'puks' => 'Perpustakaan Umum Kota Solok',
     'slogan' => 'Mari Berkunjung, Mari Berliterasi!',
+    'failed' => 'Gagal',
+    'success' => 'Sukses',
     'navigation' => [
         'home' => "Beranda",
         'collection' => "Koleksi",

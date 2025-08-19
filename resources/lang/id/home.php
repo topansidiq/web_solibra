@@ -24,5 +24,26 @@ return [
     ],
     'video_failed' => 'Browser tidak mendukung video',
     'new' => 'Terbaru',
-    'author' => 'Penulis'
+    'author' => 'Penulis',
+
+    // member
+    'activity' => 'Aktivitas',
+    'active_borrow' => 'Peminjaman Aktif:',
+    'overdue_borrow' => 'Peminjaman Jatuh Tempo:',
+    'pending_borrow' => 'Peminjaman Menunggu Konfirmasi:',
+    'archive_borrow' => 'Riwayat Peminjaman:',
+    'due_on' => 'Jatuh tempo pada',
+    'overdue_days' => 'Telah terlambat selama :days hari',
+    'submitted_on' => 'Diajukan pada',
+    'returned_on' => 'Telah dikembalikan pada',
+    'no_active_borrow' => 'Tidak ada peminjaman aktif',
+    'no_overdue_borrow' => 'Tidak ada peminjaman yang jatuh tempo',
+    'no_pending_borrow' => 'Tidak ada pengajuan peminjaman',
+    'no_archive_borrow' => 'Tidak ada riwayat peminjaman',
+    'view_active_borrow' => 'Lihat Peminjaman',
+    'view_overdue_borrow' => 'Lihat Peminjaman',
+    'view_pending_borrow' => 'Lihat Pengajuan',
+    'view_archive_borrow' => 'Lihat Riwayat Peminjaman',
+    'close' => 'Tutup',
+    'your_collection' => 'Koleksi Anda',
 ];

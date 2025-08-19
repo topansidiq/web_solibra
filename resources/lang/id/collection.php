@@ -7,4 +7,8 @@ return [
     'author' => 'Penulis:',
     'popular' => 'Populer',
     'popular_message' => 'Rekomendasi buku yang diminati orang lain',
+
+    // member
+    'your_borrowed' => 'Daftar Pinjaman Kamu',
+    'no_borrowed' => 'Tidak ada buku yang sedang dipinjam.',
 ];

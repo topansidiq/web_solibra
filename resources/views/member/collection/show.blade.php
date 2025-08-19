@@ -22,7 +22,6 @@
                     $isFavorite = auth()->user()->favoriteBooks()->where('book_id', $book->id)->exists();
                 @endphp
 
-
                 <div>
                     <a href="{{ route('member.collection.favorite', $book) }}" class="flex items-center gap-3">
                         <i class="w-8 h-8 text-red-400" data-lucide="heart"></i>
@@ -30,8 +29,6 @@
                             {{ __('book.make_favorit') }}</p>
                     </a>
                 </div>
-
-
             </div>
             <div>
                 <div x-data="{ show: {{ session('error') ? 'true' : 'false' }} }" x-show="show" x-init="setTimeout(() => show = false, {{ session('duration') ? session('duration') : 6000 }})" class="transition-all ease-in-out"
@@ -83,12 +80,13 @@
                         <div class="col-span-1 font-medium">{{ __('book.category') }}</div>
                         <div class="col-span-3 px-2 space-x-1">
                             @foreach ($book->categories as $category)
-                                <span class="inline-block bg-sky-200 text-neutral-800 px-2 py-0.5 rounded text-xs">
+                                <span class="inline-block bg-sky-200 text-neutral-800 px-2 py-0.5 rounded text-xs mr-1">
                                     {{ $category->name }}
                                 </span>
                             @endforeach
                         </div>
                     </div>
+
                     <div class="grid grid-cols-4 border-b border-neutral-200 py-2">
                         <div class="col-span-1 font-medium">{{ __('book.stock') }}</div>
                         <div class="col-span-3 px-2 space-x-1">
@@ -169,7 +167,7 @@
                                 {{ $related->categories->pluck('name')->join(', ') }}
                             </div>
                             <p class="text-xs font-medium text-sky-700 line-clamp-2">
-                                Penulis: {{ $related->formatted_author }}
+                                {{ __('book.author') }}: {{ $related->formatted_author }}
                             </p>
                         </div>
                     </a>
