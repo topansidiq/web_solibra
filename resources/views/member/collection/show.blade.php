@@ -86,6 +86,12 @@
                             @endforeach
                         </div>
                     </div>
+                    <div class="grid grid-cols-4 border-b border-neutral-200 py-2">
+                        <div class="col-span-1 font-medium">Stok</div>
+                        <div class="col-span-3 px-2 space-x-1">
+                            {{ $book->stock }}
+                        </div>
+                    </div>
 
                     <div class="pt-4">
                         <h3 class="font-semibold mb-2">Deskripsi</h3>

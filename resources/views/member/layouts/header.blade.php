@@ -5,6 +5,7 @@
     $collection = __('member_header.collection');
     $borrowing = __('member_header.borrowing');
     $service = __('member_header.service');
+    $event = __('main.navigation.event');
     $information = __('member_header.information');
     $notification = __('member_header.notification');
     $account = __('member_header.account');
@@ -15,6 +16,7 @@
         ['label' => $collection, 'name' => 'member.collection'],
         ['label' => $borrowing, 'name' => 'member.borrow'],
         ['label' => $service, 'name' => 'member.service'],
+        ['label' => $event, 'name' => 'member.event'],
         ['label' => $information, 'name' => 'member.information'],
         ['label' => $notification, 'name' => 'member.notification'],
     ];

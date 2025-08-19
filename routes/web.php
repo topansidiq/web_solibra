@@ -67,6 +67,7 @@ Route::group([
         Route::get('/member/information/{information}', [MemberController::class, 'show'])->name('member.information.show');
         Route::get('/member/notification', [MemberController::class, 'notification'])->name('member.notification');
         Route::get('/member/account', [MemberController::class, 'account'])->name('member.account');
+        Route::get('/member/event', [MemberController::class, 'event'])->name('member.event');
 
         // Borrow Menu
         Route::get('/member/borrow', [MemberController::class, 'borrow'])->name('member.borrow');

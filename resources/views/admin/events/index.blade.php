@@ -15,21 +15,25 @@
                 </div>
 
                 <div>
-                    <h3 class="text-xl font-bold">Daftar Koleksi</h3>
-                    <p class="text-sm">Ini adalah daftar koleksi buku yang tersedia di perpustakaan</p>
+                    <h3 class="text-xl font-bold">Daftar Acara</h3>
+                    <p class="text-sm">Ini adalah daftar acara di Perpustakaan Umum kota Solok</p>
                 </div>
             </div>
 
             {{-- Action --}}
-            <div class="flex gap-4">
-
+            <div>
+                <a href="{{ route('events.create') }}"
+                    class="flex flex-row items-center justify-around cursor-pointer rounded-md px-2 py-1 bg-sky-800 text-slate-200">
+                    <i data-lucide="plus" class="block w-5 h-5"></i>
+                    <p class="text-sm">Tambah Acara</p>
+                </a>
             </div>
         </div>
 
         {{-- Tabel Scrollable --}}
         <div class="mx-4">
             <table class="table font-sans w-full">
-                <thead class="bg-teal-800 text-white text-sm sticky top-0 z-10">
+                <thead class="bg-sky-800 text-white text-sm sticky top-0 z-10">
                     <tr>
                         <th class="p-4">No.</th>
                         <th class="p-4">Judul Kegiatan</th>
@@ -59,7 +63,7 @@
                                     </form>
 
                                     {{-- Delete Book Button --}}
-                                    <form action="{{ route('events.destroy', $event->id) }}" method="POST" class="ml-2">
+                                    <form action="{{ route('events.destroy', $event) }}" method="POST" class="ml-2">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="delete-book-btn">

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Koleksi | Perpustakaan Umum Kota Solok')
+@section('title', __('main.navigation.collection') . ' | Perpustakaan Umum Kota Solok')
 
 @section('content')
     <div>
@@ -10,25 +10,25 @@
             <div class="w-[1680px] mx-auto">
                 <div class="flex bg-white gap-4 p-4 mx-auto items-center justify-between">
                     <div>
-                        <p class="font-bold text-lg text-slate-800">Koleksi Terbaru</p>
-                        <p class="text-xs">Temukan koleksi menarik disini!</p>
+                        <p class="font-bold text-lg text-slate-800">{{ __('collection.new_collection') }}</p>
+                        <p class="text-xs">{{ __('collection.collection_message') }}</p>
                     </div>
                     <!-- Filter Kategori -->
                     <div class="grid items-center">
-                        <h3 class="text-sm mb-2 font-semibold">Filter Kategori:</h3>
+                        <h3 class="text-sm mb-2 font-semibold">{{ __('collection.category_filter') }}</h3>
                         <div class="flex gap-3">
                             <div
-                                class="h-fit px-2 py-1 rounded-full text-xs text-center
-        {{ is_null($selectedCategory) ? 'bg-neutral-500 text-yellow-50' : 'bg-yellow-500 text-yellow-50' }}
-        hover:bg-amber-700 hover:text-amber-50">
+                            class="h-fit px-2 py-1 rounded-full text-xs text-center
+                                 {{ is_null($selectedCategory) ? 'bg-neutral-500 text-yellow-50' : 'bg-yellow-500 text-yellow-50' }}
+                                 hover:bg-amber-700 hover:text-amber-50">
                                 <a href="{{ route('collection') }}">
-                                    Semua
+                                    {{ __('collection.all') }}
                                 </a>
                             </div>
                             @foreach ($categories as $category)
                                 <div
                                     class="h-fit px-2 py-1 rounded-full text-xs text-center
-                          {{ $selectedCategory == $category->id ? 'bg-neutral-500 text-yellow-50 hover:bg-neutral-500' : 'bg-yellow-500 text-yellow-50' }} hover:bg-yellow-700 hover:border-neutral-500 hover:text-yellow-50">
+                                  {{ $selectedCategory == $category->id ? 'bg-neutral-500 text-yellow-50 hover:bg-neutral-500' : 'bg-yellow-500 text-yellow-50' }} hover:bg-yellow-700 hover:border-neutral-500 hover:text-yellow-50">
                                     <a href="{{ route('collection', ['category' => $category->id]) }}">
                                         {{ $category->name }}
                                     </a>
@@ -54,7 +54,7 @@
                                             <span class="">{{ $category->name }}, </span>
                                         @endforeach
                                     </div>
-                                    <p class="text-xs font-semibold text-slate-500">Penulis: {{ $book->author }}</p>
+                                    <p class="text-xs font-semibold text-slate-500">{{ __('collection.author') }} {{ $book->author }}</p>
                                 </div>
                             </div>
                         </a>
@@ -68,8 +68,8 @@
             <div class="w-[1680px] mx-auto">
                 <div class="flex bg-white gap-4 p-4 mx-auto items-center justify-between">
                     <div>
-                        <p class="font-bold text-lg text-slate-800">Populer</p>
-                        <p class="text-xs">Rekomendasi buku yang diminati orang lain</p>
+                        <p class="font-bold text-lg text-slate-800">{{ __('collection.popular') }}</p>
+                        <p class="text-xs">{{ __('collection.popular_message') }}</p>
                     </div>
                 </div>
                 <div class=" bg-white gap-4 p-4 grid grid-cols-6 mx-auto content-around">
@@ -88,7 +88,7 @@
                                             <span class="">{{ $category->name }}, </span>
                                         @endforeach
                                     </div>
-                                    <p class="text-xs font-semibold text-slate-500">Penulis: {{ $book->author }}</p>
+                                    <p class="text-xs font-semibold text-slate-500">{{ __('collection.author') }} {{ $book->author }}</p>
                                 </div>
                             </div>
                         </a>

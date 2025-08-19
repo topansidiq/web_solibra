@@ -218,7 +218,7 @@
                 </div>
 
                 <div class="p-4 border border-slate-200 rounded-xl shadow-sm bg-slate-50">
-                    <h3 class="text-base font-semibold mb-2 text-slate-700"> LaporanKeterlambatan </h3>
+                    <h3 class="text-base font-semibold mb-2 text-slate-700"> Laporan Keterlambatan </h3>
                     <canvas id="overdueChart" class="w-full h-64"></canvas>
                 </div>
             </div>

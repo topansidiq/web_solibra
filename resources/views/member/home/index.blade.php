@@ -1,6 +1,6 @@
 @extends('member.layouts.app')
 
-@section('title', 'Beranda | Perpustakaan Umum Kota Solok')
+@section('title', __('main.navigation.home') . ' | Perpustakaan Umum Kota Solok')
 
 @section('content')
     {{-- @if (request()->is('/') || request()->is('home')) --}}
