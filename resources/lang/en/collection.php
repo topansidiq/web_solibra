@@ -7,4 +7,8 @@ return [
     'author' => 'Author:',
     'popular' => 'Popular',
     'popular_message' => 'Recommended books that others are interested in',
+
+     // member
+    'your_borrowed' => 'Your Borrowed Books',
+    'no_borrowed' => 'You have no borrowed books.',
 ];

@@ -3,98 +3,113 @@
 @section('title', __('main.navigation.collection') . ' | Perpustakaan Umum Kota Solok')
 
 @section('content')
-    <div>
+    <div class="px-4 sm:px-6 lg:px-8">
 
-        {{-- New Collection --}}
-        <section class="border-b border-neutral-100">
-            <div class="w-[1680px] mx-auto">
-                <div class="flex bg-white gap-4 p-4 mx-auto items-center justify-between">
-                    <div>
-                        <p class="font-bold text-lg text-slate-800">{{ __('collection.new_collection') }}</p>
-                        <p class="text-xs">{{ __('collection.collection_message') }}</p>
-                    </div>
-                    <!-- Filter Kategori -->
-                    <div class="grid items-center">
-                        <h3 class="text-sm mb-2 font-semibold">{{ __('collection.category_filter') }}</h3>
-                        <div class="flex gap-3">
-                            <div
-                            class="h-fit px-2 py-1 rounded-full text-xs text-center
-                                 {{ is_null($selectedCategory) ? 'bg-neutral-500 text-yellow-50' : 'bg-yellow-500 text-yellow-50' }}
-                                 hover:bg-amber-700 hover:text-amber-50">
-                                <a href="{{ route('collection') }}">
-                                    {{ __('collection.all') }}
-                                </a>
-                            </div>
-                            @foreach ($categories as $category)
-                                <div
-                                    class="h-fit px-2 py-1 rounded-full text-xs text-center
-                                  {{ $selectedCategory == $category->id ? 'bg-neutral-500 text-yellow-50 hover:bg-neutral-500' : 'bg-yellow-500 text-yellow-50' }} hover:bg-yellow-700 hover:border-neutral-500 hover:text-yellow-50">
-                                    <a href="{{ route('collection', ['category' => $category->id]) }}">
-                                        {{ $category->name }}
-                                    </a>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
+        {{-- KOLEKSI TERBARU --}}
+        <div class="xl:mx-10 p-4 bg-white rounded-2xl border-slate-200">
+            {{-- Header & Filter --}}
+            <div class="flex flex-col xl:flex-row gap-4 items-start xl:items-center justify-between mb-6">
+                <h2 class="font-bold text-xl text-sky-800">{{ __('collection.new_collection') }}</h2>
 
-                </div>
-                <div class=" bg-white gap-4 p-4 grid grid-cols-6 mx-auto content-around">
-                    @foreach ($books as $book)
-                        <a href="{{ route('show.book', $book) }}">
-                            <div
-                                class="book h-full bg-slate-50 rounded shadow border border-slate-300 cursor-pointer hover:scale-105 transition">
-                                <div class="h-fit bg-slate-400">
-                                    <img src="{{ asset('storage/' . $book->cover) }}" alt="" class="shadow-sm">
-                                </div>
-
-                                <div class="p-3">
-                                    <h2 class="font-bold text-sm">{{ $book->title }} ({{ $book->year }})</h2>
-                                    <div class="text-xs">
-                                        @foreach ($book->categories as $category)
-                                            <span class="">{{ $category->name }}, </span>
-                                        @endforeach
-                                    </div>
-                                    <p class="text-xs font-semibold text-slate-500">{{ __('collection.author') }} {{ $book->author }}</p>
-                                </div>
-                            </div>
+                {{-- Filter Kategori --}}
+                <div>
+                    <h3 class="text-sm mb-2 font-semibold text-slate-700">{{ __('collection.category_filter') }}</h3>
+                    <div class="flex flex-wrap gap-2">
+                        {{-- Semua --}}
+                        <a href="{{ route('collection') }}" class="px-4 py-1.5 rounded-full text-xs font-medium transition-all
+                            {{ is_null($selectedCategory)
+                                ? 'bg-sky-800 text-white shadow-sm hover:bg-sky-800'
+                                : 'bg-sky-500 text-white hover:bg-sky-600 shadow-sm' }}">
+                            {{ __('collection.all') }}
                         </a>
-                    @endforeach
+
+                        {{-- Per kategori --}}
+                        @foreach ($categories as $category)
+                                        <a href="{{ route('collection', ['category' => $category->id]) }}" class="px-4 py-1.5 rounded-full text-xs font-medium transition-all
+                                   {{ $selectedCategory == $category->id
+                            ? 'bg-sky-800 text-white shadow-sm hover:bg-sky-800'
+                            : 'bg-sky-500 text-white hover:bg-sky-600 shadow-sm' }}">
+                                            {{ $category->name }}
+                                        </a>
+                        @endforeach
+                    </div>
                 </div>
             </div>
-        </section>
+
+            {{-- Grid Koleksi --}}
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5">
+                @foreach ($books as $book)
+                    <a href="{{ route('member.collection.show', $book->id) }}" class="block bg-white rounded-xl shadow hover:shadow-lg border border-slate-200
+                        hover:scale-105 transition transform overflow-hidden">
+
+                        {{-- Cover Buku --}}
+                        @if (!empty($book->cover) && Storage::disk('public')->exists($book->cover))
+                            <div class="h-72 bg-cover bg-center"
+                                style="background-image: url('{{ asset('storage/' . $book->cover) }}')"></div>
+                        @else
+                            <div class="h-72 bg-sky-800 flex items-center justify-center text-white text-center p-4">
+                                <h1 class="text-lg font-semibold drop-shadow-lg">{{ $book->clean_title }}</h1>
+                            </div>
+                        @endif
+
+                        {{-- Info Buku --}}
+                        <div class="p-3">
+                            <h2 class="font-bold text-sm line-clamp-2 text-slate-800">
+                                {{ $book->title }} ({{ $book->year }})
+                            </h2>
+                            <div class="text-xs text-gray-500 mb-1">
+                                @foreach ($book->categories as $category)
+                                    <span>{{ $category->name }}</span>@if(!$loop->last), @endif
+                                @endforeach
+                            </div>
+                            <p class="text-xs font-medium text-sky-700">{{ __('collection.author') }} {{ $book->author }}</p>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        </div>
 
         {{-- Popular Collection --}}
-        <section class="border-b border-neutral-100">
-            <div class="w-[1680px] mx-auto">
-                <div class="flex bg-white gap-4 p-4 mx-auto items-center justify-between">
-                    <div>
-                        <p class="font-bold text-lg text-slate-800">{{ __('collection.popular') }}</p>
-                        <p class="text-xs">{{ __('collection.popular_message') }}</p>
-                    </div>
-                </div>
-                <div class=" bg-white gap-4 p-4 grid grid-cols-6 mx-auto content-around">
-                    @foreach ($books as $book)
-                        <a href="{{ route('show.book', $book->id) }}">
-                            <div
-                                class="book h-full bg-slate-50 rounded shadow border border-slate-300 cursor-pointer hover:scale-105 transition">
-                                <div class="h-fit bg-slate-400">
-                                    <img src="{{ asset('storage/' . $book->cover) }}" alt="" class="shadow-sm">
-                                </div>
-
-                                <div class="p-3">
-                                    <h2 class="font-bold text-sm">{{ $book->title }} ({{ $book->year }})</h2>
-                                    <div class="text-xs">
-                                        @foreach ($book->categories as $category)
-                                            <span class="">{{ $category->name }}, </span>
-                                        @endforeach
-                                    </div>
-                                    <p class="text-xs font-semibold text-slate-500">{{ __('collection.author') }} {{ $book->author }}</p>
-                                </div>
-                            </div>
-                        </a>
-                    @endforeach
-                </div>
+        <div class="xl:mx-10 p-4 bg-white rounded-2xl border-slate-200">
+            {{-- Judul --}}
+            <div class="flex items-center justify-between mb-2">
+                <h2 class="font-bold text-xl text-sky-800">{{ __('collection.popular') }}</h2>
             </div>
-        </section>
+            <h3 class="text-slate-500 mb-4">{{ __('collection.popular_message') }}</h3>
+
+            {{-- Grid Buku --}}
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5">
+                @foreach ($books as $book)
+                    <a href="{{ route('show.book', $book->id) }}" class="block bg-white rounded-xl shadow hover:shadow-lg border border-slate-200
+                              hover:scale-105 transition transform overflow-hidden">
+
+                        {{-- Cover Buku --}}
+                        @if (!empty($book->cover) && Storage::disk('public')->exists($book->cover))
+                            <div class="h-72 bg-cover bg-center"
+                                style="background-image: url('{{ asset('storage/' . $book->cover) }}')"></div>
+                        @else
+                            <div class="h-72 bg-sky-800 flex items-center justify-center text-white text-center p-4">
+                                <h1 class="text-lg font-semibold drop-shadow-lg">{{ $book->clean_title }}</h1>
+                            </div>
+                        @endif
+
+                        {{-- Info Buku --}}
+                        <div class="p-3">
+                            <h2 class="font-bold text-sm line-clamp-2 text-slate-800">
+                                {{ $book->title }} ({{ $book->year }})
+                            </h2>
+                            <div class="text-xs text-gray-500 mb-1">
+                                @foreach ($book->categories as $category)
+                                    <span>{{ $category->name }}</span>@if(!$loop->last), @endif
+                                @endforeach
+                            </div>
+                            <p class="text-xs font-medium text-sky-700">
+                                {{ __('collection.author') }} {{ $book->author }}
+                            </p>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        </div>
     </div>
 @endsection

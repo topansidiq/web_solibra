@@ -12,8 +12,8 @@
 
                 <!-- Meta Info -->
                 <div class="flex flex-row text-sm text-gray-500 space-x-6">
-                    <span><strong>Penerbit:</strong> {{ $information->author }}</span>
-                    <span><strong>Tanggal:</strong>
+                    <span><strong>{{ __('show_information.publisher') }}:</strong> {{ $information->author }}</span>
+                    <span><strong>{{ __('show_information.date') }}:</strong>
                         {{ $information->created_at->locale(app()->getLocale())->translatedFormat('d F Y') }}</span>
                 </div>
 
@@ -34,7 +34,7 @@
                 <div class="flex justify-end pt-4">
                     <a href="{{ route('member.information')}}"
                         class="inline-block bg-sky-800 hover:bg-sky-900 text-white text-sm font-medium px-6 py-2 rounded-md transition">
-                        ← Kembali ke Informasi
+                        {{ __('show_information.back_to_information') }}
                     </a>
                 </div>
             </div>

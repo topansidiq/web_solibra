@@ -5,8 +5,8 @@
 @section('content')
     <main class="max-w-7xl mx-auto mt-3">
         <div>
-            <p class="font-bold text-lg text-slate-800">Galeri</p>
-            <p class="text-xs text-neutral-500">Lini Masa Perpustakaan Umum Kota Solok</p>
+            <p class="font-bold text-lg text-slate-800">{{ __('gallery.title') }}</p>
+            <p class="text-xs text-neutral-500">{{ __('gallery.subtitle') }}</p>
         </div>
         <div class="grid grid-cols-3 gap-3 py-4">
             @foreach ($galleries as $media)

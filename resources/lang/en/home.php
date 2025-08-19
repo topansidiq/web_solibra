@@ -24,5 +24,26 @@ return [
     ],
     'video_failed' => 'Your browser does not support video',
     'new' => 'New',
-    'author' => 'Author'
+    'author' => 'Author',
+
+    // member
+    'activity' => 'Activity',
+    'active_borrow' => 'Active Borrow:',
+    'overdue_borrow' => 'Overdue Borrow:',
+    'pending_borrow' => 'Pending Borrow:',
+    'archive_borrow' => 'Borrow History:',
+    'due_on' => 'Due on',
+    'overdue_days' => 'Overdue for :days days',
+    'submitted_on' => 'Submitted on',
+    'returned_on' => 'Returned on',
+    'no_active_borrow' => 'No active borrowings',
+    'no_overdue_borrow' => 'No overdue borrowings',
+    'no_pending_borrow' => 'No pending borrowings',
+    'no_archive_borrow' => 'No borrow history',
+    'view_active_borrow' => 'View Borrowings',
+    'view_overdue_borrow' => 'View Borrowings',
+    'view_pending_borrow' => 'View Submissions',
+    'view_archive_borrow' => 'View Borrow History',
+    'close' => 'Close',
+    'your_collection' => 'Your Collection',
 ];

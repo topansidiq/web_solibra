@@ -11,7 +11,7 @@
                         <i class="w-10 h-10" data-lucide="chevron-left"></i>
                     </a>
                     <div>
-                        <h1 class="font-bold text-neutral-700 text-2xl">Tentang Buku Ini</h1>
+                        <h1 class="font-bold text-neutral-700 text-2xl">{{ __('book.about')}}</h1>
                         <p class="pt-1 font-semibold text-neutral-500">{{ $book->title }}</p>
                     </div>
                 </div>
@@ -20,22 +20,19 @@
                     $isFavorite = auth()->user()->favoriteBooks()->where('book_id', $book->id)->exists();
                 @endphp
 
-
                 <div>
                     <a href="{{ route('member.collection.favorite', $book) }}" class="flex items-center gap-3">
                         <i class="w-8 h-8 text-red-400" data-lucide="heart"></i>
-                        <p class="text-sm px-2 py-1 rounded-md border border-red-400 text-red-400">Jadikan Favorit</p>
+                        <p class="text-sm px-2 py-1 rounded-md border border-red-400 text-red-400">{{ __('book.add_favorites') }}</p>
                     </a>
                 </div>
-
-
             </div>
             <div>
                 <div x-data="{ show: {{ session('error') ? 'true' : 'false' }} }" x-show="show" x-init="setTimeout(() => show = false, {{ session('duration') ? session('duration') : 6000 }})" class="transition-all ease-in-out"
                     x-transition x-cloak>
                     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
                         role="alert">
-                        <strong class="font-bold bg-red-300 px-2 py-1 rounded-sm">Gagal</strong>
+                        <strong class="font-bold bg-red-300 px-2 py-1 rounded-sm">{{ __('main.failed') }}</strong>
                         <span class="block sm:inline">{{ session('error') }}</span>
                     </div>
                 </div>
@@ -43,7 +40,7 @@
                     x-transition x-cloak>
                     <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4"
                         role="alert">
-                        <strong class="font-bold bg-green-300 px-2 py-1 rounded-sm">Berhasil</strong>
+                        <strong class="font-bold bg-green-300 px-2 py-1 rounded-sm">{{ __('main.success') }}</strong>
                         <span class="block sm:inline">{{ session('success') }}</span>
                     </div>
                 </div>
@@ -63,39 +60,84 @@
 
                 {{-- Detail --}}
                 <div class="flex-1 space-y-2 text-sm">
-                    @foreach ([
-            'Judul' => $book->title,
-            'Penulis' => $book->author,
-            'Penerbit' => $book->publisher,
-            'ISBN' => $book->isbn,
-            'Tahun Terbit' => $book->year,
-        ] as $label => $value)
-                        <div class="grid grid-cols-4 border-b border-neutral-200 py-2">
-                            <div class="col-span-1 font-medium">{{ $label }}</div>
-                            <div class="col-span-3 px-2 text-slate-800">{{ $value }}</div>
+                    <div class="grid grid-cols-4 border-b border-neutral-200 items-center py-2">
+                        <div class="col-span-1">
+                            {{ __('book.title') }}
                         </div>
-                    @endforeach
-
-                    <div class="grid grid-cols-4 border-b border-neutral-200 py-2">
-                        <div class="col-span-1 font-medium">Kategori</div>
-                        <div class="col-span-3 px-2 space-x-1">
+                        <div class="col-span-3 px-2">
+                            <h1 class="font-bold text-slate-800">{{ $book->clean_title }} ({{ $book->edition }})</h1>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-4 border-b border-neutral-200 items-center py-2">
+                        <div class="col-span-1">
+                            {{ __('book.author') }}
+                        </div>
+                        <div class="col-span-3 px-2">
+                            <h1 class="text-slate-800">{{ $book->formatted_author }}</h1>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-4 border-b border-neutral-200 items-center py-2">
+                        <div class="col-span-1">
+                            {{ __('book.publisher') }}
+                        </div>
+                        <div class="col-span-3 px-2">
+                            <h1 class="text-slate-800">{{ preg_replace('/[:,]/', '', $book->publisher) }} |
+                                {{ preg_replace('/[:,]/', '', $book->publication_place) }}</h1>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-4 border-b border-neutral-200 items-center py-2">
+                        <div class="col-span-1 ">
+                            {{ __('book.physical') }}
+                        </div>
+                        <div class="col-span-3 px-2">
+                            <h1 class="text-slate-800"><span
+                                    class="font-bold text-neutral-500">({{ $book->physical_shape }})</span>
+                                {{ $book->physical_description }}</h1>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-4 border-b border-neutral-200 items-center py-2">
+                        <div class="col-span-1">
+                            {{ __('book.isbn') }}
+                        </div>
+                        <div class="col-span-3 px-2">
+                            <h1 class="text-slate-800">{{ preg_replace('/[-]/', '', $book->isbn) }}</h1>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-4 border-b border-neutral-200 items-center py-2">
+                        <div class="col-span-1">
+                            {{ __('book.year') }}
+                        </div>
+                        <div class="col-span-3 px-2">
+                            <h1 class="text-slate-800">{{ $book->year }}</h1>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-4 border-b border-neutral-200 items-center py-2">
+                        <div class="col-span-1">
+                            {{ __('book.category') }}
+                        </div>
+                        <div class="col-span-3 px-2">
                             @foreach ($book->categories as $category)
-                                <span class="inline-block bg-sky-200 text-neutral-800 px-2 py-0.5 rounded text-xs">
+                                <span class="inline-block bg-sky-200 text-neutral-800 px-2 py-0.5 rounded text-xs mr-1">
                                     {{ $category->name }}
                                 </span>
                             @endforeach
                         </div>
                     </div>
+
                     <div class="grid grid-cols-4 border-b border-neutral-200 py-2">
-                        <div class="col-span-1 font-medium">Stok</div>
+                        <div class="col-span-1">{{ __('book.stock') }}</div>
                         <div class="col-span-3 px-2 space-x-1">
                             {{ $book->stock }}
                         </div>
                     </div>
 
-                    <div class="pt-4">
-                        <h3 class="font-semibold mb-2">Deskripsi</h3>
-                        <p class="prose text-justify">{!! $book->description !!}</p>
+                    <div class="items-center py-2">
+                        <div class="col-span-4 font-semibold">
+                            {{ __('book.description') }}
+                        </div>
+                        <div class="py-4 text-justify">
+                            {!! $book->description !!}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -105,15 +147,14 @@
                 @if ($book->stock == 0)
 
                 <button disabled class="px-4 py-2 bg-neutral-400 text-white rounded-md shadow">
-                    Buku tidak tersedia atau stok kosong
+                    {{ __('book.not_available') }}
                 </button>
                 @else
                     @if ($user->member_status !== 'validated')
                 <div>
                         <button disabled class="px-4 py-2 bg-neutral-400 hover:bg-sky-800 text-white rounded-md shadow">
-                            Anda belum bisa melakukan peminjaman. Harap men-validasi data langsung ke Perpustakaan Umum Kota Solok
+                            {{ __('book.not_validated') }}
                         </button>
-
                     </div>
                 @else
                     <form action="{{ route('member.borrow.store') }}" method="POST">
@@ -121,22 +162,17 @@
                     <input type="hidden" name="book_id" value="{{ $book->id }}">
                     <input type="hidden" name="user_id" value="{{ $user->id }}">
                     <button type="submit" class="px-4 py-2 bg-sky-700 hover:bg-sky-800 text-white rounded-md shadow">
-                        Pinjam Buku Ini
+                        {{ __('book.borrow_this') }}
                     </button>
-                </form>
+                    </form>
                 @endif
                 @endif
-
             </div>
-
-
-
-
         </div>
 
         {{-- Buku Serupa --}}
         <div>
-            <h2 class="text-xl font-bold mb-4 text-slate-800">Buku Serupa</h2>
+            <h2 class="text-xl font-bold mb-4 text-slate-800">{{ __('book.related') }}</h2>
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5">
                 @foreach ($relatedBooks as $related)
                     <a href="{{ route('show.book', $related) }}"
@@ -162,7 +198,7 @@
                                 {{ $related->categories->pluck('name')->join(', ') }}
                             </div>
                             <p class="text-xs font-medium text-sky-700 line-clamp-2">
-                                Penulis: {{ $related->formatted_author }}
+                                {{ __('book.author') }}: {{ $related->formatted_author }}
                             </p>
                         </div>
                     </a>

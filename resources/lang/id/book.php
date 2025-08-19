@@ -14,4 +14,11 @@ return [
     'description' => 'Deskripsi',
     'related' => 'Buku Serupa',
     'writer' => 'Penulis',
+    'stock' => 'Stok',
+
+    // member
+    'add_favorites' => 'Jadikan Favorit',
+    'not_available' => 'Buku tidak tersedia atau stok kosong',
+    'not_validated' => 'Anda belum bisa melakukan peminjaman. Harap men-validasi data langsung ke Perpustakaan Umum Kota Solok',
+    'borrow_this' => 'Pinjam Buku Ini',
 ];

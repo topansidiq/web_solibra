@@ -14,4 +14,12 @@ return [
     'description' => 'Description',
     'related' => 'Related Books',
     'writer' => 'Writer',
+    'stock' => 'Stock',
+
+    // member
+    'add_favorites' => 'Add to Favorites',
+    'not_available' => 'Book not available or out of stock',
+    'not_validated' => 'You cannot borrow books yet. Please validate your data directly at the Solok Public Library',
+    'borrow_this' => 'Borrow This Book',
+    'similar_books' => 'Similar Books',
 ];
