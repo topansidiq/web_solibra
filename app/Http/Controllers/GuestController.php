@@ -75,8 +75,7 @@ class GuestController extends Controller
 
     public function showEvent($id)
     {
-        $event = Event::findOrFail($id);
-
+        $event = Event::find($id);
         return view('show.event', compact('event'));
     }
 

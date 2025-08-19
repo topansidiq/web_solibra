@@ -1,149 +1,160 @@
 @extends('layouts.app')
 
-@section('title', 'Layanan | Perpustakaan Umum Kota Solok')
+@section('title', __('main.navigation.service') . ' | Perpustakaan Umum Kota Solok')
 
 @section('content')
     <section class="bg-white py-12">
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex flex-col items-center text-center mb-14">
-                <h2 class="text-3xl font-extrabold text-sky-800">Layanan Kami</h2>
-                <p class="text-gray-500 mt-2">Menyediakam berbagai layanan untuk mendukung literasi masyarakat</p>
+                <h2 class="text-3xl font-extrabold text-sky-800">{{ __('service.our_service') }}</h2>
+                <p class="text-gray-500 mt-2">{{ __('service.our_service_message') }}</p>
                 <div class="w-20 border-b-4 border-sky-600 mt-3"></div>
             </div>
 
             <!-- Grid Layanan -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-
+                <!-- Circulation -->
                 <div
                     class="bg-white rounded-xl shadow p-6 text-center border border-gray-200 hover:scale-105 hover:shadow-md transition-all duration-300 ease-in-out">
                     <i data-lucide="iteration-cw" class="w-12 h-12 mx-auto text-sky-800 mb-4"></i>
-                    <h3 class="text-lg font-semibold text-sky-800 mb-2">Layanan Sirkulasi</h3>
-                    <p class="text-gray-700 text-sm">Peminjaman, pengembalian, dan perpanjangan masa pinjam bahan pustaka.
-                    </p>
+                    <h3 class="text-lg font-semibold text-sky-800 mb-2">{{ __('service.circulation') }}</h3>
+                    <p class="text-gray-700 text-sm">{{ __('service.circulation_content') }}</p>
                 </div>
 
+                <!-- Member -->
                 <div
                     class="bg-white rounded-xl shadow p-6 text-center border border-gray-200 hover:scale-105 hover:shadow-md transition-all duration-300 ease-in-out">
                     <i data-lucide="square-user-round" class="w-12 h-12 mx-auto text-sky-800 mb-4"></i>
-                    <h3 class="text-lg font-semibold text-sky-800 mb-2">Layanan Keanggotaan</h3>
-                    <p class="text-gray-700 text-sm">Proses pendaftaran mudah untuk menjadi anggota perpustakaan.</p>
+                    <h3 class="text-lg font-semibold text-sky-800 mb-2">{{ __('service.member') }}</h3>
+                    <p class="text-gray-700 text-sm">{{ __('service.member_content') }}</p>
                 </div>
 
+                <!-- Children Collection -->
                 <div
                     class="bg-white rounded-xl shadow p-6 text-center border border-gray-200 hover:scale-105 hover:shadow-md transition-all duration-300 ease-in-out">
                     <i data-lucide="blocks" class="w-12 h-12 mx-auto text-sky-800 mb-4"></i>
-                    <h3 class="text-lg font-semibold text-sky-800 mb-2">Layanan Koleksi Anak</h3>
-                    <p class="text-gray-700 text-sm">Bahan bacaan edukatif dan hiburan untuk anak-anak.</p>
+                    <h3 class="text-lg font-semibold text-sky-800 mb-2">{{ __('service.children_collection') }}</h3>
+                    <p class="text-gray-700 text-sm">{{ __('service.children_collection_content') }}</p>
                 </div>
 
+                <!-- General Collection -->
                 <div
                     class="bg-white rounded-xl shadow p-6 text-center border border-gray-200 hover:scale-105 hover:shadow-md transition-all duration-300 ease-in-out">
                     <i data-lucide="users" class="w-12 h-12 mx-auto text-sky-800 mb-4"></i>
-                    <h3 class="text-lg font-semibold text-sky-800 mb-2">Layanan Koleksi Umum</h3>
-                    <p class="text-gray-700 text-sm">Buku populer, fiksi, non-fiksi, dan buku pelajaran untuk semua
-                        kalangan.</p>
+                    <h3 class="text-lg font-semibold text-sky-800 mb-2">{{ __('service.general_collection') }}</h3>
+                    <p class="text-gray-700 text-sm">{{ __('service.general_collection_content') }}</p>
                 </div>
 
+                <!-- Chatbot -->
                 <div
                     class="bg-white rounded-xl shadow p-6 text-center border border-gray-200 hover:scale-105 hover:shadow-md transition-all duration-300 ease-in-out">
                     <i data-lucide="bot" class="w-12 h-12 mx-auto text-sky-800 mb-4"></i>
-                    <h3 class="text-lg font-semibold text-sky-800 mb-2">Layanan Chatbot</h3>
-                    <p class="text-gray-700 text-sm">Asisten virtual informasi peminjaman dan perpanjangan masa pinjam buku
-                    </p>
+                    <h3 class="text-lg font-semibold text-sky-800 mb-2">{{ __('service.chatbot') }}</h3>
+                    <p class="text-gray-700 text-sm">{{ __('service.chatbot_content') }}</p>
                 </div>
 
+                <!-- Reference -->
                 <div
                     class="bg-white rounded-xl shadow p-6 text-center border border-gray-200 hover:scale-105 hover:shadow-md transition-all duration-300 ease-in-out">
                     <i data-lucide="bookmark-check" class="w-12 h-12 mx-auto text-sky-800 mb-4"></i>
-                    <h3 class="text-lg font-semibold text-sky-800 mb-2">Layanan Referensi</h3>
-                    <p class="text-gray-700 text-sm">Kamus, ensiklopedia, dan bahan rujukan hanya untuk dibaca di tempat.
-                    </p>
+                    <h3 class="text-lg font-semibold text-sky-800 mb-2">{{ __('service.reference') }}</h3>
+                    <p class="text-gray-700 text-sm">{{ __('service.reference_content') }}</p>
                 </div>
 
+                <!-- Tandon -->
                 <div
                     class="bg-white rounded-xl shadow p-6 text-center border border-gray-200 hover:scale-105 hover:shadow-md transition-all duration-300 ease-in-out">
                     <i data-lucide="book-copy" class="w-12 h-12 mx-auto text-sky-800 mb-4"></i>
-                    <h3 class="text-lg font-semibold text-sky-800 mb-2">Layanan Tandon</h3>
-                    <p class="text-gray-700 text-sm">Koleksi cadangan atau arsip pustaka untuk kondisi tertentu.</p>
+                    <h3 class="text-lg font-semibold text-sky-800 mb-2">{{ __('service.tandon') }}</h3>
+                    <p class="text-gray-700 text-sm">{{ __('service.tandon_content') }}</p>
                 </div>
 
+                <!-- Special Needs -->
                 <div
                     class="bg-white rounded-xl shadow p-6 text-center border border-gray-200 hover:scale-105 hover:shadow-md transition-all duration-300 ease-in-out">
                     <i data-lucide="accessibility" class="w-12 h-12 mx-auto text-sky-800 mb-4"></i>
-                    <h3 class="text-lg font-semibold text-sky-800 mb-2">Pemustaka Berkebutuhan Khusus</h3>
-                    <p class="text-gray-700 text-sm">Layanan inklusif bagi penyandang disabilitas.</p>
+                    <h3 class="text-lg font-semibold text-sky-800 mb-2">{{ __('service.special_needs') }}</h3>
+                    <p class="text-gray-700 text-sm">{{ __('service.special_needs_content') }}</p>
                 </div>
 
+                <!-- Complaint -->
                 <div
                     class="bg-white rounded-xl shadow p-6 text-center border border-gray-200 hover:scale-105 hover:shadow-md transition-all duration-300 ease-in-out">
                     <i data-lucide="speech" class="w-12 h-12 mx-auto text-sky-800 mb-4"></i>
-                    <h3 class="text-lg font-semibold text-sky-800 mb-2">Layanan Pengaduan</h3>
-                    <p class="text-gray-700 text-sm">Kritik, saran, dan keluhan untuk meningkatkan kualitas layanan.</p>
+                    <h3 class="text-lg font-semibold text-sky-800 mb-2">{{ __('service.complaint') }}</h3>
+                    <p class="text-gray-700 text-sm">{{ __('service.complaint_content') }}</p>
                 </div>
 
+                <!-- Solok Corner -->
                 <div
                     class="bg-white rounded-xl shadow p-6 text-center border border-gray-200 hover:scale-105 hover:shadow-md transition-all duration-300 ease-in-out">
                     <i data-lucide="file-clock" class="w-12 h-12 mx-auto text-sky-800 mb-4"></i>
-                    <h3 class="text-lg font-semibold text-sky-800 mb-2">Layanan Solok Corner</h3>
-                    <p class="text-gray-700 text-sm">Informasi sejarah, budaya, dan perkembangan Kota Solok.</p>
+                    <h3 class="text-lg font-semibold text-sky-800 mb-2">{{ __('service.solok_corner') }}</h3>
+                    <p class="text-gray-700 text-sm">{{ __('service.solok_corner_content') }}</p>
                 </div>
 
+                <!-- Information Retrieval -->
                 <div
                     class="bg-white rounded-xl shadow p-6 text-center border border-gray-200 hover:scale-105 hover:shadow-md transition-all duration-300 ease-in-out">
                     <i data-lucide="search" class="w-12 h-12 mx-auto text-sky-800 mb-4"></i>
-                    <h3 class="text-lg font-semibold text-sky-800 mb-2">Layanan Temu Kembali Informasi</h3>
-                    <p class="text-gray-700 text-sm">Bantuan menemukan informasi dari katalog manual atau digital.</p>
+                    <h3 class="text-lg font-semibold text-sky-800 mb-2">{{ __('service.information_retrieval') }}</h3>
+                    <p class="text-gray-700 text-sm">{{ __('service.information_retrieval_content') }}</p>
                 </div>
 
+                <!-- Warintek -->
                 <div
                     class="bg-white rounded-xl shadow p-6 text-center border border-gray-200 hover:scale-105 hover:shadow-md transition-all duration-300 ease-in-out">
                     <i data-lucide="laptop-minimal" class="w-12 h-12 mx-auto text-sky-800 mb-4"></i>
-                    <h3 class="text-lg font-semibold text-sky-800 mb-2">Layanan Warintek</h3>
-                    <p class="text-gray-700 text-sm">Warung Informasi Teknologi, akses informasi ilmiah dan teknologi
-                        melalui internet.</p>
+                    <h3 class="text-lg font-semibold text-sky-800 mb-2">{{ __('service.warintek') }}</h3>
+                    <p class="text-gray-700 text-sm">{{ __('service.warintek_content') }}</p>
                 </div>
 
+                <!-- Mobile Library -->
                 <div
                     class="bg-white rounded-xl shadow p-6 text-center border border-gray-200 hover:scale-105 hover:shadow-md transition-all duration-300 ease-in-out">
                     <i data-lucide="bus" class="w-12 h-12 mx-auto text-sky-800 mb-4"></i>
-                    <h3 class="text-lg font-semibold text-sky-800 mb-2">Layanan Perpustakaan Keliling</h3>
-                    <p class="text-gray-700 text-sm">Mobil perpustakaan untuk menjangkau daerah terpencil.</p>
+                    <h3 class="text-lg font-semibold text-sky-800 mb-2">{{ __('service.mobile_library') }}</h3>
+                    <p class="text-gray-700 text-sm">{{ __('service.mobile_library_content') }}</p>
                 </div>
 
+                <!-- Book Rotation -->
                 <div
                     class="bg-white rounded-xl shadow p-6 text-center border border-gray-200 hover:scale-105 hover:shadow-md transition-all duration-300 ease-in-out">
                     <i data-lucide="refresh-ccw" class="w-12 h-12 mx-auto text-sky-800 mb-4"></i>
-                    <h3 class="text-lg font-semibold text-sky-800 mb-2">Layanan Buku Bergulir</h3>
-                    <p class="text-gray-700 text-sm">Peminjaman koleksi buku bergiliran di komunitas.</p>
+                    <h3 class="text-lg font-semibold text-sky-800 mb-2">{{ __('service.book_rotation') }}</h3>
+                    <p class="text-gray-700 text-sm">{{ __('service.book_rotation_content') }}</p>
                 </div>
 
+                <!-- Early Literacy -->
                 <div
                     class="bg-white rounded-xl shadow p-6 text-center border border-gray-200 hover:scale-105 hover:shadow-md transition-all duration-300 ease-in-out">
                     <i data-lucide="baby" class="w-12 h-12 mx-auto text-sky-800 mb-4"></i>
-                    <h3 class="text-lg font-semibold text-sky-800 mb-2">Layanan Literasi Anak Usia Dini</h3>
-                    <p class="text-gray-700 text-sm">Program membaca bersama, bercerita, dan aktivitas kreatif untuk anak.
-                    </p>
+                    <h3 class="text-lg font-semibold text-sky-800 mb-2">{{ __('service.early_literacy') }}</h3>
+                    <p class="text-gray-700 text-sm">{{ __('service.early_literacy_content') }}</p>
                 </div>
             </div>
+
         </div>
     </section>
 
     <!-- Jadwal Layanan -->
     <section class="py-12 bg-white">
         <div class="max-w-3xl mx-auto px-4">
-            <h2 class="text-2xl font-bold text-sky-800 mb-6 text-center">Jadwal Pelayanan</h2>
+            <h2 class="text-2xl font-bold text-sky-800 mb-6 text-center">
+                {{ __('service.title') }}
+            </h2>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <!-- Senin - Jumat -->
+                <!-- Weekdays -->
                 <div class="bg-sky-800 text-white rounded-lg p-6 text-center shadow">
-                    <h3 class="text-lg font-semibold">Senin - Jum'at</h3>
-                    <p class="mt-2 text-sm">09.00 – 16.00 WIB</p>
+                    <h3 class="text-lg font-semibold">{{ __('service.weekdays') }}</h3>
+                    <p class="mt-2 text-sm">{{ __('service.weekdays_hours') }}</p>
                 </div>
 
-                <!-- Sabtu - Minggu -->
+                <!-- Weekend -->
                 <div class="bg-sky-800 text-white rounded-lg p-6 text-center shadow">
-                    <h3 class="text-lg font-semibold">Sabtu, Minggu & Tanggal Merah</h3>
-                    <p class="mt-2 text-sm">Tutup</p>
+                    <h3 class="text-lg font-semibold">{{ __('service.weekend') }}</h3>
+                    <p class="mt-2 text-sm">{{ __('service.weekend_hours') }}</p>
                 </div>
             </div>
         </div>

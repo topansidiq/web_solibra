@@ -8,7 +8,7 @@ return [
         'collection' => "Koleksi",
         'profile' => 'Profil',
         'service' => "Layanan",
-        'event' => 'Kegiatam',
+        'event' => 'Kegiatan',
         'information' => 'Informasi',
         'gallery' => "Galeri",
         'enter_button' => 'Masuk',
