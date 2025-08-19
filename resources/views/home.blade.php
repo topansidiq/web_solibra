@@ -168,8 +168,8 @@
                                     class="book h-full bg-slate-50 rounded-md shadow border border-slate-300 cursor-pointer hover:scale-105 transition">
 
                                     @if ($book->cover && Storage::disk('public')->exists($book->cover))
-                                        <div class="h-72"
-                                            style="background-image: url({{ asset('storage/' . $book->cover) }})">
+                                        <div class="h-72">
+                                            <img src="{{ asset('storage/' . $book->cover) }}" alt="">
                                         </div>
                                     @else
                                         <div class="h-72 bg-cover bg-no-repeat py-10 flex items-center justify-center text-white text-2xl font-semibold"
@@ -228,8 +228,8 @@
                                     class="book h-full bg-slate-50 rounded-md shadow border border-slate-300 cursor-pointer hover:scale-105 transition">
 
                                     @if ($book->cover && Storage::disk('public')->exists($book->cover))
-                                        <div class="h-72"
-                                            style="background-image: url({{ asset('storage/' . $book->cover) }})">
+                                        <div class="h-72">
+                                            <img src="{{ asset('storage/' . $book->cover) }}" alt="">
                                         </div>
                                     @else
                                         <div class="h-72 bg-cover bg-no-repeat py-10 flex items-center justify-center text-white text-2xl font-semibold"
@@ -272,13 +272,13 @@
                             <div class="rounded-md px-1 py-0.5 text-xs bg-sky-200">
                                 <a href="#">{{ __('home.event_buttons.ongoing') }}</a>
                             </div>
-                            <div class="rounded-md px-1 py-0.5 text-xs bg-sky-200">
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-neutral-200">
                                 <a href="#">{{ __('home.event_buttons.upcoming') }}</a>
                             </div>
-                            <div class="rounded-md px-1 py-0.5 text-xs bg-sky-200">
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-neutral-200">
                                 <a href="#">{{ __('home.event_buttons.completed') }}</a>
                             </div>
-                            <div class="rounded-md px-1 py-0.5 text-xs bg-sky-200">
+                            <div class="rounded-md px-1 py-0.5 text-xs bg-neutral-200">
                                 <a href="#">{{ __('home.event_buttons.cancelled') }}</a>
                             </div>
                         </div>
@@ -293,14 +293,15 @@
                                     <div
                                         class="book h-full bg-slate-50 rounded-md shadow border border-slate-300 cursor-pointer hover:scale-105 transition">
 
-                                        @if ($event->poster && Storage::disk('public')->exists($event->poster))
-                                            <div class="h-96 bg-no-repeat bg-cover"
-                                                style="background-image: url({{ asset('storage/' . $event->poster) }})">
+                                        @if ($book->cover && Storage::disk('public')->exists($book->cover))
+                                            <div class="h-72">
+                                                <img src="{{ asset('storage/' . $event->poster) }}" alt=""
+                                                    class="w-full h-full object-cover rounded">
                                             </div>
                                         @else
                                             <div class="h-72 bg-cover bg-no-repeat py-10 flex items-center justify-center text-white text-2xl font-semibold"
                                                 style="background-image: url({{ asset('img/default_cover.jpg') }})">
-                                                <h1 class="p-3">{{ $event->title }}</h1>
+                                                <h1 class="p-3">{{ $book->clean_title }}</h1>
                                             </div>
                                         @endif
 

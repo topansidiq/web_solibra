@@ -1,5 +1,7 @@
 @extends('member.layouts.app')
 
+@section('title', __('book.page_title'))
+
 @section('content')
     <div class="max-w-7xl mx-auto px-4 py-6 space-y-10">
 
@@ -11,8 +13,8 @@
                         <i class="w-10 h-10" data-lucide="chevron-left"></i>
                     </a>
                     <div>
-                        <h1 class="font-bold text-neutral-700 text-2xl">Tentang Buku Ini</h1>
-                        <p class="pt-1 font-semibold text-neutral-500">{{ $book->title }}</p>
+                        <h1 class="font-bold text-neutral-700 text-2xl">{{ __('book.about') }}</h1>
+                        <p class="pt-1 font-semibold text-neutral-500">{{ $book->clean_title }}</p>
                     </div>
                 </div>
 
@@ -24,7 +26,8 @@
                 <div>
                     <a href="{{ route('member.collection.favorite', $book) }}" class="flex items-center gap-3">
                         <i class="w-8 h-8 text-red-400" data-lucide="heart"></i>
-                        <p class="text-sm px-2 py-1 rounded-md border border-red-400 text-red-400">Jadikan Favorit</p>
+                        <p class="text-sm px-2 py-1 rounded-md border border-red-400 text-red-400">
+                            {{ __('book.make_favorit') }}</p>
                     </a>
                 </div>
 
@@ -35,7 +38,7 @@
                     x-transition x-cloak>
                     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
                         role="alert">
-                        <strong class="font-bold bg-red-300 px-2 py-1 rounded-sm">Gagal</strong>
+                        <strong class="font-bold bg-red-300 px-2 py-1 rounded-sm">{{ __('validation.error') }}</strong>
                         <span class="block sm:inline">{{ session('error') }}</span>
                     </div>
                 </div>
@@ -43,7 +46,7 @@
                     x-transition x-cloak>
                     <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4"
                         role="alert">
-                        <strong class="font-bold bg-green-300 px-2 py-1 rounded-sm">Berhasil</strong>
+                        <strong class="font-bold bg-green-300 px-2 py-1 rounded-sm">{{ __('validation.success') }}</strong>
                         <span class="block sm:inline">{{ session('success') }}</span>
                     </div>
                 </div>
@@ -52,7 +55,7 @@
             <div class="flex flex-col md:flex-row gap-6 bg-neutral-50 p-6">
                 {{-- Cover --}}
                 @if (!empty($book->cover) && Storage::disk('public')->exists($book->cover))
-                    <img src="{{ asset('storage/' . $book->cover) }}" alt="{{ $book->title }}"
+                    <img src="{{ asset('storage/' . $book->cover) }}" alt="{{ $book->clean_title }}"
                         class="w-full md:w-64 lg:w-72 object-cover rounded-lg shadow-sm">
                 @else
                     <div
@@ -64,11 +67,11 @@
                 {{-- Detail --}}
                 <div class="flex-1 space-y-2 text-sm">
                     @foreach ([
-            'Judul' => $book->title,
-            'Penulis' => $book->author,
-            'Penerbit' => $book->publisher,
-            'ISBN' => $book->isbn,
-            'Tahun Terbit' => $book->year,
+            __('book.title') => $book->title,
+            __('book.author') => $book->author,
+            __('book.publisher') => $book->publisher,
+            __('book.isbn') => $book->isbn,
+            __('book.year') => $book->year,
         ] as $label => $value)
                         <div class="grid grid-cols-4 border-b border-neutral-200 py-2">
                             <div class="col-span-1 font-medium">{{ $label }}</div>
@@ -77,7 +80,7 @@
                     @endforeach
 
                     <div class="grid grid-cols-4 border-b border-neutral-200 py-2">
-                        <div class="col-span-1 font-medium">Kategori</div>
+                        <div class="col-span-1 font-medium">{{ __('book.category') }}</div>
                         <div class="col-span-3 px-2 space-x-1">
                             @foreach ($book->categories as $category)
                                 <span class="inline-block bg-sky-200 text-neutral-800 px-2 py-0.5 rounded text-xs">
@@ -87,15 +90,21 @@
                         </div>
                     </div>
                     <div class="grid grid-cols-4 border-b border-neutral-200 py-2">
-                        <div class="col-span-1 font-medium">Stok</div>
+                        <div class="col-span-1 font-medium">{{ __('book.stock') }}</div>
                         <div class="col-span-3 px-2 space-x-1">
                             {{ $book->stock }}
                         </div>
                     </div>
 
                     <div class="pt-4">
-                        <h3 class="font-semibold mb-2">Deskripsi</h3>
-                        <p class="prose text-justify">{!! $book->description !!}</p>
+                        <h3 class="font-semibold mb-2">{{ __('book.description') }}</h3>
+
+                        @if (empty($book->description) || $book->description === '')
+                            <p class="text-justify">{{ __('book.no_description') }}</p>
+                        @else
+                            <p class="prose text-justify">{!! $book->description !!}</p>
+                        @endif
+
                     </div>
                 </div>
             </div>
@@ -103,44 +112,42 @@
             {{-- Button Peminjaman --}}
             <div class="p-4 border-t border-neutral-200 flex justify-end">
                 @if ($book->stock == 0)
-
-                <button disabled class="px-4 py-2 bg-neutral-400 text-white rounded-md shadow">
-                    Buku tidak tersedia atau stok kosong
-                </button>
+                    <button disabled class="px-4 py-2 bg-neutral-400 text-white rounded-md shadow text-sm">
+                        {{ __('book.unavailable') }}
+                    </button>
                 @else
                     @if ($user->member_status !== 'validated')
-                <div>
-                        <button disabled class="px-4 py-2 bg-neutral-400 hover:bg-sky-800 text-white rounded-md shadow">
-                            Anda belum bisa melakukan peminjaman. Harap men-validasi data langsung ke Perpustakaan Umum Kota Solok
-                        </button>
+                        <div>
+                            <button disabled class="px-4 py-2 bg-neutral-400 text-sm text-white rounded-md shadow">
+                                {{ __('book.unvalidate') }}
+                            </button>
 
-                    </div>
-                @else
-                    <form action="{{ route('member.borrow.store') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="book_id" value="{{ $book->id }}">
-                    <input type="hidden" name="user_id" value="{{ $user->id }}">
-                    <button type="submit" class="px-4 py-2 bg-sky-700 hover:bg-sky-800 text-white rounded-md shadow">
-                        Pinjam Buku Ini
-                    </button>
-                </form>
+                        </div>
+                    @else
+                        <form action="{{ route('member.borrow.store') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="book_id" value="{{ $book->id }}">
+                            <input type="hidden" name="user_id" value="{{ $user->id }}">
+                            <button type="submit"
+                                class="px-4 py-2 bg-sky-700 hover:bg-sky-800 text-white rounded-md shadow text-sm">
+                                {{ __('book.borrow') }}
+                            </button>
+                        </form>
+                    @endif
                 @endif
-                @endif
-
             </div>
-
-
-
-
         </div>
 
         {{-- Buku Serupa --}}
         <div>
-            <h2 class="text-xl font-bold mb-4 text-slate-800">Buku Serupa</h2>
+            <div class="mb-4">
+                <h2 class="text-xl font-bold text-slate-800">{{ __('book.related') }}</h2>
+                <p class="text-xs">{{ __('book.related_message') }}</p>
+            </div>
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5">
                 @foreach ($relatedBooks as $related)
                     <a href="{{ route('show.book', $related) }}"
-                        class="block bg-white rounded-xl shadow hover:shadow-lg border border-slate-200
+                        class="block bg-white rounded-md shadow hover:shadow-lg border border-slate-200
                           hover:scale-105 transition-transform overflow-hidden">
 
                         {{-- Cover --}}

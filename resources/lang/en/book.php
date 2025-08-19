@@ -14,4 +14,13 @@ return [
     'description' => 'Description',
     'related' => 'Related Books',
     'writer' => 'Writer',
+
+    // Show book in member
+    'make_favorit' => "Add to Favorites",
+    'stock' => "Stock",
+    'unavailable' => "Book is unavailable or out of stock",
+    'unvalidate' => "You cannot borrow a book yet. Please validate your data directly at Perpustakaan Umum Kota Solok",
+    'borrow' => "Borrow This Book",
+    'related_message' => "Similar collections you might like",
+    'no_description' => "Nothing description"
 ];
