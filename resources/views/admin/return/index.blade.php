@@ -44,7 +44,6 @@
                         <th class="p-4">Judul Buku</th>
                         <th class="p-4">Peminjam</th>
                         <th class="p-4 text-center">Status Peminjaman</th>
-                        <th class="p-4 text-center">Status Pengembalian</th>
                         <th class="p-4 text-center">Tanggal Pengembalian</th>
                         <th class="p-4 text-center">Aksi</th>
                     </tr>
@@ -83,15 +82,15 @@
                                 {{ $borrow->user->name ?? '-' }}
                             </td>
                             <td class="px-4 py-1 border border-slate-300 text-center">
-                                {{ $borrow->status }}
-                            </td>
-                            <td class="px-4 py-1 border border-slate-300 text-center">
-                                @if ($borrow->status !== 'returned')
-                                    <span>Belum di kembalikan</span>
-                                @else
-                                    <span>Telah di kembalikan</span>
+                                @if ($borrow->status === 'confirmed')
+                                    Aktif
+                                @elseif ($borrow->status === 'overdue')
+                                    Terlambat {{ (int) now()->diffInDays($borrow->due_date) }} hari
+                                @elseif ($borrow->status === 'returned')
+                                    Sudah Dikembalikan
                                 @endif
                             </td>
+
                             <td class="px-4 py-1 border border-slate-300 text-center ">
                                 @if ($borrow->status !== 'returned')
                                     <span>-</span>

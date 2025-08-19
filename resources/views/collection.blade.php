@@ -18,9 +18,9 @@
                         <h3 class="text-sm mb-2 font-semibold">Filter Kategori:</h3>
                         <div class="flex gap-3">
                             <div
-                                class="h-fit px-2 py-1 rounded-full text-xs text-center
-        {{ is_null($selectedCategory) ? 'bg-neutral-500 text-yellow-50' : 'bg-yellow-500 text-yellow-50' }}
-        hover:bg-amber-700 hover:text-amber-50">
+                            class="h-fit px-2 py-1 rounded-full text-xs text-center
+                                 {{ is_null($selectedCategory) ? 'bg-neutral-500 text-yellow-50' : 'bg-yellow-500 text-yellow-50' }}
+                                 hover:bg-amber-700 hover:text-amber-50">
                                 <a href="{{ route('collection') }}">
                                     Semua
                                 </a>
@@ -28,7 +28,7 @@
                             @foreach ($categories as $category)
                                 <div
                                     class="h-fit px-2 py-1 rounded-full text-xs text-center
-                          {{ $selectedCategory == $category->id ? 'bg-neutral-500 text-yellow-50 hover:bg-neutral-500' : 'bg-yellow-500 text-yellow-50' }} hover:bg-yellow-700 hover:border-neutral-500 hover:text-yellow-50">
+                                  {{ $selectedCategory == $category->id ? 'bg-neutral-500 text-yellow-50 hover:bg-neutral-500' : 'bg-yellow-500 text-yellow-50' }} hover:bg-yellow-700 hover:border-neutral-500 hover:text-yellow-50">
                                     <a href="{{ route('collection', ['category' => $category->id]) }}">
                                         {{ $category->name }}
                                     </a>

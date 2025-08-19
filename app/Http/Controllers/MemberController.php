@@ -66,6 +66,16 @@ class MemberController extends Controller
         return view('member.account.index', compact('user'));
     }
 
+    public function event(){
+        try {
+            $events = Event::orderBy('created_at', 'desc')->get()->groupBy('status');
+            $user = Auth::user();
+            return view('member.event.index', compact('events', 'user'));
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
     public function account_edit($id)
     {
         $user = User::findOrFail($id);
