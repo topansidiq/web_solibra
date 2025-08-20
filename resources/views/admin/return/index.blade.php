@@ -63,22 +63,12 @@
                             <td class="px-4 py-1 border border-slate-300">
                                 <div class="flex items-center justify-between">
                                     <p class="outline-0">
-                                        <a href="{{ route('borrows.show', $borrow->id) }}">
-                                            {{ Str::limit($borrow->book->clean_title, 35) ?? '-' }}
-                                        </a>
+                                        {{ Str::limit($borrow->book->clean_title, 35) ?? '-' }}
                                     </p>
-                                    <form action="{{ route('borrows.destroy', $borrow->id) }}" method="POST"
-                                        onsubmit="return confirm('Yakin ingin menghapus peminjaman ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-500 hover:underline text-xs">
-                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                        </button>
-                                    </form>
                                 </div>
                             </td>
                             <td class="px-4 py-1 border border-slate-300
-                            ">
+                                                    ">
                                 {{ $borrow->user->name ?? '-' }}
                             </td>
                             <td class="px-4 py-1 border border-slate-300 text-center">
@@ -98,18 +88,34 @@
                                     <span>{{ $borrow->return_date }}</span>
                                 @endif
                             </td>
-                            <td class="px-4 py-1 border border-slate-300">
-                                <div class="flex justify-center items-center h-full">
+                            <td class="px-4 py-1 border border-slate-300 text-center">
+                                <div class="flex items-center justify-center gap-1">
+                                    {{-- Status Peminjaman --}}
                                     @if ($borrow->status === 'returned')
-                                        <span class="px-2 py-1 bg-gray-400 rounded-md text-neutral-50">
+                                        <span class="px-2 py-1 bg-gray-400 rounded-md text-neutral-50 text-xs">
                                             Sudah Dikembalikan
                                         </span>
                                     @else
                                         <a href="{{ route('return.show', $borrow) }}"
-                                            class="px-2 py-1 bg-green-500 rounded-md text-neutral-50">
+                                            class="px-2 py-1 bg-green-500 rounded-md text-neutral-50 text-xs">
                                             Kembalikan
                                         </a>
                                     @endif
+
+                                    {{-- Aksi User --}}
+                                    <a href="{{ route('return.show', $borrow->id) }}"
+                                        class="bg-green-500 hover:bg-green-600 text-white text-xs px-3 py-1 rounded">
+                                        Detail
+                                    </a>
+                                    <form action="{{ route('borrows.destroy', $borrow->id) }}" method="POST"
+                                        onsubmit="return confirm('Yakin ingin menghapus peminjaman ini?')" class="inline-block">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded flex items-center justify-center h-[25px]">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>

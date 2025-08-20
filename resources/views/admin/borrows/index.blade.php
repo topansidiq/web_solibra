@@ -2,15 +2,15 @@
 
 @section('content')
     <div class="content flex flex-col flex-auto bg-gray-50 w-full" x-data="{ openAddborrowModal: false }" x-cloak>
-        <div x-data="{ show: {{ session('error') ? 'true' : 'false' }} }" x-show="show" x-init="setTimeout(() => show = false, 6000)" class="transition-all ease-in-out" x-transition
-            x-cloak>
+        <div x-data="{ show: {{ session('error') ? 'true' : 'false' }} }" x-show="show"
+            x-init="setTimeout(() => show = false, 6000)" class="transition-all ease-in-out" x-transition x-cloak>
             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
                 <strong class="font-bold bg-red-300 px-2 py-1 rounded-sm">Gagal</strong>
                 <span class="block sm:inline">{{ session('error') }}</span>
             </div>
         </div>
-        <div x-data="{ show: {{ session('success') ? 'true' : 'false' }} }" x-show="show" x-init="setTimeout(() => show = false, 6000)" class="transition-all ease-in-out" x-transition
-            x-cloak>
+        <div x-data="{ show: {{ session('success') ? 'true' : 'false' }} }" x-show="show"
+            x-init="setTimeout(() => show = false, 6000)" class="transition-all ease-in-out" x-transition x-cloak>
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
                 <strong class="font-bold bg-green-300 px-2 py-1 rounded-sm">Berhasil</strong>
                 <span class="block sm:inline">{{ session('success') }}</span>
@@ -59,7 +59,8 @@
                         @csrf
 
                         {{-- Select Book --}}
-                        <div x-data="bookSearch({{ $books->sortByDesc('stock')->values()->toJson() }})" x-init="window.bookSearchInstance = $data" class="relative">
+                        <div x-data="bookSearch({{ $books->sortByDesc('stock')->values()->toJson() }})"
+                            x-init="window.bookSearchInstance = $data" class="relative">
                             <label for keyword class="block font-semibold">Pilih Buku</label>
                             <input type="text" x-model="search" @focus="show = true" @keydown.tab.prevent="selectFirst()"
                                 @keydown.enter.prevent="selectFirst()" @click.outside="show = false" id="keyword"
@@ -81,7 +82,8 @@
                         </div>
 
                         {{-- Select User --}}
-                        <div x-data="userSearch({{ $users->values()->toJson() }})" x-init="window.userSearchInstance = $data" class="relative">
+                        <div x-data="userSearch({{ $users->values()->toJson() }})"
+                            x-init="window.userSearchInstance = $data" class="relative">
                             <label for keyword class="block font-semibold">Pilih Pengguna</label>
                             <input type="text" x-model="search" @focus="show = true" @keydown.tab.prevent="selectFirst()"
                                 @keydown.enter.prevent="selectFirst()" @click.outside="show = false" id="keyword"
@@ -143,6 +145,7 @@
                         <th class="p-4 text-center">Tanggal Pengembalian</th>
                         <th class="p-4 text-center">Status Peminjaman</th>
                         <th class="p-4 text-center">Perpanjangan</th>
+                        <th class="p-4 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="text-xs">
@@ -160,18 +163,8 @@
                             <td class="px-4 py-1 border border-slate-300">
                                 <div class="flex items-center justify-between">
                                     <p class="outline-0">
-                                        <a href="{{ route('borrows.show', $borrow->id) }}">
-                                            {{ Str::limit($borrow->book->clean_title, 35) ?? '-' }}
-                                        </a>
+                                        {{ Str::limit($borrow->book->clean_title, 35) ?? '-' }}
                                     </p>
-                                    <form action="{{ route('borrows.destroy', $borrow->id) }}" method="POST"
-                                        onsubmit="return confirm('Yakin ingin menghapus peminjaman ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-500 hover:underline text-xs">
-                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                        </button>
-                                    </form>
                                 </div>
                             </td>
                             <td class="px-4 py-1 border border-slate-300">
@@ -300,6 +293,28 @@
                                         </button>
                                     </form>
                                 @endif
+                            </td>
+                            {{-- kolom aksi --}}
+                            <td class="px-4 py-1 border border-slate-300 text-center w-32">
+                                <div class="flex items-center justify-center gap-1">
+                                    <a href="{{ route('borrows.show', $borrow->id) }}"
+                                        class="bg-green-500 hover:bg-green-600 text-white text-xs px-3 py-1 rounded">
+                                        Detail
+                                    </a>
+                                    {{-- <a href="{{ route('users.edit', $user->id) }}"
+                                        class="bg-sky-800 hover:bg-sky-900 text-white text-xs px-3 py-1 rounded">
+                                        Edit
+                                    </a> --}}
+                                    <form action="{{ route('borrows.destroy', $borrow->id) }}" method="POST"
+                                        onsubmit="return confirm('Yakin ingin menghapus peminjaman ini?')" class="inline-block">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded flex items-center justify-center h-[25px]">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @endforeach
