@@ -32,7 +32,7 @@
             </form>
             <div class="flex mx-auto gap-4 text-sm">
                 <div class="bg-green-500 py-2 px-4 rounded-lg text-neutral-50">
-                    <a href="https://wa.me/6282388407308?text=OTP" target="_blank">
+                    <a href="https://wa.me/62895385071133?text=OTP" target="_blank">
                         <button class="">
                             Dapatkan OTP
                         </button>

@@ -41,6 +41,7 @@
                         <th class="p-4">Tanggal Selesai</th>
                         <th class="p-4">Lokasi</th>
                         <th class="p-4">Status</th>
+                        <th class="p-4">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="text-xs">
@@ -52,24 +53,7 @@
 
                             <td class="px-4 py-1 border border-slate-300">
                                 <div class="flex flex-row gap-2 justify-between items-center">
-                                    <form class="flex items-center gap-2">
-                                        {{-- Edit Book Button --}}
-                                        <a href="{{ route('events.edit', $event->id) }}" class="block">
-                                            <i data-lucide="edit" class="w-4 h-4 text-blue-500"></i>
-                                        </a>
-
-                                        {{-- Book Title --}}
-                                        <p class="text-left">{{ $event->title }}</p>
-                                    </form>
-
-                                    {{-- Delete Book Button --}}
-                                    <form action="{{ route('events.destroy', $event) }}" method="POST" class="ml-2">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="delete-book-btn">
-                                            <i data-lucide="trash-2" class="w-4 h-4 text-red-500"></i>
-                                        </button>
-                                    </form>
+                                    <p class="text-left">{{ $event->title }}</p>
                                 </div>
                             </td>
 
@@ -81,6 +65,28 @@
                             </td>
                             <td class="px-4 py-1 border border-slate-300 text-center">{{ $event->location }}</td>
                             <td class="px-4 py-1 border border-slate-300 text-center">{{ $event->status }}</td>
+                            <td class="px-4 py-1 border border-slate-300 text-center w-32">
+                                <div class="flex items-center justify-center gap-1">
+                                    {{-- <a href="{{ route('events.show', $event->id) }}"
+                                        class="bg-green-500 hover:bg-green-600 text-white text-xs px-3 py-1 rounded">
+                                        Detail
+                                    </a> --}}
+                                    {{-- <a href="{{ route('events.edit', $event->id) }}"
+                                        class="bg-sky-800 hover:bg-sky-900 text-white text-xs px-3 py-1 rounded">
+                                        Edit
+                                    </a> --}}
+                                    <form action="{{ route('events.destroy', $event->id) }}" method="POST"
+                                        onsubmit="return confirm('Yakin ingin menghapus acara ini?')"
+                                        class="inline-block">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded flex items-center justify-center h-[25px]">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
