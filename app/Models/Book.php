@@ -5,9 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * @mixin IdeHelperBook
- */
 class Book extends Model
 {
     /** @use HasFactory<\Database\Factories\BookFactory> */
@@ -77,6 +74,12 @@ class Book extends Model
     {
         return strtoupper(substr($this->title, 0, 1));
     }
+
+    public function getDescriptionAttribute($value)
+    {
+        return $value ?? __('book.no_description');
+    }
+
 
     public function categories()
     {
