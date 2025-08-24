@@ -13,5 +13,4 @@ return [
     'enter' => 'Enter',
     'dont_have_account' => 'Don’t have an account?',
     'register' => 'Register',
-
 ];

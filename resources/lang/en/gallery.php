@@ -2,5 +2,5 @@
 
 return [
     'title' => 'Gallery',
-    'subtitle' => 'Timeline of the Solok Public Library',
+    'subtitle' => 'Timeline of the Perpustakaan Umum Kota Solok',
 ];
