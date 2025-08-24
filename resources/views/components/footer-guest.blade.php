@@ -1,5 +1,5 @@
 <footer class="bg-white mt-10 static bottom-0 w-full">
-    <div class="max-w-6xl mx-auto px-4 py-10 grid md:grid-cols-2 gap-10">
+    <div class="max-w-7xl mx-auto px-4 py-10 grid md:grid-cols-2 gap-10">
         <iframe
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3974.2159786061274!2d100.6668065!3d-0.7978297!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e2a597d90519999%3A0x2b92f34027ee9e69!2sPerpustakaan%20Umum%20Kota%20Solok!5e0!3m2!1sid!2sid!4v1720778893269!5m2!1sid!2sid"
             width="100%" height="300" style="border:0; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);"

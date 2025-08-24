@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\{
@@ -118,6 +119,9 @@ Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
 
         // Custom archive route
         Route::get('/archive', [BorrowController::class, 'archiveTable'])->name('borrows.archived');
+
+        Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+        Route::get('/reports/export/{type}', [ReportController::class, 'export'])->name('reports.export');
     });
 
 

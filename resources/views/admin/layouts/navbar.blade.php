@@ -37,6 +37,7 @@
             ['label' => 'Acara', 'name' => 'events.index', 'icon' => 'calendar-days'],
             ['label' => 'Notifikasi', 'name' => 'notifications.index', 'icon' => 'bell'],
             ['label' => 'Galeri', 'name' => 'galleries.index', 'icon' => 'gallery-vertical-end'],
+            ['label' => 'Laporan', 'name' => 'reports.index', 'icon' => 'gallery-vertical-end'],
         ];
     @endphp
 
