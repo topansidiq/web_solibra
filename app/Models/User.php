@@ -12,7 +12,6 @@ use Illuminate\Notifications\Notifiable;
  */
 /**
  * @mixin \Eloquent
- * @mixin IdeHelperUser
  */
 
 class User extends Authenticatable
@@ -54,6 +53,11 @@ class User extends Authenticatable
         'role' => Role::class,
         'expired_date' => 'date'
     ];
+
+    public function isMaster(): bool
+    {
+        return $this->role === Role::Master;
+    }
 
     public function isAdmin(): bool
     {

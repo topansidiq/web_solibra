@@ -73,7 +73,7 @@ class UserFactory extends Factory
         return [
 
             'name' => $faker->name($gender),
-            'role' => fake()->randomElement(Role::cases()),
+            'role' => fake()->randomElement(['admin', 'librarian', 'member']),
             'phone_number' => fake()->unique()->numerify('08#########'),
             'email' => fake()->unique()->safeEmail(),
 

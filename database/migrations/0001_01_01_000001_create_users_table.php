@@ -17,7 +17,7 @@ return new class extends Migration
             // Primary
             $table->id();
             $table->string('name');
-            $table->enum('role', ['admin', 'librarian', 'member'])->default('member');
+            $table->enum('role', ['admin', 'librarian', 'member', 'master'])->default('member');
             $table->string('phone_number')->unique();
             $table->string('email')->unique();
             $table->string('password');

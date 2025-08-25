@@ -48,6 +48,7 @@ class LoginController extends Controller
         $role = Auth::user()->role;
 
         return match ($role) {
+            Role::Master => '/master/dashboard',
             Role::Admin, Role::Librarian => '/admin/dashboard',
             Role::Member => '/member/dashboard',
             default => '/',

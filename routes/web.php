@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\MasterController;
 use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -131,7 +132,7 @@ Route::middleware(['auth', 'role:admin,librarian'])->group(function () {
 });
 
 // All User Route
-Route::middleware(['auth', 'role:admin,librarian,member'])->group(function () {
+Route::middleware(['auth', 'role:admin,librarian,member,master'])->group(function () {
     // Users
 
 
@@ -146,4 +147,10 @@ Route::middleware(['auth', 'role:admin,librarian,member'])->group(function () {
     Route::resource('otps', OTPController::class);
 
     // WhatsApp Bot
+});
+
+// Middleware master
+Route::prefix('master')->middleware(['auth', 'role:master'])->group(function () {
+    Route::get('/dashboard', [MasterController::class, 'index'])->name('master.dashboard');
+    Route::get('/admins', [MasterController::class, 'admins'])->name('master.admins');
 });

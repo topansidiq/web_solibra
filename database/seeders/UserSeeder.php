@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
 
-        // User::factory()->count(10)->create();
+        User::factory()->count(40)->create();
 
         // User::create([
         //     'name' => 'Salsabila Agustin Putri Yendi',
@@ -43,29 +43,37 @@ class UserSeeder extends Seeder
         //     'email_verified_at' => now()
         // ]);
 
-        User::create([
-            'name' => 'Salsabila Agustin PY',
-            'role' => 'admin',
-            'phone_number' => '089626861033',
-            'gender' => 'male',
-            'birth_date' => '2002-07-28',
-            'age' => 23,
-            'id_type' => 'KTP',
-            'id_number' => 1305072807020002,
-            'address' => 'Jl. Contoh No. 123, Padang',
-            'regency' => 'Padang',
-            'province' => 'Sumatera Barat',
-            'member_status' => 'new',
-            'jobs' => 'Mahasiswa',
-            'education' => 'S1',
-            'class_department' => 'Ilmu Perpustakaan',
-            'email' => 'fahri@gmail.com',
-            'password' => Hash::make('12345678'),
-            'remember_token' => '123456789098',
-            'status_account' => 'active',
-            'expired_date' => now()->addYear(),
-            'profile_picture' => null,
-            'email_verified_at' => now()
-        ]);
+        // User::create([
+        //     'name' => 'Salsabila Agustin PY',
+        //     'role' => 'admin',
+        //     'phone_number' => '089626861033',
+        //     'gender' => 'male',
+        //     'birth_date' => '2002-07-28',
+        //     'age' => 23,
+        //     'id_type' => 'KTP',
+        //     'id_number' => 1305072807020002,
+        //     'address' => 'Jl. Contoh No. 123, Padang',
+        //     'regency' => 'Padang',
+        //     'province' => 'Sumatera Barat',
+        //     'member_status' => 'new',
+        //     'jobs' => 'Mahasiswa',
+        //     'education' => 'S1',
+        //     'class_department' => 'Ilmu Perpustakaan',
+        //     'email' => 'fahri@gmail.com',
+        //     'password' => Hash::make('12345678'),
+        //     'remember_token' => '123456789098',
+        //     'status_account' => 'active',
+        //     'expired_date' => now()->addYear(),
+        //     'profile_picture' => null,
+        //     'email_verified_at' => now()
+        // ]);
+
+        // User::create([
+        //     'name' => "Primary",
+        //     'role' => 'master',
+        //     'phone_number' => '-',
+        //     'email' => 'perpustakaankotasolok@gmail.com',
+        //     'password' => Hash::make('perpustakaanumumkotasolok')
+        // ]);
     }
 }
